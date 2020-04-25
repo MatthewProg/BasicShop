@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BasicShop
+namespace BasicShop.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,6 +23,20 @@ namespace BasicShop
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void DockPanel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
+        private void leftPanel_MouseLeave(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void leftPanel_MouseEnter(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

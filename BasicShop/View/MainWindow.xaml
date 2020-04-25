@@ -1,0 +1,157 @@
+﻿<Window x:Class="BasicShop.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BasicShop.View"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        BorderThickness="0"
+        Title="Basic Shop" Height="600" Width="1066" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" WindowStyle="None">
+
+    <Window.Resources>
+        <Storyboard x:Key="OpenMenu">
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button1text" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button2text" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button3text" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button4text" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="leftPanel">
+                <EasingDoubleKeyFrame KeyTime="0" Value="80"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="200"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Storyboard.TargetName="dockControls">
+                <SplineThicknessKeyFrame KeyTime="0" Value="80,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:0.3" Value="200,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="CloseMenu">
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button1text" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button2text" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button3text" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button4text" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="leftPanel">
+                <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="80"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Storyboard.TargetName="dockControls">
+                <SplineThicknessKeyFrame KeyTime="0" Value="200,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="00:00:0.3" Value="80,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="StackPanel.MouseEnter" SourceName="leftPanel">
+            <BeginStoryboard Storyboard="{StaticResource OpenMenu}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="StackPanel.MouseLeave" SourceName="leftPanel">
+            <BeginStoryboard Storyboard="{StaticResource CloseMenu}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Grid>
+        <!--<Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" x:Name="firstColumn"/>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>-->
+
+        <!--Window controls-->
+        <DockPanel Height="24" x:Name="dockControls" VerticalAlignment="Top" Background="{StaticResource MaterialDesignDarkBackground}" LastChildFill="False" MouseLeftButtonDown="DockPanel_MouseDown"  Margin="80,0,0,0" >
+            <Button DockPanel.Dock="Right" Height="auto" Style="{StaticResource MaterialDesignFlatButton}">
+                <materialDesign:PackIcon Kind="Close" />
+            </Button>
+            <Button DockPanel.Dock="Right" Height="auto" Style="{StaticResource MaterialDesignFlatButton}">
+                <materialDesign:PackIcon Margin="0,4" Kind="WindowMinimize" />
+            </Button>
+            <TextBlock DockPanel.Dock="Right"  FontSize="20" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Margin="0,0,382,0" FontFamily="Corbel" FontWeight="Bold" Text="BASIC SHOP"/>
+        </DockPanel>
+        
+        <!--Main panel-->
+        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="576" Width="986">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="0,5" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBox Width="340" materialDesign:TextFieldAssist.HasOutlinedTextField="True" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" VerticalAlignment="Center">
+                    <materialDesign:HintAssist.Hint>
+                        <StackPanel Orientation="Horizontal" Margin="-2 0 0 0">
+                            <materialDesign:PackIcon Kind="Magnify" />
+                            <TextBlock>Szukaj</TextBlock>
+                        </StackPanel>
+                    </materialDesign:HintAssist.Hint>
+                </TextBox>
+            </StackPanel>
+            <ScrollViewer Grid.Row="1">
+                <Frame x:Name="frameMain"/>
+            </ScrollViewer>
+        </Grid>
+        
+        <!--Left Panel-->
+        <Grid x:Name="leftPanel" Width="80" HorizontalAlignment="Left" Background="{StaticResource MaterialDesignBody}" MouseLeave="leftPanel_MouseLeave" MouseEnter="leftPanel_MouseEnter">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="185" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Button Grid.Row="0" VerticalAlignment="Top" Background="Transparent" Width="auto" Height="auto" Padding="3" BorderThickness="0" Margin="0,15,0,0">
+                <Image Source="BasicShopLogo.png" Margin="5" RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"/>
+            </Button>
+            <StackPanel Grid.Row="1">
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0" Padding="16,13">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                        <materialDesign:PackIcon Kind="Home" Width="auto" Height="auto"/>
+                        <TextBlock x:Name="button1text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Strona główna</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="FormatListBulletedSquare" Width="auto" Height="auto"/>
+                        <TextBlock x:Name="button2text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Kategorie</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="PackageVariant" Width="auto" Height="auto"/>
+                        <TextBlock x:Name="button3text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Zamówienia</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="AccountCircle" Width="auto" Height="auto"/>
+                        <TextBlock x:Name="button4text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Moje konto</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        
+    </Grid>
+</Window>
