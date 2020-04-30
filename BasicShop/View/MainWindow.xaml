@@ -18,6 +18,12 @@
 
     <Window.Resources>
         <Storyboard x:Key="OpenMenu">
+            <!--<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="searchBox" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="iconSearch" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>-->
             <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button1text" Storyboard.TargetProperty="(UIElement.Visibility)">
                 <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
@@ -40,6 +46,12 @@
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="CloseMenu">
+            <!--<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="searchBox" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="iconSearch" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>-->
             <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="button1text" Storyboard.TargetProperty="(UIElement.Visibility)">
                 <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Hidden}"/>
             </ObjectAnimationUsingKeyFrames>
@@ -93,29 +105,10 @@
         </DockPanel>
         
         <!--Main panel-->
-        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="576" Width="986">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <Frame x:Name="frameMain" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="576" Width="986"/>
 
-            <StackPanel Margin="0,5" Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBox Width="340" materialDesign:TextFieldAssist.HasOutlinedTextField="True" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" VerticalAlignment="Center">
-                    <materialDesign:HintAssist.Hint>
-                        <StackPanel Orientation="Horizontal" Margin="-2 0 0 0">
-                            <materialDesign:PackIcon Kind="Magnify" />
-                            <TextBlock>Szukaj</TextBlock>
-                        </StackPanel>
-                    </materialDesign:HintAssist.Hint>
-                </TextBox>
-            </StackPanel>
-            <ScrollViewer Grid.Row="1">
-                <Frame x:Name="frameMain"/>
-            </ScrollViewer>
-        </Grid>
-        
         <!--Left Panel-->
-        <Grid x:Name="leftPanel" Width="80" HorizontalAlignment="Left" Background="{StaticResource MaterialDesignBody}" MouseLeave="leftPanel_MouseLeave" MouseEnter="leftPanel_MouseEnter">
+        <Grid x:Name="leftPanel" Width="80" HorizontalAlignment="Left" Background="#212121" MouseLeave="leftPanel_MouseLeave" MouseEnter="leftPanel_MouseEnter">
             <Grid.RowDefinitions>
                 <RowDefinition Height="185" />
                 <RowDefinition Height="*" />
@@ -125,6 +118,15 @@
                 <Image Source="BasicShopLogo.png" Margin="5" RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"/>
             </Button>
             <StackPanel Grid.Row="1">
+                <TextBox x:Name="searchBox" Visibility="Collapsed" Width="auto" materialDesign:TextFieldAssist.HasOutlinedTextField="True" Foreground="Black" Background="LightGray" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" Margin="10,7,10,8">
+                <materialDesign:HintAssist.Hint>
+                    <StackPanel Background="Transparent" Orientation="Horizontal" Margin="-2 0 0 0">
+                        <materialDesign:PackIcon Kind="Magnify" />
+                        <TextBlock>Szukaj</TextBlock>
+                    </StackPanel>
+                </materialDesign:HintAssist.Hint>
+            </TextBox>
+            <materialDesign:PackIcon x:Name="iconSearch" Kind="Magnify" Width="54" Height="54" Padding="16,13" Foreground="{DynamicResource MaterialDesignFlatButtonClick}" Margin="15,0"/>
                 <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0" Padding="16,13">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
                         <materialDesign:PackIcon Kind="Home" Width="auto" Height="auto"/>

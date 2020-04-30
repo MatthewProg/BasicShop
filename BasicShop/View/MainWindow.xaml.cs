@@ -23,6 +23,7 @@ namespace BasicShop.View
         public MainWindow()
         {
             InitializeComponent();
+            frameMain.Content = new View.ProductList();
         }
 
         private void DockPanel_MouseDown(object sender, MouseButtonEventArgs e)
@@ -32,11 +33,16 @@ namespace BasicShop.View
 
         private void leftPanel_MouseLeave(object sender, MouseEventArgs e)
         {
+            iconSearch.Visibility = Visibility.Visible;
+            searchBox.Visibility = Visibility.Collapsed;
+            leftPanel.Focus();
         }
 
         private void leftPanel_MouseEnter(object sender, MouseEventArgs e)
         {
-
+            iconSearch.Visibility = Visibility.Collapsed;
+            searchBox.Visibility = Visibility.Visible;
+            searchBox.Focus();
         }
     }
 }
