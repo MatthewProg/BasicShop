@@ -1,5 +1,6 @@
 ﻿using BasicShop.Model;
 using BasicShop.ViewModel;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,8 +28,8 @@ namespace BasicShop.View
         public ProductList()
         {
             InitializeComponent();
-
-            var ok = new SampleViewModel()
+            this.DataContext = new ProductListViewModel();
+            /*var ok = new SampleViewModel()
             {
                 Code = "Code",
                 Description = "Desc",
@@ -49,15 +50,28 @@ namespace BasicShop.View
                 },ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok
             };
 
-            this.DataContext = new CheckListViewModel()
+            var lis = new List<CheckListModel>()
             {
-                Checks = new ObservableCollection<CheckListModel>()
-                {
-                    new CheckListModel() { Name = "Test1" },
-                    new CheckListModel() { Name = "Test2" },
-                    new CheckListModel() { Name = "Test3" }
-                }
+                new CheckListModel() { Name = "Test1" },
+                new CheckListModel() { Name = "Test2" },
+                new CheckListModel() { Name = "Test3" }
             };
+
+            BasicShop.Model.ProductListModel model = new Model.ProductListModel();
+            string testString = "Power:123;Height [mm]:9;";
+            model.SetSpecification(testString);*/
+
+            /*filtersPanel.DataContext = new ProductListViewModel()
+            {
+                SimpleFilters = new ObservableCollection<CheckListViewModel>()
+                {
+                    new CheckListViewModel(lis, "Test"),
+                    new CheckListViewModel(lis, "Test2"),
+                    new CheckListViewModel(lis, "Ojk"),
+                    new CheckListViewModel(lis, "Dziala")
+                }
+            };*/
+            //filtersPanel.DataContext = new CheckListViewModel(lis, "Test");
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -68,6 +82,21 @@ namespace BasicShop.View
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private void Button_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            DrawerHost.CloseDrawerCommand.Execute(Dock.Left, leftDrawer);
         }
     }
 }

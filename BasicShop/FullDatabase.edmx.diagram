@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0b221158e80f43719ee8c2cd6baac426" Name="Diagram1">
+        <EntityTypeShape EntityType="shopModel.account" Width="1.5" PointX="9.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.address" Width="1.5" PointX="5.25" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.category" Width="1.5" PointX="12.75" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.city" Width="1.5" PointX="3" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.country" Width="1.5" PointX="0.75" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.feedback" Width="1.5" PointX="12" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.order" Width="1.5" PointX="7.5" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.order_product" Width="1.5" PointX="9.75" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.person" Width="1.5" PointX="7.5" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.position" Width="1.5" PointX="7.5" PointY="17.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.producent" Width="1.5" PointX="12.75" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.product" Width="1.5" PointX="15" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.role" Width="1.5" PointX="7.5" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.staff" Width="1.5" PointX="9.75" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.store" Width="1.5" PointX="7.5" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.warehouse" Width="1.5" PointX="17.25" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="shopModel.product_image" Width="1.5" PointX="17.25" PointY="13.5" IsExpanded="true" />
+        <AssociationConnector Association="shopModel.FK_account_person" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_account_role" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_feedback_account" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_order_account" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_address_city" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_order_address" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_person_address" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_store_address" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_category_parentcategory" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_product_category" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_city_country" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_feedback_product" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_order_product_order" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_order_product_product" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_staff_person" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_staff_position" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_product_producent" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_product_image_product" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_warehouse_product" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_staff_store" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.FK_warehouse_store" ManuallyRouted="false" />
+        <AssociationConnector Association="shopModel.whishlist" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

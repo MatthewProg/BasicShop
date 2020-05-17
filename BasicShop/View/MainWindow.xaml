@@ -115,7 +115,7 @@
             </Grid.RowDefinitions>
             
             <Button Grid.Row="0" VerticalAlignment="Top" Background="Transparent" Width="auto" Height="auto" Padding="3" BorderThickness="0" Margin="0,15,0,0">
-                <Image Source="BasicShopLogo.png" Margin="5" RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"/>
+                <Image Source="/BasicShop;component/Resources/img/BasicShopLogo.png" Margin="5" RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"/>
             </Button>
             <StackPanel Grid.Row="1">
                 <TextBox x:Name="searchBox" Visibility="Collapsed" Width="auto" materialDesign:TextFieldAssist.HasOutlinedTextField="True" Foreground="Black" Background="LightGray" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" Margin="10,7,10,8">

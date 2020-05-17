@@ -1,0 +1,1389 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="shopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="account_id" />
+          </Key>
+          <Property Name="account_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="person_id" Type="int" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="password" Type="char" MaxLength="432" Nullable="false" />
+          <Property Name="role_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="address">
+          <Key>
+            <PropertyRef Name="address_id" />
+          </Key>
+          <Property Name="address_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="city_id" Type="int" Nullable="false" />
+          <Property Name="road" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="house" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="flat" Type="varchar" MaxLength="10" />
+          <Property Name="zip_code" Type="char" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="category">
+          <Key>
+            <PropertyRef Name="category_id" />
+          </Key>
+          <Property Name="category_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="parent_category" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="city">
+          <Key>
+            <PropertyRef Name="city_id" />
+          </Key>
+          <Property Name="city_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="country_id" Type="int" Nullable="false" />
+          <Property Name="city" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="country">
+          <Key>
+            <PropertyRef Name="country_id" />
+          </Key>
+          <Property Name="country_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="country" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="feedback">
+          <Key>
+            <PropertyRef Name="feedback_id" />
+          </Key>
+          <Property Name="feedback_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="product_id" Type="int" Nullable="false" />
+          <Property Name="account_id" Type="int" Nullable="false" />
+          <Property Name="rating" Type="float" Nullable="false" />
+          <Property Name="comment" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="order">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="order_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="account_id" Type="int" Nullable="false" />
+          <Property Name="address_id" Type="int" Nullable="false" />
+          <Property Name="status" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="order_product">
+          <Key>
+            <PropertyRef Name="order_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="order_id" Type="int" Nullable="false" />
+          <Property Name="product_id" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="person">
+          <Key>
+            <PropertyRef Name="person_id" />
+          </Key>
+          <Property Name="person_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="surname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="address_id" Type="int" />
+          <Property Name="phone" Type="varchar" MaxLength="12" />
+          <Property Name="email" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="position">
+          <Key>
+            <PropertyRef Name="position_id" />
+          </Key>
+          <Property Name="position_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="payment" Type="money" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="producent">
+          <Key>
+            <PropertyRef Name="producent_id" />
+          </Key>
+          <Property Name="producent_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="product">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="category_id" Type="int" />
+          <Property Name="producent_id" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="price" Type="money" Nullable="false" />
+          <Property Name="specification" Type="varchar(max)" />
+          <Property Name="description" Type="varchar(max)" />
+          <Property Name="thumbnail" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'shop_database.dbo.product_image' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="product_image">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="int" Nullable="false" />
+          <Property Name="image_src" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="role">
+          <Key>
+            <PropertyRef Name="role_id" />
+          </Key>
+          <Property Name="role_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="type" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="staff">
+          <Key>
+            <PropertyRef Name="staff_id" />
+          </Key>
+          <Property Name="staff_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="store_id" Type="int" Nullable="false" />
+          <Property Name="position_id" Type="int" Nullable="false" />
+          <Property Name="person_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="store">
+          <Key>
+            <PropertyRef Name="store_id" />
+          </Key>
+          <Property Name="store_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="address_id" Type="int" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" />
+          <Property Name="phone" Type="varchar" MaxLength="12" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="warehouse">
+          <Key>
+            <PropertyRef Name="product_id" />
+            <PropertyRef Name="store_id" />
+          </Key>
+          <Property Name="product_id" Type="int" Nullable="false" />
+          <Property Name="store_id" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="whishlist">
+          <Key>
+            <PropertyRef Name="account_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="account_id" Type="int" Nullable="false" />
+          <Property Name="product_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_account_person">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="person_id" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_account_role">
+          <End Role="role" Type="Self.role" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="role">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_address_city">
+          <End Role="city" Type="Self.city" Multiplicity="1" />
+          <End Role="address" Type="Self.address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="city">
+              <PropertyRef Name="city_id" />
+            </Principal>
+            <Dependent Role="address">
+              <PropertyRef Name="city_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_category_parentcategory">
+          <End Role="category" Type="Self.category" Multiplicity="0..1" />
+          <End Role="category1" Type="Self.category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="category">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="category1">
+              <PropertyRef Name="parent_category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_city_country">
+          <End Role="country" Type="Self.country" Multiplicity="1" />
+          <End Role="city" Type="Self.city" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="country">
+              <PropertyRef Name="country_id" />
+            </Principal>
+            <Dependent Role="city">
+              <PropertyRef Name="country_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_feedback_account">
+          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="feedback" Type="Self.feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="feedback">
+              <PropertyRef Name="account_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_feedback_product">
+          <End Role="product" Type="Self.product" Multiplicity="1" />
+          <End Role="feedback" Type="Self.feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="feedback">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_account">
+          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="order" Type="Self.order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="order">
+              <PropertyRef Name="account_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_address">
+          <End Role="address" Type="Self.address" Multiplicity="1" />
+          <End Role="order" Type="Self.order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="address">
+              <PropertyRef Name="address_id" />
+            </Principal>
+            <Dependent Role="order">
+              <PropertyRef Name="address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_product_order">
+          <End Role="order" Type="Self.order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="order_product" Type="Self.order_product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="order">
+              <PropertyRef Name="order_id" />
+            </Principal>
+            <Dependent Role="order_product">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_product_product">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="order_product" Type="Self.order_product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="order_product">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_person_address">
+          <End Role="address" Type="Self.address" Multiplicity="0..1" />
+          <End Role="person" Type="Self.person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="address">
+              <PropertyRef Name="address_id" />
+            </Principal>
+            <Dependent Role="person">
+              <PropertyRef Name="address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_product_category">
+          <End Role="category" Type="Self.category" Multiplicity="0..1" />
+          <End Role="product" Type="Self.product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="category">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="product">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_product_image_product">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="product_image" Type="Self.product_image" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="product_image">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_product_producent">
+          <End Role="producent" Type="Self.producent" Multiplicity="0..1" />
+          <End Role="product" Type="Self.product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="producent">
+              <PropertyRef Name="producent_id" />
+            </Principal>
+            <Dependent Role="product">
+              <PropertyRef Name="producent_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_staff_person">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="staff" Type="Self.staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="person_id" />
+            </Principal>
+            <Dependent Role="staff">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_staff_position">
+          <End Role="position" Type="Self.position" Multiplicity="1" />
+          <End Role="staff" Type="Self.staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position">
+              <PropertyRef Name="position_id" />
+            </Principal>
+            <Dependent Role="staff">
+              <PropertyRef Name="position_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_staff_store">
+          <End Role="store" Type="Self.store" Multiplicity="1" />
+          <End Role="staff" Type="Self.staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="store">
+              <PropertyRef Name="store_id" />
+            </Principal>
+            <Dependent Role="staff">
+              <PropertyRef Name="store_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_store_address">
+          <End Role="address" Type="Self.address" Multiplicity="1" />
+          <End Role="store" Type="Self.store" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="address">
+              <PropertyRef Name="address_id" />
+            </Principal>
+            <Dependent Role="store">
+              <PropertyRef Name="address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_warehouse_product">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="warehouse" Type="Self.warehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="warehouse">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_warehouse_store">
+          <End Role="store" Type="Self.store" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="warehouse" Type="Self.warehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="store">
+              <PropertyRef Name="store_id" />
+            </Principal>
+            <Dependent Role="warehouse">
+              <PropertyRef Name="store_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_whishlist_account">
+          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="whishlist" Type="Self.whishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="whishlist">
+              <PropertyRef Name="account_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_whishlist_product">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="whishlist" Type="Self.whishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="whishlist">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="shopModelStoreContainer">
+          <EntitySet Name="account" EntityType="Self.account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="address" EntityType="Self.address" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="category" EntityType="Self.category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="city" EntityType="Self.city" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="country" EntityType="Self.country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="feedback" EntityType="Self.feedback" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="order" EntityType="Self.order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="order_product" EntityType="Self.order_product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="person" EntityType="Self.person" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="position" EntityType="Self.position" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="producent" EntityType="Self.producent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="product" EntityType="Self.product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="role" EntityType="Self.role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="staff" EntityType="Self.staff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="store" EntityType="Self.store" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="warehouse" EntityType="Self.warehouse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="whishlist" EntityType="Self.whishlist" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="product_image" EntityType="Self.product_image" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [product_image].[product_id] AS [product_id], 
+    [product_image].[image_src] AS [image_src]
+    FROM [dbo].[product_image] AS [product_image]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_account_person" Association="Self.FK_account_person">
+            <End Role="person" EntitySet="person" />
+            <End Role="account" EntitySet="account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_account_role" Association="Self.FK_account_role">
+            <End Role="role" EntitySet="role" />
+            <End Role="account" EntitySet="account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_address_city" Association="Self.FK_address_city">
+            <End Role="city" EntitySet="city" />
+            <End Role="address" EntitySet="address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_category_parentcategory" Association="Self.FK_category_parentcategory">
+            <End Role="category" EntitySet="category" />
+            <End Role="category1" EntitySet="category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_city_country" Association="Self.FK_city_country">
+            <End Role="country" EntitySet="country" />
+            <End Role="city" EntitySet="city" />
+          </AssociationSet>
+          <AssociationSet Name="FK_feedback_account" Association="Self.FK_feedback_account">
+            <End Role="account" EntitySet="account" />
+            <End Role="feedback" EntitySet="feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK_feedback_product" Association="Self.FK_feedback_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="feedback" EntitySet="feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_account" Association="Self.FK_order_account">
+            <End Role="account" EntitySet="account" />
+            <End Role="order" EntitySet="order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_address" Association="Self.FK_order_address">
+            <End Role="address" EntitySet="address" />
+            <End Role="order" EntitySet="order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_product_order" Association="Self.FK_order_product_order">
+            <End Role="order" EntitySet="order" />
+            <End Role="order_product" EntitySet="order_product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_product_product" Association="Self.FK_order_product_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="order_product" EntitySet="order_product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_person_address" Association="Self.FK_person_address">
+            <End Role="address" EntitySet="address" />
+            <End Role="person" EntitySet="person" />
+          </AssociationSet>
+          <AssociationSet Name="FK_product_category" Association="Self.FK_product_category">
+            <End Role="category" EntitySet="category" />
+            <End Role="product" EntitySet="product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_product_image_product" Association="Self.FK_product_image_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="product_image" EntitySet="product_image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_product_producent" Association="Self.FK_product_producent">
+            <End Role="producent" EntitySet="producent" />
+            <End Role="product" EntitySet="product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_staff_person" Association="Self.FK_staff_person">
+            <End Role="person" EntitySet="person" />
+            <End Role="staff" EntitySet="staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_staff_position" Association="Self.FK_staff_position">
+            <End Role="position" EntitySet="position" />
+            <End Role="staff" EntitySet="staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_staff_store" Association="Self.FK_staff_store">
+            <End Role="store" EntitySet="store" />
+            <End Role="staff" EntitySet="staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_store_address" Association="Self.FK_store_address">
+            <End Role="address" EntitySet="address" />
+            <End Role="store" EntitySet="store" />
+          </AssociationSet>
+          <AssociationSet Name="FK_warehouse_product" Association="Self.FK_warehouse_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="warehouse" EntitySet="warehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_warehouse_store" Association="Self.FK_warehouse_store">
+            <End Role="store" EntitySet="store" />
+            <End Role="warehouse" EntitySet="warehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_whishlist_account" Association="Self.FK_whishlist_account">
+            <End Role="account" EntitySet="account" />
+            <End Role="whishlist" EntitySet="whishlist" />
+          </AssociationSet>
+          <AssociationSet Name="FK_whishlist_product" Association="Self.FK_whishlist_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="whishlist" EntitySet="whishlist" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="shopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="account_id" />
+          </Key>
+          <Property Name="account_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="person_id" Type="Int32" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="432" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="role_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="person" Relationship="Self.FK_account_person" FromRole="account" ToRole="person" />
+          <NavigationProperty Name="role" Relationship="Self.FK_account_role" FromRole="account" ToRole="role" />
+          <NavigationProperty Name="feedback" Relationship="Self.FK_feedback_account" FromRole="account" ToRole="feedback" />
+          <NavigationProperty Name="order" Relationship="Self.FK_order_account" FromRole="account" ToRole="order" />
+          <NavigationProperty Name="product" Relationship="Self.whishlist" FromRole="account" ToRole="product" />
+        </EntityType>
+        <EntityType Name="address">
+          <Key>
+            <PropertyRef Name="address_id" />
+          </Key>
+          <Property Name="address_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="city_id" Type="Int32" Nullable="false" />
+          <Property Name="road" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="house" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="flat" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="zip_code" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="city" Relationship="Self.FK_address_city" FromRole="address" ToRole="city" />
+          <NavigationProperty Name="order" Relationship="Self.FK_order_address" FromRole="address" ToRole="order" />
+          <NavigationProperty Name="person" Relationship="Self.FK_person_address" FromRole="address" ToRole="person" />
+          <NavigationProperty Name="store" Relationship="Self.FK_store_address" FromRole="address" ToRole="store" />
+        </EntityType>
+        <EntityType Name="category">
+          <Key>
+            <PropertyRef Name="category_id" />
+          </Key>
+          <Property Name="category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="parent_category" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="category1" Relationship="Self.FK_category_parentcategory" FromRole="category" ToRole="category1" />
+          <NavigationProperty Name="category2" Relationship="Self.FK_category_parentcategory" FromRole="category1" ToRole="category" />
+          <NavigationProperty Name="product" Relationship="Self.FK_product_category" FromRole="category" ToRole="product" />
+        </EntityType>
+        <EntityType Name="city">
+          <Key>
+            <PropertyRef Name="city_id" />
+          </Key>
+          <Property Name="city_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="country_id" Type="Int32" Nullable="false" />
+          <Property Name="city1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="address" Relationship="Self.FK_address_city" FromRole="city" ToRole="address" />
+          <NavigationProperty Name="country" Relationship="Self.FK_city_country" FromRole="city" ToRole="country" />
+        </EntityType>
+        <EntityType Name="country">
+          <Key>
+            <PropertyRef Name="country_id" />
+          </Key>
+          <Property Name="country_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="country1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="city" Relationship="Self.FK_city_country" FromRole="country" ToRole="city" />
+        </EntityType>
+        <EntityType Name="feedback">
+          <Key>
+            <PropertyRef Name="feedback_id" />
+          </Key>
+          <Property Name="feedback_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="product_id" Type="Int32" Nullable="false" />
+          <Property Name="account_id" Type="Int32" Nullable="false" />
+          <Property Name="rating" Type="Double" Nullable="false" />
+          <Property Name="comment" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="account" Relationship="Self.FK_feedback_account" FromRole="feedback" ToRole="account" />
+          <NavigationProperty Name="product" Relationship="Self.FK_feedback_product" FromRole="feedback" ToRole="product" />
+        </EntityType>
+        <EntityType Name="order">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="order_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="account_id" Type="Int32" Nullable="false" />
+          <Property Name="address_id" Type="Int32" Nullable="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="account" Relationship="Self.FK_order_account" FromRole="order" ToRole="account" />
+          <NavigationProperty Name="address" Relationship="Self.FK_order_address" FromRole="order" ToRole="address" />
+          <NavigationProperty Name="order_product" Relationship="Self.FK_order_product_order" FromRole="order" ToRole="order_product" />
+        </EntityType>
+        <EntityType Name="order_product">
+          <Key>
+            <PropertyRef Name="order_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="order_id" Type="Int32" Nullable="false" />
+          <Property Name="product_id" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="order" Relationship="Self.FK_order_product_order" FromRole="order_product" ToRole="order" />
+          <NavigationProperty Name="product" Relationship="Self.FK_order_product_product" FromRole="order_product" ToRole="product" />
+        </EntityType>
+        <EntityType Name="person">
+          <Key>
+            <PropertyRef Name="person_id" />
+          </Key>
+          <Property Name="person_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="address_id" Type="Int32" />
+          <Property Name="phone" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="account" Relationship="Self.FK_account_person" FromRole="person" ToRole="account" />
+          <NavigationProperty Name="address" Relationship="Self.FK_person_address" FromRole="person" ToRole="address" />
+          <NavigationProperty Name="staff" Relationship="Self.FK_staff_person" FromRole="person" ToRole="staff" />
+        </EntityType>
+        <EntityType Name="position">
+          <Key>
+            <PropertyRef Name="position_id" />
+          </Key>
+          <Property Name="position_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="payment" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="staff" Relationship="Self.FK_staff_position" FromRole="position" ToRole="staff" />
+        </EntityType>
+        <EntityType Name="producent">
+          <Key>
+            <PropertyRef Name="producent_id" />
+          </Key>
+          <Property Name="producent_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="product" Relationship="Self.FK_product_producent" FromRole="producent" ToRole="product" />
+        </EntityType>
+        <EntityType Name="product">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="category_id" Type="Int32" />
+          <Property Name="producent_id" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="specification" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="thumbnail" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="category" Relationship="Self.FK_product_category" FromRole="product" ToRole="category" />
+          <NavigationProperty Name="feedback" Relationship="Self.FK_feedback_product" FromRole="product" ToRole="feedback" />
+          <NavigationProperty Name="order_product" Relationship="Self.FK_order_product_product" FromRole="product" ToRole="order_product" />
+          <NavigationProperty Name="producent" Relationship="Self.FK_product_producent" FromRole="product" ToRole="producent" />
+          <NavigationProperty Name="product_image" Relationship="Self.FK_product_image_product" FromRole="product" ToRole="product_image" />
+          <NavigationProperty Name="warehouse" Relationship="Self.FK_warehouse_product" FromRole="product" ToRole="warehouse" />
+          <NavigationProperty Name="account" Relationship="Self.whishlist" FromRole="product" ToRole="account" />
+        </EntityType>
+        <EntityType Name="role">
+          <Key>
+            <PropertyRef Name="role_id" />
+          </Key>
+          <Property Name="role_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="type" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="account" Relationship="Self.FK_account_role" FromRole="role" ToRole="account" />
+        </EntityType>
+        <EntityType Name="staff">
+          <Key>
+            <PropertyRef Name="staff_id" />
+          </Key>
+          <Property Name="staff_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="store_id" Type="Int32" Nullable="false" />
+          <Property Name="position_id" Type="Int32" Nullable="false" />
+          <Property Name="person_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="person" Relationship="Self.FK_staff_person" FromRole="staff" ToRole="person" />
+          <NavigationProperty Name="position" Relationship="Self.FK_staff_position" FromRole="staff" ToRole="position" />
+          <NavigationProperty Name="store" Relationship="Self.FK_staff_store" FromRole="staff" ToRole="store" />
+        </EntityType>
+        <EntityType Name="store">
+          <Key>
+            <PropertyRef Name="store_id" />
+          </Key>
+          <Property Name="store_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="address_id" Type="Int32" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="address" Relationship="Self.FK_store_address" FromRole="store" ToRole="address" />
+          <NavigationProperty Name="staff" Relationship="Self.FK_staff_store" FromRole="store" ToRole="staff" />
+          <NavigationProperty Name="warehouse" Relationship="Self.FK_warehouse_store" FromRole="store" ToRole="warehouse" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="warehouse">
+          <Key>
+            <PropertyRef Name="product_id" />
+            <PropertyRef Name="store_id" />
+          </Key>
+          <Property Name="product_id" Type="Int32" Nullable="false" />
+          <Property Name="store_id" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="product" Relationship="Self.FK_warehouse_product" FromRole="warehouse" ToRole="product" />
+          <NavigationProperty Name="store" Relationship="Self.FK_warehouse_store" FromRole="warehouse" ToRole="store" />
+        </EntityType>
+        <EntityType Name="product_image">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="Int32" Nullable="false" />
+          <Property Name="image_src" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="product" Relationship="Self.FK_product_image_product" FromRole="product_image" ToRole="product" />
+        </EntityType>
+        <Association Name="FK_account_person">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="person_id" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_account_role">
+          <End Role="role" Type="Self.role" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="role">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_feedback_account">
+          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="feedback" Type="Self.feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="feedback">
+              <PropertyRef Name="account_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_account">
+          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="order" Type="Self.order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="order">
+              <PropertyRef Name="account_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_address_city">
+          <End Role="city" Type="Self.city" Multiplicity="1" />
+          <End Role="address" Type="Self.address" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="city">
+              <PropertyRef Name="city_id" />
+            </Principal>
+            <Dependent Role="address">
+              <PropertyRef Name="city_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_address">
+          <End Role="address" Type="Self.address" Multiplicity="1" />
+          <End Role="order" Type="Self.order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="address">
+              <PropertyRef Name="address_id" />
+            </Principal>
+            <Dependent Role="order">
+              <PropertyRef Name="address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_person_address">
+          <End Role="address" Type="Self.address" Multiplicity="0..1" />
+          <End Role="person" Type="Self.person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="address">
+              <PropertyRef Name="address_id" />
+            </Principal>
+            <Dependent Role="person">
+              <PropertyRef Name="address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_store_address">
+          <End Role="address" Type="Self.address" Multiplicity="1" />
+          <End Role="store" Type="Self.store" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="address">
+              <PropertyRef Name="address_id" />
+            </Principal>
+            <Dependent Role="store">
+              <PropertyRef Name="address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_category_parentcategory">
+          <End Role="category" Type="Self.category" Multiplicity="0..1" />
+          <End Role="category1" Type="Self.category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="category">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="category1">
+              <PropertyRef Name="parent_category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_product_category">
+          <End Role="category" Type="Self.category" Multiplicity="0..1" />
+          <End Role="product" Type="Self.product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="category">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="product">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_city_country">
+          <End Role="country" Type="Self.country" Multiplicity="1" />
+          <End Role="city" Type="Self.city" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="country">
+              <PropertyRef Name="country_id" />
+            </Principal>
+            <Dependent Role="city">
+              <PropertyRef Name="country_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_feedback_product">
+          <End Role="product" Type="Self.product" Multiplicity="1" />
+          <End Role="feedback" Type="Self.feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="feedback">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_product_order">
+          <End Role="order" Type="Self.order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="order_product" Type="Self.order_product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="order">
+              <PropertyRef Name="order_id" />
+            </Principal>
+            <Dependent Role="order_product">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_order_product_product">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="order_product" Type="Self.order_product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="order_product">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_staff_person">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="staff" Type="Self.staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="person_id" />
+            </Principal>
+            <Dependent Role="staff">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_staff_position">
+          <End Role="position" Type="Self.position" Multiplicity="1" />
+          <End Role="staff" Type="Self.staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position">
+              <PropertyRef Name="position_id" />
+            </Principal>
+            <Dependent Role="staff">
+              <PropertyRef Name="position_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_product_producent">
+          <End Role="producent" Type="Self.producent" Multiplicity="0..1" />
+          <End Role="product" Type="Self.product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="producent">
+              <PropertyRef Name="producent_id" />
+            </Principal>
+            <Dependent Role="product">
+              <PropertyRef Name="producent_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_product_image_product">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="product_image" Type="Self.product_image" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="product_image">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_warehouse_product">
+          <End Role="product" Type="Self.product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="warehouse" Type="Self.warehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="warehouse">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_staff_store">
+          <End Role="store" Type="Self.store" Multiplicity="1" />
+          <End Role="staff" Type="Self.staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="store">
+              <PropertyRef Name="store_id" />
+            </Principal>
+            <Dependent Role="staff">
+              <PropertyRef Name="store_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_warehouse_store">
+          <End Role="store" Type="Self.store" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="warehouse" Type="Self.warehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="store">
+              <PropertyRef Name="store_id" />
+            </Principal>
+            <Dependent Role="warehouse">
+              <PropertyRef Name="store_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="whishlist">
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <End Role="product" Type="Self.product" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="shopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="account" EntityType="Self.account" />
+          <EntitySet Name="address" EntityType="Self.address" />
+          <EntitySet Name="category" EntityType="Self.category" />
+          <EntitySet Name="city" EntityType="Self.city" />
+          <EntitySet Name="country" EntityType="Self.country" />
+          <EntitySet Name="feedback" EntityType="Self.feedback" />
+          <EntitySet Name="order" EntityType="Self.order" />
+          <EntitySet Name="order_product" EntityType="Self.order_product" />
+          <EntitySet Name="person" EntityType="Self.person" />
+          <EntitySet Name="position" EntityType="Self.position" />
+          <EntitySet Name="producent" EntityType="Self.producent" />
+          <EntitySet Name="product" EntityType="Self.product" />
+          <EntitySet Name="role" EntityType="Self.role" />
+          <EntitySet Name="staff" EntityType="Self.staff" />
+          <EntitySet Name="store" EntityType="Self.store" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="warehouse" EntityType="Self.warehouse" />
+          <EntitySet Name="product_image" EntityType="Self.product_image" />
+          <AssociationSet Name="FK_account_person" Association="Self.FK_account_person">
+            <End Role="person" EntitySet="person" />
+            <End Role="account" EntitySet="account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_account_role" Association="Self.FK_account_role">
+            <End Role="role" EntitySet="role" />
+            <End Role="account" EntitySet="account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_feedback_account" Association="Self.FK_feedback_account">
+            <End Role="account" EntitySet="account" />
+            <End Role="feedback" EntitySet="feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_account" Association="Self.FK_order_account">
+            <End Role="account" EntitySet="account" />
+            <End Role="order" EntitySet="order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_address_city" Association="Self.FK_address_city">
+            <End Role="city" EntitySet="city" />
+            <End Role="address" EntitySet="address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_address" Association="Self.FK_order_address">
+            <End Role="address" EntitySet="address" />
+            <End Role="order" EntitySet="order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_person_address" Association="Self.FK_person_address">
+            <End Role="address" EntitySet="address" />
+            <End Role="person" EntitySet="person" />
+          </AssociationSet>
+          <AssociationSet Name="FK_store_address" Association="Self.FK_store_address">
+            <End Role="address" EntitySet="address" />
+            <End Role="store" EntitySet="store" />
+          </AssociationSet>
+          <AssociationSet Name="FK_category_parentcategory" Association="Self.FK_category_parentcategory">
+            <End Role="category" EntitySet="category" />
+            <End Role="category1" EntitySet="category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_product_category" Association="Self.FK_product_category">
+            <End Role="category" EntitySet="category" />
+            <End Role="product" EntitySet="product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_city_country" Association="Self.FK_city_country">
+            <End Role="country" EntitySet="country" />
+            <End Role="city" EntitySet="city" />
+          </AssociationSet>
+          <AssociationSet Name="FK_feedback_product" Association="Self.FK_feedback_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="feedback" EntitySet="feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_product_order" Association="Self.FK_order_product_order">
+            <End Role="order" EntitySet="order" />
+            <End Role="order_product" EntitySet="order_product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_order_product_product" Association="Self.FK_order_product_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="order_product" EntitySet="order_product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_staff_person" Association="Self.FK_staff_person">
+            <End Role="person" EntitySet="person" />
+            <End Role="staff" EntitySet="staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_staff_position" Association="Self.FK_staff_position">
+            <End Role="position" EntitySet="position" />
+            <End Role="staff" EntitySet="staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_product_producent" Association="Self.FK_product_producent">
+            <End Role="producent" EntitySet="producent" />
+            <End Role="product" EntitySet="product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_product_image_product" Association="Self.FK_product_image_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="product_image" EntitySet="product_image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_warehouse_product" Association="Self.FK_warehouse_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="warehouse" EntitySet="warehouse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_staff_store" Association="Self.FK_staff_store">
+            <End Role="store" EntitySet="store" />
+            <End Role="staff" EntitySet="staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_warehouse_store" Association="Self.FK_warehouse_store">
+            <End Role="store" EntitySet="store" />
+            <End Role="warehouse" EntitySet="warehouse" />
+          </AssociationSet>
+          <AssociationSet Name="whishlist" Association="Self.whishlist">
+            <End Role="account" EntitySet="account" />
+            <End Role="product" EntitySet="product" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="shopModelStoreContainer" CdmEntityContainer="shopEntities">
+          <EntitySetMapping Name="account">
+            <EntityTypeMapping TypeName="shopModel.account">
+              <MappingFragment StoreEntitySet="account">
+                <ScalarProperty Name="account_id" ColumnName="account_id" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="address">
+            <EntityTypeMapping TypeName="shopModel.address">
+              <MappingFragment StoreEntitySet="address">
+                <ScalarProperty Name="address_id" ColumnName="address_id" />
+                <ScalarProperty Name="city_id" ColumnName="city_id" />
+                <ScalarProperty Name="road" ColumnName="road" />
+                <ScalarProperty Name="house" ColumnName="house" />
+                <ScalarProperty Name="flat" ColumnName="flat" />
+                <ScalarProperty Name="zip_code" ColumnName="zip_code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="category">
+            <EntityTypeMapping TypeName="shopModel.category">
+              <MappingFragment StoreEntitySet="category">
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="parent_category" ColumnName="parent_category" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="city">
+            <EntityTypeMapping TypeName="shopModel.city">
+              <MappingFragment StoreEntitySet="city">
+                <ScalarProperty Name="city_id" ColumnName="city_id" />
+                <ScalarProperty Name="country_id" ColumnName="country_id" />
+                <ScalarProperty Name="city1" ColumnName="city" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="country">
+            <EntityTypeMapping TypeName="shopModel.country">
+              <MappingFragment StoreEntitySet="country">
+                <ScalarProperty Name="country_id" ColumnName="country_id" />
+                <ScalarProperty Name="country1" ColumnName="country" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="feedback">
+            <EntityTypeMapping TypeName="shopModel.feedback">
+              <MappingFragment StoreEntitySet="feedback">
+                <ScalarProperty Name="feedback_id" ColumnName="feedback_id" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="account_id" ColumnName="account_id" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="order">
+            <EntityTypeMapping TypeName="shopModel.order">
+              <MappingFragment StoreEntitySet="order">
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+                <ScalarProperty Name="account_id" ColumnName="account_id" />
+                <ScalarProperty Name="address_id" ColumnName="address_id" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="order_product">
+            <EntityTypeMapping TypeName="shopModel.order_product">
+              <MappingFragment StoreEntitySet="order_product">
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="person">
+            <EntityTypeMapping TypeName="shopModel.person">
+              <MappingFragment StoreEntitySet="person">
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="address_id" ColumnName="address_id" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="position">
+            <EntityTypeMapping TypeName="shopModel.position">
+              <MappingFragment StoreEntitySet="position">
+                <ScalarProperty Name="position_id" ColumnName="position_id" />
+                <ScalarProperty Name="payment" ColumnName="payment" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="producent">
+            <EntityTypeMapping TypeName="shopModel.producent">
+              <MappingFragment StoreEntitySet="producent">
+                <ScalarProperty Name="producent_id" ColumnName="producent_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="product">
+            <EntityTypeMapping TypeName="shopModel.product">
+              <MappingFragment StoreEntitySet="product">
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="producent_id" ColumnName="producent_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="specification" ColumnName="specification" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="thumbnail" ColumnName="thumbnail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="role">
+            <EntityTypeMapping TypeName="shopModel.role">
+              <MappingFragment StoreEntitySet="role">
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="staff">
+            <EntityTypeMapping TypeName="shopModel.staff">
+              <MappingFragment StoreEntitySet="staff">
+                <ScalarProperty Name="staff_id" ColumnName="staff_id" />
+                <ScalarProperty Name="store_id" ColumnName="store_id" />
+                <ScalarProperty Name="position_id" ColumnName="position_id" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="store">
+            <EntityTypeMapping TypeName="shopModel.store">
+              <MappingFragment StoreEntitySet="store">
+                <ScalarProperty Name="store_id" ColumnName="store_id" />
+                <ScalarProperty Name="address_id" ColumnName="address_id" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="shopModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="warehouse">
+            <EntityTypeMapping TypeName="shopModel.warehouse">
+              <MappingFragment StoreEntitySet="warehouse">
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="store_id" ColumnName="store_id" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="product_image">
+            <EntityTypeMapping TypeName="shopModel.product_image">
+              <MappingFragment StoreEntitySet="product_image">
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="image_src" ColumnName="image_src" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="whishlist" TypeName="shopModel.whishlist" StoreEntitySet="whishlist">
+            <EndProperty Name="account">
+              <ScalarProperty Name="account_id" ColumnName="account_id" />
+            </EndProperty>
+            <EndProperty Name="product">
+              <ScalarProperty Name="product_id" ColumnName="product_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
