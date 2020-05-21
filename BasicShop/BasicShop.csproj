@@ -140,6 +140,7 @@
     <Compile Include="Model\CheckListModel.cs" />
     <Compile Include="Model\ComboBoxItemModel.cs" />
     <Compile Include="Model\ProductListModel.cs" />
+    <Compile Include="Model\SimpleListModel.cs" />
     <Compile Include="Model\SortingCategoryModel.cs" />
     <Compile Include="Model\SpecifitationModel.cs" />
     <Compile Include="order.cs">
@@ -176,7 +177,9 @@
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\CheckListViewModel.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ProductListViewModel.cs" />
+    <Compile Include="ViewModel\SimpleListViewModel.cs" />
     <Compile Include="View\ProductList.xaml.cs">
       <DependentUpon>ProductList.xaml</DependentUpon>
     </Compile>

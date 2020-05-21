@@ -1,18 +1,23 @@
 ﻿using BasicShop.Commands;
 using BasicShop.Model;
 using MaterialDesignThemes.Wpf;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.Remoting.Contexts;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Threading;
 
 namespace BasicShop.ViewModel
 {
@@ -25,8 +30,60 @@ namespace BasicShop.ViewModel
         private string _selectedSortingName;
         private string _selectedShowingNumber;
         private Visibility _loadingScreen;
+        private string _currentSearch;
+        private Visibility _searchVisibility;
+        private ObservableCollection<Tuple<int, SimpleListModel>> _navList;
+        private uint? _currentCategoryId;
 
+        public ObservableCollection<Tuple<int, SimpleListModel>> NavList
+        {
+            get { return _navList; }
+            set
+            {
+                if (value == _navList) return;
 
+                _navList = value;
+                OnPropertyChanged("NavList");
+            }
+        }
+        public string AdditionalInfoText { get; private set; }
+        public Visibility AdditionalInfoVisibility { get; private set; }
+        public uint? CurrentCategoryId
+        {
+            get { return _currentCategoryId; }
+            set
+            {
+                if (value == _currentCategoryId) return;
+
+                _currentCategoryId = value;
+                OnPropertyChanged("CurrentCategoryId");
+            }
+        }
+        public Visibility SearchVisibility
+        {
+            get { return _searchVisibility; }
+            set
+            {
+                if (value == _searchVisibility) return;
+
+                _searchVisibility = value;
+                OnPropertyChanged("SearchVisibility");
+            }
+        }
+        public string CurrentSearch
+        {
+            get { return _currentSearch; }
+            set
+            {
+                if (value == _currentSearch) return;
+
+                _currentSearch = value;
+                OnPropertyChanged("CurrentSearch");
+
+                if (_currentSearch == null) SearchVisibility = Visibility.Collapsed;
+                else SearchVisibility = Visibility.Visible;
+            }
+        }
         public Visibility LoadingScreen
         {
             get { return _loadingScreen; }
@@ -116,7 +173,7 @@ namespace BasicShop.ViewModel
             get
             {
                 var tmp = new ObservableCollection<SpecifitationModel>();
-                foreach(var e in _filters)
+                foreach (var e in _filters)
                 {
                     foreach (var f in e.GetActiveFilters())
                         tmp.Add(f);
@@ -131,16 +188,19 @@ namespace BasicShop.ViewModel
 
         public ProductListViewModel()
         {
-            LoadingScreen = Visibility.Visible;
-
-            SelectedShowingNumber = "15";
-            LoadProductsFromDB();
-            CreateSortingList();
-            CreateShowingItemsComboBox();
+            Action mainLoad = () =>
+            {
+                SearchVisibility = Visibility.Collapsed;
+                SetAdditionalInfo(null);
+                UpdateNavList();
+                SelectedShowingNumber = "15";
+                LoadProductsFromDB();
+                CreateSortingList();
+                CreateShowingItemsComboBox();
+            };
+            LoadingScreenProcess(mainLoad);
             FilterCommand = new SimpleCommand(FilterList);
             SelectedItemChangedCommand = new SimpleCommand(ProcessSortingChange);
-
-            LoadingScreen = Visibility.Collapsed;
 
             /* - - - - - - TESTS ONLY! - - - - - - -*/
             var li1 = new List<CheckListModel>()
@@ -163,36 +223,7 @@ namespace BasicShop.ViewModel
                 new CheckListViewModel(li1, "test1"),
                 new CheckListViewModel(li2, "test2")
             };
-
-
-            /*var p1 = new ProductListModel()
-            {
-                Name = "Drukarka",
-                ImageUrl = @"./Category/11/1.jpg",
-                Price = System.Data.SqlTypes.SqlMoney.Parse("100.00")
-            };
-            p1.SetSpecification("Wysokość [m]:10;Moc [W]:1200;");
-
-            var p2 = new ProductListModel()
-            {
-                Name = "Drukarka",
-                ImageUrl = @"./Category/19/2.jpg",
-                Price = System.Data.SqlTypes.SqlMoney.Parse("99.99")
-            };
-            p2.SetSpecification("Kolor:zielony;Masa [kg]:10;");
-
-            var p3 = new ProductListModel()
-            {
-                Name = "Drukarka",
-                ImageUrl = @"./Category/8/1.jpg",
-                Price = System.Data.SqlTypes.SqlMoney.Parse("9100.00")
-            };
-            p3.SetSpecification("Interfejs:SATA;Przekątna [cal]:12;");
-
-            Products = new ObservableCollection<ProductListModel>()
-            {
-               p1,p2,p3
-            };*/
+            
             /* - - - - - - - - - - - - - - - - - - - - - -*/
 
         }
@@ -201,7 +232,24 @@ namespace BasicShop.ViewModel
         public void FilterList()
         {
             //DialogHost.CloseDialogCommand.Execute(new object(), null);
-            MessageBox.Show("ok");
+            //MessageBox.Show("ok");
+        }
+
+        private void SetAdditionalInfo(string text)
+        {
+            if (text == null)
+            {
+                AdditionalInfoVisibility = Visibility.Collapsed;
+                AdditionalInfoText = string.Empty;
+            }
+            else
+            {
+                AdditionalInfoVisibility = Visibility.Visible;
+                AdditionalInfoText = text;
+            }
+
+            OnPropertyChanged("AdditionalInfoVisibility");
+            OnPropertyChanged("AdditionalInfoText");
         }
 
         private void CreateSortingList()
@@ -233,6 +281,33 @@ namespace BasicShop.ViewModel
                     Sort = new SortDescription("price", ListSortDirection.Ascending)
                 }
             };
+        }
+
+        private void UpdateNavList()
+        {
+            if (CurrentCategoryId == null)
+            {
+                NavList = new ObservableCollection<Tuple<int, SimpleListModel>>();
+                return;
+            }
+
+            int counter = -1;
+            var list = new ObservableCollection<Tuple<int, SimpleListModel>>();
+            var dataContext = new shopEntities();
+            var catId = CurrentCategoryId;
+            do
+            {
+                counter++;
+                var categoryName = from l in dataContext.category
+                               where l.category_id == catId
+                               select l.name;
+                list.Add(new Tuple<int, SimpleListModel>(counter, new SimpleListModel() { Id = (uint)catId, Name = categoryName.First() }));
+                var parentId = from l in dataContext.category
+                           where l.category_id == catId
+                           select l.parent_category;
+                catId = (uint?)parentId.FirstOrDefault();
+            } while (catId != null);
+            NavList = new ObservableCollection<Tuple<int, SimpleListModel>>(list.OrderByDescending(p => p.Item1));
         }
 
         private void CreateShowingItemsComboBox()
@@ -268,32 +343,57 @@ namespace BasicShop.ViewModel
 
         private void ProcessSortingChange()
         {
+            LoadingScreenProcess(LoadProductsFromDB);
+        }
+
+        private void LoadingScreenProcess(Action action)
+        {
             LoadingScreen = Visibility.Visible;
 
-            LoadProductsFromDB();
-
-            LoadingScreen = Visibility.Collapsed;
+            Task.Factory.StartNew(action).ContinueWith((Task) =>
+            {
+                LoadingScreen = Visibility.Collapsed;
+            });
         }
 
         private void LoadProductsFromDB()
         {
+
             var dataContext = new shopEntities();
-            var query = from l in dataContext.product
-                        where l.category_id == 9
+            IQueryable<product> query = null;
+            if(CurrentCategoryId != null)
+                query = from l in dataContext.product
+                        where l.category_id == CurrentCategoryId
+                        select l;
+            if (CurrentSearch != null)
+            {
+                if (query != null)
+                    query = from l in query
+                            where l.name.ToLower().Contains(CurrentSearch.ToLower())
+                            select l;
+                else
+                    query = from l in dataContext.product
+                            where l.name.ToLower().Contains(CurrentSearch.ToLower())
+                            select l;
+            }
+            if(query == null)
+                query = from l in dataContext.product
                         select l;
 
             SortingCategoryModel selected = new SortingCategoryModel();
-            if(SelectedSortingName != null)
+            if (SelectedSortingName != null)
                 selected = SortingList.FirstOrDefault(s => s.Name == SelectedSortingName);
-            switch(selected.Sort.PropertyName)
+            switch (selected.Sort.PropertyName)
             {
                 case "name":
                     if (selected.Sort.Direction == ListSortDirection.Ascending)
                         query = from q in query
-                                orderby q.name ascending select q;
+                                orderby q.name ascending
+                                select q;
                     else
                         query = from q in query
-                                orderby q.name descending select q;
+                                orderby q.name descending
+                                select q;
                     break;
                 case "price":
                     if (selected.Sort.Direction == ListSortDirection.Ascending)
@@ -307,13 +407,14 @@ namespace BasicShop.ViewModel
                     break;
                 default:
                     query = from q in query
-                        orderby q.product_id
-                        select q;
+                            orderby q.product_id
+                            select q;
                     break;
             }
             var list = query.Take(int.Parse(SelectedShowingNumber));
-            Products = new ObservableCollection<ProductListModel>();
-            foreach(var e in list)
+            //Products = new ObservableCollection<ProductListModel>();
+            var tmp = new ObservableCollection<ProductListModel>();
+            foreach (var e in list)
             {
                 var p = new ProductListModel()
                 {
@@ -322,8 +423,12 @@ namespace BasicShop.ViewModel
                     ImageUrl = e.thumbnail
                 };
                 p.SetSpecification(e.specification);
-                Products.Add(p);
+                tmp.Add(p);
             }
+
+            Products = tmp;
+            if (tmp.Count == 0) SetAdditionalInfo("Nie znaleziono produktów pasujących do kryteriów wyszukiwania!");
+            else SetAdditionalInfo(null);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

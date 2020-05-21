@@ -105,7 +105,7 @@
         </DockPanel>
         
         <!--Main panel-->
-        <Frame x:Name="frameMain" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="576" Width="986"/>
+        <Frame x:Name="frameMain" Content="{Binding MainFrame}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="576" Width="986"/>
 
         <!--Left Panel-->
         <Grid x:Name="leftPanel" Width="80" HorizontalAlignment="Left" Background="#212121" MouseLeave="leftPanel_MouseLeave" MouseEnter="leftPanel_MouseEnter">

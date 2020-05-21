@@ -109,11 +109,28 @@
                 <Button VerticalAlignment="Center" Width="auto" Height="auto" Style="{StaticResource MaterialDesignIconForegroundButton}">
                     <materialDesign:PackIcon Kind="Home" Height="auto" Width="auto" Foreground="{StaticResource MaterialDesignLightForeground}"/>
                 </Button>
-                <TextBlock VerticalAlignment="Center" FontWeight="Black" FontSize="18" Text=">" Foreground="{StaticResource MaterialDesignLightForeground}"/>
+                <ItemsControl ItemsSource="{Binding NavList}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" DataContext="{Binding Item2}">
+                                <TextBlock VerticalAlignment="Center" FontWeight="Black" FontSize="18" Text=">" Foreground="{StaticResource MaterialDesignLightForeground}"/>
+                                <Button VerticalAlignment="Center" Margin="0,0,0,0" Padding="1,0" Width="auto" Height="auto" Style="{StaticResource MaterialDesignFlatButton}">
+                                    <TextBlock VerticalAlignment="Center" FontSize="16" Text="{Binding Name}" Foreground="{StaticResource MaterialDesignLightForeground}"/>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <!--<TextBlock VerticalAlignment="Center" FontWeight="Black" FontSize="18" Text=">" Foreground="{StaticResource MaterialDesignLightForeground}"/>
 
                 <Button VerticalAlignment="Center" Margin="0,0,0,0" Padding="1,0" Width="auto" Height="auto" Style="{StaticResource MaterialDesignFlatButton}">
                     <TextBlock VerticalAlignment="Center" FontSize="16" Text="Podzespoły komputerowe" Foreground="{StaticResource MaterialDesignLightForeground}"/>
-                </Button>
+                </Button>-->
             </WrapPanel>
             <Separator Grid.Row="0" VerticalAlignment="Bottom" Width="auto" HorizontalAlignment="Stretch" Margin="10,0"/>
 
@@ -131,8 +148,8 @@
                         <RotateTransform Angle="90"/>
                     </Separator.RenderTransform>
                 </Separator>
-                <TextBlock DockPanel.Dock="Left" Margin="-6,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="28" Text="Szukane:"/>
-                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="28" Margin="5,0,0,0" Text="hasło"/>
+                <TextBlock DockPanel.Dock="Left" Visibility="{Binding SearchVisibility}" Margin="-6,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="28" Text="Szukane:"/>
+                <TextBlock DockPanel.Dock="Left" Visibility="{Binding SearchVisibility}" VerticalAlignment="Center" FontSize="28" Margin="5,0,0,0" Text="{Binding CurrentSearch}"/>
                 <Border DockPanel.Dock="Right" Padding="10,0" Margin="10,0" VerticalAlignment="Center" Height="30" CornerRadius="15,15,15,15" BorderThickness="2" BorderBrush="Black">
                     <ComboBox x:Name="bb" materialDesign:HintAssist.Hint="Sortowanie" Width="150" ItemsSource="{Binding SortingList}" DisplayMemberPath="Name" SelectedValuePath="Name" SelectedValue="{Binding SelectedSortingName, Mode=TwoWay}">
                         <i:Interaction.Triggers>
@@ -164,71 +181,74 @@
 
             <!--Items-->
             <ScrollViewer Grid.Row="3"  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Products}" Grid.IsSharedSizeScope="True">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:ProductListModel}">
-                            <Border x:Name="Border" Padding="8" BorderThickness="0 0 0 1" Background="{DynamicResource MaterialDesignPaper}" Height="auto" Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource MaterialDesignDivider}" MouseDown="Border_MouseDown" MouseUp="Border_MouseUp">
-                                <Border.Triggers>
-                                    <EventTrigger RoutedEvent="MouseDown">
-                                        <EventTrigger.Actions>
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <ColorAnimation To="#999999" Storyboard.TargetProperty="(Border.Background).(Color)" FillBehavior="HoldEnd" Duration="0"/>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger.Actions>
-                                    </EventTrigger>
-                                    <EventTrigger RoutedEvent="MouseUp">
-                                        <EventTrigger.Actions>
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <ColorAnimation To="#FFDEDEDE" Storyboard.TargetProperty="(Border.Background).(Color)" FillBehavior="HoldEnd" Duration="0"/>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger.Actions>
-                                    </EventTrigger>
-                                </Border.Triggers>
-                                <Grid Height="150">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition SharedSizeGroup="Checkerz" />
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="180"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="40"/>
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Border Background="Transparent" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Height="150" Width="150">
-                                        <Image Height="150" Width="150" Source="{Binding ImageUrl, Converter={StaticResource OnlineImageConverter}}"/>
-                                    </Border>
-                                    <TextBlock Margin="8 0 0 0" Grid.Row="0" Grid.Column="1" FontWeight="Black" TextTrimming="CharacterEllipsis" FontSize="30" ToolTip="{Binding Name}" Text="{Binding Name}" VerticalAlignment="Top" HorizontalAlignment="Left" materialDesign:HintAssist.Hint="{Binding Name}" />
-                                    <ItemsControl Margin="8 0 0 0" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" ItemsSource="{Binding Specifitation}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <WrapPanel Orientation="Vertical" >
-                                                    <TextBlock Margin="0,0,20,0">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding Products}" Grid.IsSharedSizeScope="True">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:ProductListModel}">
+                                <Border x:Name="Border" Padding="8" BorderThickness="0 0 0 1" Background="{DynamicResource MaterialDesignPaper}" Height="auto" Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="{DynamicResource MaterialDesignDivider}" MouseDown="Border_MouseDown" MouseUp="Border_MouseUp">
+                                    <Border.Triggers>
+                                        <EventTrigger RoutedEvent="MouseDown">
+                                            <EventTrigger.Actions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="#999999" Storyboard.TargetProperty="(Border.Background).(Color)" FillBehavior="HoldEnd" Duration="0"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger.Actions>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="MouseUp">
+                                            <EventTrigger.Actions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation To="#FFDEDEDE" Storyboard.TargetProperty="(Border.Background).(Color)" FillBehavior="HoldEnd" Duration="0"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger.Actions>
+                                        </EventTrigger>
+                                    </Border.Triggers>
+                                    <Grid Height="150">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="Checkerz" />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="180"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"/>
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Border Background="Transparent" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Height="150" Width="150">
+                                            <Image Height="150" Width="150" Source="{Binding ImageUrl, Converter={StaticResource OnlineImageConverter}}"/>
+                                        </Border>
+                                        <TextBlock Margin="8 0 0 0" Grid.Row="0" Grid.Column="1" FontWeight="Black" TextTrimming="CharacterEllipsis" FontSize="30" ToolTip="{Binding Name}" Text="{Binding Name}" VerticalAlignment="Top" HorizontalAlignment="Left" materialDesign:HintAssist.Hint="{Binding Name}" />
+                                        <ItemsControl Margin="8 0 0 0" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" ItemsSource="{Binding Specifitation}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <WrapPanel Orientation="Vertical" >
+                                                        <TextBlock Margin="0,0,20,0">
                                                     <Run FontWeight="SemiBold" Text="{Binding Element, StringFormat={}{0}: }"/>
                                                     <Run Text="{Binding Value}"/>
-                                                    </TextBlock>
-                                                </WrapPanel>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Medium" Foreground="Red" FontFamily="Myanmar Text" LineHeight="6" >
+                                                        </TextBlock>
+                                                    </WrapPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Medium" Foreground="Red" FontFamily="Myanmar Text" LineHeight="6" >
                                         <Run FontSize="50" Text="{Binding Price, StringFormat={}{0:F0}}"></Run>
                                         <Run FontStretch="ExtraCondensed" BaselineAlignment="TextTop" TextDecorations="Underline" FontSize="26">00</Run>
                                         <Run FontSize="30" Text=" zł"></Run>
-                                    </TextBlock>
-                                </Grid>
-                            </Border>
-                            <DataTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
-                                </Trigger>
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                        </TextBlock>
+                                    </Grid>
+                                </Border>
+                                <DataTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                                    </Trigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock HorizontalAlignment="Center" FontSize="18" Foreground="Gray" FontFamily="Trebuchet MS" Text="{Binding AdditionalInfoText}" Visibility="{Binding AdditionalInfoVisibility}"/>
+                </StackPanel>
             </ScrollViewer>
             
             <!--Page navigation-->
@@ -243,7 +263,7 @@
                 </ComboBox>
             </DockPanel>
 
-            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen, Mode=TwoWay}">
+            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
                 <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
                 </materialDesign:Card>

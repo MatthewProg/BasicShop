@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BasicShop.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,8 @@ namespace BasicShop.View
         public MainWindow()
         {
             InitializeComponent();
-            frameMain.Content = new View.ProductList();
+            this.DataContext = new MainWindowViewModel();
+            //frameMain.Content = new View.ProductList();
         }
 
         private void DockPanel_MouseDown(object sender, MouseButtonEventArgs e)

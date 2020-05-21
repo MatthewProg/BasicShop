@@ -29,49 +29,6 @@ namespace BasicShop.View
         {
             InitializeComponent();
             this.DataContext = new ProductListViewModel();
-            /*var ok = new SampleViewModel()
-            {
-                Code = "Code",
-                Description = "Desc",
-                Name = "Name"
-            };
-            testOnly.ItemsSource = new ObservableCollection<SampleViewModel>() {
-                new SampleViewModel()
-                {
-                    Code = "Code",
-                    Description = "Desc",
-                    Name = "Name"
-                },
-                new SampleViewModel()
-                {
-                    Code="Secon",
-                    Description="Desc2",
-                    Name="Test"
-                },ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok
-            };
-
-            var lis = new List<CheckListModel>()
-            {
-                new CheckListModel() { Name = "Test1" },
-                new CheckListModel() { Name = "Test2" },
-                new CheckListModel() { Name = "Test3" }
-            };
-
-            BasicShop.Model.ProductListModel model = new Model.ProductListModel();
-            string testString = "Power:123;Height [mm]:9;";
-            model.SetSpecification(testString);*/
-
-            /*filtersPanel.DataContext = new ProductListViewModel()
-            {
-                SimpleFilters = new ObservableCollection<CheckListViewModel>()
-                {
-                    new CheckListViewModel(lis, "Test"),
-                    new CheckListViewModel(lis, "Test2"),
-                    new CheckListViewModel(lis, "Ojk"),
-                    new CheckListViewModel(lis, "Dziala")
-                }
-            };*/
-            //filtersPanel.DataContext = new CheckListViewModel(lis, "Test");
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
