@@ -488,6 +488,18 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.whishlist' does not have a pri
             </CollectionType>
           </ReturnType>
         </Function>
+        <Function Name="categorySpecificationWithChildren" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CategoryId" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="SpecKey" Type="varchar(max)" />
+                <Property Name="SpecValue" Type="varchar(max)" />
+                <Property Name="product_id" Type="int" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="childCategories" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ParentId" Type="int" Mode="In" />
           <ReturnType>
@@ -1223,11 +1235,19 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.whishlist' does not have a pri
           <FunctionImport Name="categorySpecification" IsComposable="true" ReturnType="Collection(shopModel.categorySpecification_Result)">
           <Parameter Name="CategoryId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="categorySpecificationWithChildren" IsComposable="true" ReturnType="Collection(shopModel.categorySpecificationWithChildren_Result)">
+            <Parameter Name="CategoryId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="categorySpecification_Result">
           <Property Type="Int32" Name="product_id" Nullable="false" />
           <Property Type="String" Name="SpecKey" Nullable="true" />
           <Property Type="String" Name="SpecValue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="categorySpecificationWithChildren_Result">
+          <Property Type="String" Name="SpecKey" Nullable="true" />
+          <Property Type="String" Name="SpecValue" Nullable="true" />
+          <Property Type="Int32" Name="product_id" Nullable="false" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1429,6 +1449,15 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.whishlist' does not have a pri
                 <ScalarProperty Name="product_id" ColumnName="product_id" />
                 <ScalarProperty Name="SpecKey" ColumnName="SpecKey" />
                 <ScalarProperty Name="SpecValue" ColumnName="SpecValue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="categorySpecificationWithChildren" FunctionName="shopModel.Store.categorySpecificationWithChildren">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="shopModel.categorySpecificationWithChildren_Result">
+                <ScalarProperty Name="SpecKey" ColumnName="SpecKey" />
+                <ScalarProperty Name="SpecValue" ColumnName="SpecValue" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

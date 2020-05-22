@@ -65,5 +65,15 @@ namespace BasicShop
     
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<categorySpecification_Result>("[shopEntities].[categorySpecification](@CategoryId)", categoryIdParameter);
         }
+    
+        [DbFunction("shopEntities", "categorySpecificationWithChildren")]
+        public virtual IQueryable<categorySpecificationWithChildren_Result> categorySpecificationWithChildren(Nullable<int> categoryId)
+        {
+            var categoryIdParameter = categoryId.HasValue ?
+                new ObjectParameter("CategoryId", categoryId) :
+                new ObjectParameter("CategoryId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<categorySpecificationWithChildren_Result>("[shopEntities].[categorySpecificationWithChildren](@CategoryId)", categoryIdParameter);
+        }
     }
 }

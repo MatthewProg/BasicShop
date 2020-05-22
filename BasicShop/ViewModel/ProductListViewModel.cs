@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlTypes;
+using System.IO.Pipes;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.Remoting.Contexts;
@@ -35,7 +36,42 @@ namespace BasicShop.ViewModel
         private Visibility _searchVisibility;
         private ObservableCollection<Tuple<int, SimpleListModel>> _navList;
         private uint? _currentCategoryId;
+        private Visibility _leftVisibility;
+        private Visibility _rightVisibility;
+        private int _currentPage;
+        private int _countProducts;
 
+        public int CurrentPage
+        {
+            get { return _currentPage + 1; }
+            set
+            {
+                _currentPage = value;
+                OnPropertyChanged("CurrentPage");
+            }
+        }
+        public Visibility LeftVisibility
+        {
+            get { return _leftVisibility; }
+            set
+            {
+                if (value == _leftVisibility) return;
+
+                _leftVisibility = value;
+                OnPropertyChanged("LeftVisibility");
+            }
+        }
+        public Visibility RightVisibility
+        {
+            get { return _rightVisibility; }
+            set
+            {
+                if (value == _rightVisibility) return;
+
+                _rightVisibility = value;
+                OnPropertyChanged("RightVisibility");
+            }
+        }
         public ObservableCollection<Tuple<int, SimpleListModel>> NavList
         {
             get { return _navList; }
@@ -185,16 +221,19 @@ namespace BasicShop.ViewModel
 
         public SimpleCommand FilterCommand { get; set; }
         public SimpleCommand SelectedItemChangedCommand { get; set; }
+        public ParameterCommand SwitchPageCommand { get; set; }
 
 
         public ProductListViewModel()
         {
+            CurrentPage = 0;
             SearchVisibility = Visibility.Collapsed;
             SelectedShowingNumber = "15";
             CreateSortingList();
             CreateShowingItemsComboBox();
             FilterCommand = new SimpleCommand(FilterList);
             SelectedItemChangedCommand = new SimpleCommand(ProcessSortingChange);
+            SwitchPageCommand = new ParameterCommand(SetPage);
 
             Action mainLoad = () =>
             {
@@ -202,6 +241,7 @@ namespace BasicShop.ViewModel
                 UpdateNavList();
                 UpdateFilters();
                 LoadProductsFromDB();
+                SetPageNavVisibility();
             };
             LoadingScreenProcess(mainLoad);
             /* - - - - - - TESTS ONLY! - - - - - - -*/
@@ -237,15 +277,58 @@ namespace BasicShop.ViewModel
             //MessageBox.Show("ok");
         }
 
-        private void SetPage(int current, int max)
+        private void SetPage(object param)
         {
+            if (param == null) return;
 
+            string direction = param.ToString();
+
+            if(direction.ToLower() == "left")
+            {
+                if (_currentPage == 0) return;
+                CurrentPage = _currentPage - 1;
+            }
+            else
+            {
+                if (_currentPage == Math.Ceiling(_countProducts / float.Parse(_selectedShowingNumber))) return;
+                CurrentPage = _currentPage + 1;
+            }
+
+            SetPageNavVisibility();
+            LoadingScreenProcess(LoadProductsFromDB);
         }
 
+        private void SetPageNavVisibility()
+        {
+            LeftVisibility = Visibility.Visible;
+            RightVisibility = Visibility.Visible;
+
+            if (_currentPage == 0) LeftVisibility = Visibility.Hidden;
+            if (CurrentPage == Math.Ceiling(_countProducts / float.Parse(_selectedShowingNumber))) RightVisibility = Visibility.Hidden;
+        }
         private void UpdateFilters()
         {
             var working = new ObservableCollection<object>();
             var dataContext = new shopEntities();
+
+            var li = dataContext.childCategories((int)CurrentCategoryId);
+            var query = dataContext.product.Where(o => li.Contains((int)o.category_id));
+            var minPrice = query.Min(x => x.price);
+            var maxPrice = query.Max(x => x.price);
+
+            float st = 0.0F;
+            if (maxPrice - minPrice <= 1) st = 0.01F;
+            else if (maxPrice - minPrice <= 10) st = 0.1F;
+            else if (maxPrice - minPrice <= 500) st = 1.0F;
+            else if (maxPrice - minPrice <= 10000) st = 10.0F;
+            else st = 20.0F;
+
+            var priceSlider = new SliderListViewModel((float)minPrice, (float)maxPrice, st, "Cena");
+            working.Add(priceSlider);
+            //Sub categories filters also
+            //var items = dataContext.categorySpecificationWithChildren((int)CurrentCategoryId);
+
+            //Only this category filters
             var items = dataContext.categorySpecification((int)CurrentCategoryId);
             foreach (var specKey in items.Select(x => x.SpecKey).Distinct())
             {
@@ -262,8 +345,8 @@ namespace BasicShop.ViewModel
                     if (float.TryParse(variant, out converted))
                     {
                         variantsF.Add(converted);
-                        if (converted < fMin) fMin = converted;
-                        if (converted > fMax) fMax = converted;
+                        if (converted <= fMin) fMin = converted;
+                        if (converted >= fMax) fMax = converted;
                     }
                     else
                         onlyNumbers = false;
@@ -435,6 +518,7 @@ namespace BasicShop.ViewModel
 
         private void ProcessSortingChange()
         {
+            CurrentPage = 0;
             LoadingScreenProcess(LoadProductsFromDB);
         }
 
@@ -506,7 +590,8 @@ namespace BasicShop.ViewModel
                             select q;
                     break;
             }
-            var list = query.Take(int.Parse(SelectedShowingNumber));
+            _countProducts = query.Count();
+            var list = query.Skip(_currentPage * int.Parse(SelectedShowingNumber)).Take(int.Parse(SelectedShowingNumber));
             //Products = new ObservableCollection<ProductListModel>();
             var tmp = new ObservableCollection<ProductListModel>();
             foreach (var e in list)

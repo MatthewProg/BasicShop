@@ -120,12 +120,16 @@
     <Compile Include="category.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="categorySpecificationWithChildren_Result.cs">
+      <DependentUpon>FullDatabase.tt</DependentUpon>
+    </Compile>
     <Compile Include="categorySpecification_Result.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="city.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Commands\ParameterCommand.cs" />
     <Compile Include="Commands\SimpleCommand.cs" />
     <Compile Include="Converters\DecimalPlacesConverter.cs" />
     <Compile Include="Converters\OnlineImageConverter.cs" />

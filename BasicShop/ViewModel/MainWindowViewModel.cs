@@ -29,7 +29,7 @@ namespace BasicShop.ViewModel
         }
 
         public SimpleCommand CloseWindowCommand { get; set; }
-        public SimpleCommand MinimalizeWindowCommand { get; set; }
+        public SimpleCommand MinimalizeWindowCommand { get; set; }    
         public MainWindowViewModel(MainWindow main)
         {
             _mainWindow = main;
@@ -39,7 +39,7 @@ namespace BasicShop.ViewModel
 
             var productList = new ProductList();
             (productList.DataContext as ProductListViewModel).CurrentSearch = null;
-            (productList.DataContext as ProductListViewModel).CurrentCategoryId = 19;
+            (productList.DataContext as ProductListViewModel).CurrentCategoryId = 7;
             MainFrame = productList;
 
         }
