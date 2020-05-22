@@ -8,6 +8,7 @@
       xmlns:viewModels="clr-namespace:BasicShop.ViewModel"
       xmlns:converters="clr-namespace:BasicShop.Converters"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:selectors="clr-namespace:BasicShop.Selectors"
       mc:Ignorable="d"
       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
       d:DesignHeight="576" d:DesignWidth="986"
@@ -22,75 +23,94 @@
       Title="ProductList">
     <Page.Resources>
         <converters:OnlineImageConverter x:Key="OnlineImageConverter"/>
+        <converters:DecimalPlacesConverter x:Key="DecimalPlacesConverter" />
+
+        <DataTemplate DataType="{x:Type viewModels:ProductListViewModel}" x:Key="checkListTemplate">
+            <Expander HorizontalAlignment="Stretch" Header="{Binding Header}" ToolTip="{Binding Header}">
+                <ItemsControl ItemsSource="{Binding Checks}" Grid.IsSharedSizeScope="True" Margin="12 0 12 0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:CheckListViewModel}" >
+                            <Border x:Name="Border2" Padding="8" MouseDown="Border_MouseDown" MouseUp="Border_MouseUp" Cursor="Hand">
+                                <Border.Triggers>
+                                    <EventTrigger RoutedEvent="MouseDown">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation To="#999999" Storyboard.TargetProperty="(Border.Background).(Color)" FillBehavior="HoldEnd" Duration="0"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseUp">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation To="#FFDEDEDE" Storyboard.TargetProperty="(Border.Background).(Color)" FillBehavior="HoldEnd" Duration="0"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                </Border.Triggers>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseUp">
+                                        <i:InvokeCommandAction  Command="{Binding ChangeSelection}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Checkerz" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox x:Name="chek" VerticalAlignment="Center" IsChecked="{Binding IsChecked}" />
+                                    <TextBlock Grid.Column="1" Margin="8 0 0 0" Padding="0,0,0,2" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding Name}" />
+                                </Grid>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Border2" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                                </Trigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Expander>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:SliderListViewModel}" x:Key="sliderListTemplate">
+            <Expander HorizontalAlignment="Stretch" Header="{Binding Header}" ToolTip="{Binding Header}">
+                <Grid Margin="12 0 12 0" HorizontalAlignment="Stretch" Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" FontSize="18" TextAlignment="Center" Text="{Binding Minimum, StringFormat={}{0:0}}" Width="{Binding ElementName=upperValue, Path=ActualWidth}" VerticalAlignment="Center"/>
+                    <Controls:RangeSlider Grid.Column="1" Controls:AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="{Binding Precision}" 
+                                          TickFrequency="{Binding Step}" IsSnapToTickEnabled="False" HorizontalAlignment="Stretch" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" 
+                                          LowerValue="{Binding ValueMinimum}" UpperValue="{Binding ValueMaximum}" Orientation="Horizontal" Margin="4,0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" FontSize="18" TextAlignment="Center" x:Name="upperValue" Text="{Binding Maximum, StringFormat={}{0:0}}" VerticalAlignment="Center"/>
+                </Grid>
+            </Expander>
+        </DataTemplate>
+
+        <selectors:FilterListTypeSelector x:Key="filterSelector" CheckListTemplate="{StaticResource checkListTemplate}" SliderListTemplate="{StaticResource sliderListTemplate}" />
     </Page.Resources>
 
     <materialDesign:DrawerHost x:Name="leftDrawer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <materialDesign:DrawerHost.LeftDrawerContent>
-            <DockPanel Width="300" Height="auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="False">
-                <materialDesign:Card DockPanel.Dock="Top" Background="{DynamicResource MaterialDesignBackground}">
-                    <StackPanel>
-                        <ItemsControl x:Name="filtersPanel" ItemsSource="{Binding Filters}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type viewModels:ProductListViewModel}">
-                                    <Expander HorizontalAlignment="Stretch" Header="{Binding Header}">
-                                        <ItemsControl ItemsSource="{Binding Checks}" Grid.IsSharedSizeScope="True" Margin="12 0 12 0">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate DataType="{x:Type viewModels:CheckListViewModel}">
-                                                    <Border x:Name="Border2" Padding="8" MouseDown="Border_MouseDown" MouseUp="Border_MouseUp">
-                                                        <Border.Triggers>
-                                                            <EventTrigger RoutedEvent="MouseDown">
-                                                                <EventTrigger.Actions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <ColorAnimation To="#999999" Storyboard.TargetProperty="(Border.Background).(Color)" FillBehavior="HoldEnd" Duration="0"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </EventTrigger.Actions>
-                                                            </EventTrigger>
-                                                            <EventTrigger RoutedEvent="MouseUp">
-                                                                <EventTrigger.Actions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <ColorAnimation To="#FFDEDEDE" Storyboard.TargetProperty="(Border.Background).(Color)" FillBehavior="HoldEnd" Duration="0"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </EventTrigger.Actions>
-                                                            </EventTrigger>
-                                                        </Border.Triggers>
-                                                        <i:Interaction.Triggers>
-                                                            <i:EventTrigger EventName="MouseUp">
-                                                                <i:InvokeCommandAction  Command="{Binding ChangeSelection}"/>
-                                                            </i:EventTrigger>
-                                                        </i:Interaction.Triggers>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition SharedSizeGroup="Checkerz" />
-                                                                <ColumnDefinition />
-                                                            </Grid.ColumnDefinitions>
-                                                            <CheckBox x:Name="chek" VerticalAlignment="Center" IsChecked="{Binding IsChecked}" />
-                                                            <TextBlock Grid.Column="1" Margin="8 0 0 0" FontWeight="Bold" Text="{Binding Name}" />
-                                                        </Grid>
-                                                    </Border>
-                                                    <DataTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="Border2" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
-                                                        </Trigger>
-                                                    </DataTemplate.Triggers>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </Expander>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </materialDesign:Card>
-                <Button DockPanel.Dock="Bottom" 
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                <DockPanel Width="300" Height="auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="False">
+                    <materialDesign:Card DockPanel.Dock="Top"  Background="{DynamicResource MaterialDesignBackground}">
+                        <StackPanel>
+                            <ItemsControl x:Name="filtersPanel" ItemsSource="{Binding Filters}" ItemTemplateSelector="{StaticResource filterSelector}" />
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <Button DockPanel.Dock="Bottom" 
                             Margin="10,4" HorizontalAlignment="Stretch" Width="auto" Command="{Binding FilterCommand}"
                             materialDesign:ButtonAssist.CornerRadius="15"
                             Style="{DynamicResource MaterialDesignRaisedButton}" Content="Filtruj" Click="Button_Click">
-                </Button>
-            </DockPanel>
+                    </Button>
+                </DockPanel>
+            </ScrollViewer>
         </materialDesign:DrawerHost.LeftDrawerContent>
         
         
@@ -225,17 +245,17 @@
                                                 <DataTemplate>
                                                     <WrapPanel Orientation="Vertical" >
                                                         <TextBlock Margin="0,0,20,0">
-                                                    <Run FontWeight="SemiBold" Text="{Binding Element, StringFormat={}{0}: }"/>
-                                                    <Run Text="{Binding Value}"/>
+                                                            <Run FontWeight="SemiBold" Text="{Binding Element, StringFormat={}{0}: }"/>
+                                                            <Run Text="{Binding Value}"/>
                                                         </TextBlock>
                                                     </WrapPanel>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                         <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Medium" Foreground="Red" FontFamily="Myanmar Text" LineHeight="6" >
-                                        <Run FontSize="50" Text="{Binding Price, StringFormat={}{0:F0}}"></Run>
-                                        <Run FontStretch="ExtraCondensed" BaselineAlignment="TextTop" TextDecorations="Underline" FontSize="26">00</Run>
-                                        <Run FontSize="30" Text=" zł"></Run>
+                                            <Run FontSize="50" Text="{Binding Price, Converter={StaticResource DecimalPlacesConverter}, ConverterParameter=N}"></Run>
+                                            <Run FontStretch="ExtraCondensed" BaselineAlignment="TextTop" TextDecorations="Underline" FontSize="26" Text="{Binding Price, Converter={StaticResource DecimalPlacesConverter}, ConverterParameter=D2}"></Run>
+                                            <Run FontSize="30" Text=" zł"></Run>
                                         </TextBlock>
                                     </Grid>
                                 </Border>

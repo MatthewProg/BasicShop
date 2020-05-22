@@ -14,6 +14,7 @@ namespace BasicShop.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null) return string.Empty;
             string path = value.ToString();
             if (path.StartsWith("\\"))
                 path = path.Substring(1);

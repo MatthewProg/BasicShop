@@ -17,6 +17,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,7 +30,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -51,6 +51,15 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
@@ -80,6 +89,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -110,15 +120,19 @@
     <Compile Include="category.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="categorySpecification_Result.cs">
+      <DependentUpon>FullDatabase.tt</DependentUpon>
+    </Compile>
     <Compile Include="city.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="Commands\SimpleCommand.cs" />
+    <Compile Include="Converters\DecimalPlacesConverter.cs" />
     <Compile Include="Converters\OnlineImageConverter.cs" />
     <Compile Include="country.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
-    <Compile Include="Enums.cs" />
+    <Compile Include="DatabaseManager.cs" />
     <Compile Include="feedback.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
@@ -167,6 +181,7 @@
     <Compile Include="role.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Selectors\FilterListTypeSelector.cs" />
     <Compile Include="staff.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
@@ -180,6 +195,7 @@
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ProductListViewModel.cs" />
     <Compile Include="ViewModel\SimpleListViewModel.cs" />
+    <Compile Include="ViewModel\SliderListViewModel.cs" />
     <Compile Include="View\ProductList.xaml.cs">
       <DependentUpon>ProductList.xaml</DependentUpon>
     </Compile>
@@ -229,6 +245,7 @@
       <DependentUpon>FullDatabase.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

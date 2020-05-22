@@ -12,6 +12,8 @@ namespace BasicShop
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class shopEntities : DbContext
     {
@@ -43,5 +45,25 @@ namespace BasicShop
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<warehouse> warehouse { get; set; }
         public virtual DbSet<product_image> product_image { get; set; }
+    
+        [DbFunction("shopEntities", "childCategories")]
+        public virtual IQueryable<Nullable<int>> childCategories(Nullable<int> parentId)
+        {
+            var parentIdParameter = parentId.HasValue ?
+                new ObjectParameter("ParentId", parentId) :
+                new ObjectParameter("ParentId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Nullable<int>>("[shopEntities].[childCategories](@ParentId)", parentIdParameter);
+        }
+    
+        [DbFunction("shopEntities", "categorySpecification")]
+        public virtual IQueryable<categorySpecification_Result> categorySpecification(Nullable<int> categoryId)
+        {
+            var categoryIdParameter = categoryId.HasValue ?
+                new ObjectParameter("CategoryId", categoryId) :
+                new ObjectParameter("CategoryId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<categorySpecification_Result>("[shopEntities].[categorySpecification](@CategoryId)", categoryIdParameter);
+        }
     }
 }

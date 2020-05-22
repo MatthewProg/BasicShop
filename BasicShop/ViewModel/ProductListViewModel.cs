@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.Remoting.Contexts;
@@ -23,7 +24,7 @@ namespace BasicShop.ViewModel
 {
     public class ProductListViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<CheckListViewModel> _filters;
+        private ObservableCollection<object> _filters;
         private ObservableCollection<ProductListModel> _products;
         private ObservableCollection<SortingCategoryModel> _sortingList;
         private ObservableCollection<Model.ComboBoxItemModel> _showingItems;
@@ -143,7 +144,7 @@ namespace BasicShop.ViewModel
             }
         }
 
-        public ObservableCollection<CheckListViewModel> Filters
+        public ObservableCollection<object> Filters
         {
             get { return _filters; }
             set
@@ -173,11 +174,11 @@ namespace BasicShop.ViewModel
             get
             {
                 var tmp = new ObservableCollection<SpecifitationModel>();
-                foreach (var e in _filters)
+                /*foreach (var e in _filters)
                 {
                     foreach (var f in e.GetActiveFilters())
                         tmp.Add(f);
-                }
+                }*/
                 return tmp;
             }
         }
@@ -188,20 +189,21 @@ namespace BasicShop.ViewModel
 
         public ProductListViewModel()
         {
-            Action mainLoad = () =>
-            {
-                SearchVisibility = Visibility.Collapsed;
-                SetAdditionalInfo(null);
-                UpdateNavList();
-                SelectedShowingNumber = "15";
-                LoadProductsFromDB();
-                CreateSortingList();
-                CreateShowingItemsComboBox();
-            };
-            LoadingScreenProcess(mainLoad);
+            SearchVisibility = Visibility.Collapsed;
+            SelectedShowingNumber = "15";
+            CreateSortingList();
+            CreateShowingItemsComboBox();
             FilterCommand = new SimpleCommand(FilterList);
             SelectedItemChangedCommand = new SimpleCommand(ProcessSortingChange);
 
+            Action mainLoad = () =>
+            {
+                SetAdditionalInfo(null);
+                UpdateNavList();
+                UpdateFilters();
+                LoadProductsFromDB();
+            };
+            LoadingScreenProcess(mainLoad);
             /* - - - - - - TESTS ONLY! - - - - - - -*/
             var li1 = new List<CheckListModel>()
             {
@@ -218,12 +220,12 @@ namespace BasicShop.ViewModel
                 new CheckListModel() { Name = "4"}
             };
 
-            Filters = new ObservableCollection<CheckListViewModel>()
+            Filters = new ObservableCollection<object>()
             {
                 new CheckListViewModel(li1, "test1"),
                 new CheckListViewModel(li2, "test2")
             };
-            
+
             /* - - - - - - - - - - - - - - - - - - - - - -*/
 
         }
@@ -233,6 +235,65 @@ namespace BasicShop.ViewModel
         {
             //DialogHost.CloseDialogCommand.Execute(new object(), null);
             //MessageBox.Show("ok");
+        }
+
+        private void SetPage(int current, int max)
+        {
+
+        }
+
+        private void UpdateFilters()
+        {
+            var working = new ObservableCollection<object>();
+            var dataContext = new shopEntities();
+            var items = dataContext.categorySpecification((int)CurrentCategoryId);
+            foreach (var specKey in items.Select(x => x.SpecKey).Distinct())
+            {
+                //var section = new CheckListViewModel();
+                //section.Header = specKey;
+                List<float> variantsF = new List<float>();
+                List<string> variantsS = new List<string>();
+                bool onlyNumbers = true;
+                var fMin = float.MaxValue;
+                var fMax = float.MinValue;
+                foreach(var variant in items.Where(x=>x.SpecKey == specKey).Select(x=>x.SpecValue).Distinct())
+                {
+                    float converted = 0.0F;
+                    if (float.TryParse(variant, out converted))
+                    {
+                        variantsF.Add(converted);
+                        if (converted < fMin) fMin = converted;
+                        if (converted > fMax) fMax = converted;
+                    }
+                    else
+                        onlyNumbers = false;
+
+                    variantsS.Add(variant);
+                    //section.Checks.Add(new CheckListModel() { Name = variant });
+                }
+
+                if(!onlyNumbers)
+                {
+                    var section = new CheckListViewModel();
+                    section.Header = specKey;
+                    foreach (var s in variantsS)
+                        section.Checks.Add(new CheckListModel() { Name = s });
+                    working.Add(section);
+                }
+                else
+                {
+                    float step = 0.0F;
+                    if (fMax - fMin <= 1) step = 0.01F;
+                    else if (fMax - fMin <= 10) step = 0.1F;
+                    else if (fMax - fMin <= 500) step = 1.0F;
+                    else if (fMax - fMin <= 10000) step = 10.0F;
+                    else step = 20.0F;
+                    var section = new SliderListViewModel(fMin,fMax,step,specKey);
+                    working.Add(section);
+                }
+            }
+            
+            Filters = working;
         }
 
         private void SetAdditionalInfo(string text)
@@ -310,6 +371,37 @@ namespace BasicShop.ViewModel
             NavList = new ObservableCollection<Tuple<int, SimpleListModel>>(list.OrderByDescending(p => p.Item1));
         }
 
+        /* Got replaced by SQL function
+        BTW, it was garbage
+
+        private List<int> GetChildCategoriesId(int parent)
+        {
+            var output = new List<int>();
+            output.Add(parent);
+
+            var dataContext = new shopEntities();
+            int currentCount = 0;
+            bool GetAndConcat()
+            {
+                currentCount = output.Count;
+                List<int> small = new List<int>();
+                foreach(var e in output)
+                {
+                    var query = from l in dataContext.category
+                                where l.parent_category == e
+                                select l.category_id;
+                    small.AddRange(query.ToList());
+                }
+                output.AddRange(small);
+                output = new List<int>(output.Distinct());
+                return currentCount != output.Count;
+            }
+
+            while(GetAndConcat()) { ; }
+
+            return output;
+        }*/
+
         private void CreateShowingItemsComboBox()
         {
             ShowingItems = new ObservableCollection<Model.ComboBoxItemModel>()
@@ -358,13 +450,16 @@ namespace BasicShop.ViewModel
 
         private void LoadProductsFromDB()
         {
-
             var dataContext = new shopEntities();
             IQueryable<product> query = null;
-            if(CurrentCategoryId != null)
-                query = from l in dataContext.product
-                        where l.category_id == CurrentCategoryId
-                        select l;
+            if (CurrentCategoryId != null)
+            {
+                var li = dataContext.childCategories((int)CurrentCategoryId);
+                query = dataContext.product.Where(o => li.Contains((int)o.category_id));
+            }
+            /*query = from l in dataContext.product
+                    where l.category_id == CurrentCategoryId
+                    select l;*/
             if (CurrentSearch != null)
             {
                 if (query != null)
