@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:BasicShop.View"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -105,7 +106,7 @@
         </DockPanel>
         
         <!--Main panel-->
-        <Frame x:Name="frameMain" Content="{Binding MainFrame}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="576" Width="986"/>
+        <Frame x:Name="frameMain" NavigationUIVisibility="Hidden" Content="{Binding MainFrame}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="576" Width="986"/>
 
         <!--Left Panel-->
         <Grid x:Name="leftPanel" Width="80" HorizontalAlignment="Left" Background="#212121" MouseLeave="leftPanel_MouseLeave" MouseEnter="leftPanel_MouseEnter">
@@ -119,33 +120,42 @@
             </Button>
             <StackPanel Grid.Row="1">
                 <TextBox x:Name="searchBox" Visibility="Collapsed" Width="auto" materialDesign:TextFieldAssist.HasOutlinedTextField="True" Foreground="Black" Background="LightGray" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" Margin="10,7,10,8">
-                <materialDesign:HintAssist.Hint>
-                    <StackPanel Background="Transparent" Orientation="Horizontal" Margin="-2 0 0 0">
-                        <materialDesign:PackIcon Kind="Magnify" />
-                        <TextBlock>Szukaj</TextBlock>
-                    </StackPanel>
-                </materialDesign:HintAssist.Hint>
-            </TextBox>
-            <materialDesign:PackIcon x:Name="iconSearch" Kind="Magnify" Width="54" Height="54" Padding="16,13" Foreground="{DynamicResource MaterialDesignFlatButtonClick}" Margin="15,0"/>
-                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0" Padding="16,13">
+                    <i:Interaction.Triggers>
+                        <i:KeyTrigger Key="Return">
+                            <i:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding ElementName=searchBox, Path=Text}"/>
+                        </i:KeyTrigger>
+                    </i:Interaction.Triggers>
+                    <materialDesign:HintAssist.Hint>
+                        <StackPanel Background="Transparent" Orientation="Horizontal" Margin="-2 0 0 0">
+                            <materialDesign:PackIcon Kind="Magnify" />
+                            <TextBlock>Szukaj</TextBlock>
+                        </StackPanel>
+                    </materialDesign:HintAssist.Hint>
+                </TextBox>
+                <materialDesign:PackIcon x:Name="iconSearch" Kind="Magnify" Width="54" Height="54" Padding="16,13" Foreground="{DynamicResource MaterialDesignFlatButtonClick}" Margin="15,0"/>
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0" Padding="16,13"
+                        Command="{Binding LoadScreenCommand}" CommandParameter="home">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
                         <materialDesign:PackIcon Kind="Home" Width="auto" Height="auto"/>
                         <TextBlock x:Name="button1text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Strona główna</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13">
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"
+                        Command="{Binding LoadScreenCommand}" CommandParameter="categories">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <materialDesign:PackIcon Kind="FormatListBulletedSquare" Width="auto" Height="auto"/>
                         <TextBlock x:Name="button2text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Kategorie</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13">
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"
+                        Command="{Binding LoadScreenCommand}" CommandParameter="null">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <materialDesign:PackIcon Kind="PackageVariant" Width="auto" Height="auto"/>
                         <TextBlock x:Name="button3text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Zamówienia</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13">
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"
+                        Command="{Binding LoadScreenCommand}" CommandParameter="null">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <materialDesign:PackIcon Kind="AccountCircle" Width="auto" Height="auto"/>
                         <TextBlock x:Name="button4text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Moje konto</TextBlock>

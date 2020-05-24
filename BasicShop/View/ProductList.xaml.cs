@@ -31,6 +31,12 @@ namespace BasicShop.View
             this.DataContext = new ProductListViewModel();
         }
 
+        public ProductList(uint? category = null, string search = null)
+        {
+            InitializeComponent();
+            this.DataContext = new ProductListViewModel(category,search);
+        }
+
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
 

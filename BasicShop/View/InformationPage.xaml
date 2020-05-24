@@ -1,0 +1,26 @@
+﻿<Page x:Class="BasicShop.View.InformationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BasicShop.View"
+      mc:Ignorable="d" 
+      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+      d:DesignHeight="576" d:DesignWidth="986"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="13"
+      TextOptions.TextFormattingMode="Ideal" 
+      TextOptions.TextRenderingMode="Auto"        
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"
+      Title="Info">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock FontSize="60"  Text="Aplikacja w trakcie budowy" FontFamily="Segoe UI" FontWeight="SemiBold" Foreground="#FFFF3434"/>
+            <TextBlock Text="Na razie zapraszam do testowania działania kategorii i listy produktów (lewa zakładka)" FontSize="16" Width="400" TextWrapping="Wrap" TextAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Page>

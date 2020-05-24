@@ -117,6 +117,7 @@
     <Compile Include="address.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Behaviours\BindableSelectedItemBehavior.cs" />
     <Compile Include="category.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
@@ -162,6 +163,7 @@
     <Compile Include="Model\SimpleListModel.cs" />
     <Compile Include="Model\SortingCategoryModel.cs" />
     <Compile Include="Model\SpecifitationModel.cs" />
+    <Compile Include="Model\TreeViewCategoryModel.cs" />
     <Compile Include="order.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
@@ -190,23 +192,39 @@
     <Compile Include="staff.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="StandardMessages.cs" />
     <Compile Include="store.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagrams.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\CheckListViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ProductListViewModel.cs" />
     <Compile Include="ViewModel\SimpleListViewModel.cs" />
     <Compile Include="ViewModel\SliderListViewModel.cs" />
+    <Compile Include="View\CategoriesPage.xaml.cs">
+      <DependentUpon>CategoriesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\InformationPage.xaml.cs">
+      <DependentUpon>InformationPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProductList.xaml.cs">
       <DependentUpon>ProductList.xaml</DependentUpon>
     </Compile>
     <Compile Include="warehouse.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Page Include="View\CategoriesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InformationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

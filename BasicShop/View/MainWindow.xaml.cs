@@ -25,7 +25,7 @@ namespace BasicShop.View
         {
             InitializeComponent();
             this.DataContext = new MainWindowViewModel(this);
-            //frameMain.Content = new View.ProductList();
+            Keyboard.ClearFocus();
         }
 
         private void DockPanel_MouseDown(object sender, MouseButtonEventArgs e)
@@ -37,7 +37,8 @@ namespace BasicShop.View
         {
             iconSearch.Visibility = Visibility.Visible;
             searchBox.Visibility = Visibility.Collapsed;
-            leftPanel.Focus();
+            searchBox.Text = string.Empty;
+            Keyboard.ClearFocus();
         }
 
         private void leftPanel_MouseEnter(object sender, MouseEventArgs e)

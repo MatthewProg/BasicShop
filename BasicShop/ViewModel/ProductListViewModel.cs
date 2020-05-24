@@ -222,8 +222,7 @@ namespace BasicShop.ViewModel
         public ParameterCommand ChangeCategoryCommand { get; set; }
 
 
-
-        public ProductListViewModel()
+        public ProductListViewModel(uint? category = null, string search = null)
         {
             ActiveFilters = new ObservableCollection<SpecifitationModel>();
             FilterCommand = new SimpleCommand(FilterList);
@@ -232,9 +231,13 @@ namespace BasicShop.ViewModel
             DeleteFilterCommand = new ParameterCommand(DeleteFilter);
             ChangeCategoryCommand = new ParameterCommand(ChangeCategory);
 
+            CurrentCategoryId = category;
+            CurrentSearch = search;
+
             FullReload();
         }
        
+
         private void FullReload()
         {
             CurrentPage = 0;
@@ -261,13 +264,14 @@ namespace BasicShop.ViewModel
         }
         private void FilterList()
         {
+            if (_filters == null) return;
             var tmp = new ObservableCollection<SpecifitationModel>();
             foreach (var e in _filters)
             {
                 if (e is CheckListViewModel)
                     foreach (var f in (e as CheckListViewModel).GetActiveFilters())
                         tmp.Add(f);
-                else if(e is SliderListViewModel)
+                else if (e is SliderListViewModel)
                 {
                     var obj = e as SliderListViewModel;
                     if (obj.ValueMinimum != obj.Minimum) tmp.Add(new SpecifitationModel() { Element = obj.Header, Value = ">" + obj.ValueMinimum.ToString("F" + obj.Precision.ToString(), CultureInfo.InvariantCulture) });
@@ -275,9 +279,13 @@ namespace BasicShop.ViewModel
                 }
             }
             ActiveFilters = tmp;
-            LoadingScreenProcess(LoadProductsFromDB);
+            Action reload = () =>
+            {
+                LoadProductsFromDB();
+                SetPageNavVisibility();
+            };
+            LoadingScreenProcess(reload);
         }
-
         private void DeleteFilter(object param)
         {
             var obj = param as SpecifitationModel;
@@ -304,7 +312,6 @@ namespace BasicShop.ViewModel
             ActiveFilters.Remove(obj);
             LoadingScreenProcess(LoadProductsFromDB);
         }
-
         private void SetPage(object param)
         {
             if (param == null) return;
@@ -325,88 +332,119 @@ namespace BasicShop.ViewModel
             SetPageNavVisibility();
             LoadingScreenProcess(LoadProductsFromDB);
         }
-
         private void SetPageNavVisibility()
         {
             LeftVisibility = Visibility.Visible;
             RightVisibility = Visibility.Visible;
 
             if (_currentPage == 0) LeftVisibility = Visibility.Hidden;
-            if (CurrentPage == Math.Ceiling(_countProducts / float.Parse(_selectedShowingNumber))) RightVisibility = Visibility.Hidden;
+            if (CurrentPage == Math.Ceiling(_countProducts / float.Parse(_selectedShowingNumber)) || _countProducts <= float.Parse(_selectedShowingNumber)) RightVisibility = Visibility.Hidden;
         }
         private void UpdateFilters()
         {
-            var working = new ObservableCollection<object>();
-            var dataContext = new shopEntities();
-
-            var li = dataContext.childCategories((int)CurrentCategoryId);
-            var query = dataContext.product.Where(o => li.Contains((int)o.category_id));
-            var minPrice = query.Min(x => x.price);
-            var maxPrice = query.Max(x => x.price);
-
-            float st = 0.0F;
-            if (maxPrice - minPrice <= 1) st = 0.01F;
-            else if (maxPrice - minPrice <= 10) st = 0.1F;
-            else if (maxPrice - minPrice <= 500) st = 1.0F;
-            else if (maxPrice - minPrice <= 10000) st = 10.0F;
-            else st = 20.0F;
-
-            var priceSlider = new SliderListViewModel((float)minPrice, (float)maxPrice, st, "Cena");
-            working.Add(priceSlider);
-            //Sub categories filters also
-            //var items = dataContext.categorySpecificationWithChildren((int)CurrentCategoryId);
-
-            //Only this category filters
-            var items = dataContext.categorySpecification((int)CurrentCategoryId);
-            foreach (var specKey in items.Select(x => x.SpecKey).Distinct())
+            try
             {
-                //var section = new CheckListViewModel();
-                //section.Header = specKey;
-                List<float> variantsF = new List<float>();
-                List<string> variantsS = new List<string>();
-                bool onlyNumbers = true;
-                var fMin = float.MaxValue;
-                var fMax = float.MinValue;
-                foreach(var variant in items.Where(x=>x.SpecKey == specKey).Select(x=>x.SpecValue).Distinct())
+                var working = new ObservableCollection<object>();
+                var dataContext = new shopEntities();
+
+                IQueryable<int?> li = null;
+                IQueryable<product> query = null;
+                if (CurrentCategoryId != null)
                 {
-                    float converted = 0.0F;
-                    if (float.TryParse(variant, NumberStyles.Float, CultureInfo.InvariantCulture, out converted))
+                    li = dataContext.childCategories((int)CurrentCategoryId);
+                    query = dataContext.product.Where(o => li.Contains((int)o.category_id));
+                }
+                if (CurrentSearch != null)
+                {
+                    IQueryable<int> sec = null;
+                    if (li == null)
+                        sec = dataContext.product.Where(x => x.name.Contains(CurrentSearch)).Select(x => x.product_id);
+                    else
+                        sec = dataContext.product.Where(x => x.name.Contains(CurrentSearch) && li.Contains(x.category_id)).Select(x => x.product_id);
+
+                    query = dataContext.product.Where(o => sec.Contains((int)o.product_id));
+                }
+
+                try
+                {
+                    if (query.Select(x => x.product_id).First() == 0) return;
+                }
+                catch
+                {
+                    return;
+                }
+
+                var minPrice = query.Min(x => x.price);
+                var maxPrice = query.Max(x => x.price);
+
+                float st = 0.0F;
+                if (maxPrice - minPrice <= 1) st = 0.01F;
+                else if (maxPrice - minPrice <= 10) st = 0.1F;
+                else if (maxPrice - minPrice <= 500) st = 1.0F;
+                else if (maxPrice - minPrice <= 10000) st = 10.0F;
+                else st = 20.0F;
+
+                var priceSlider = new SliderListViewModel((float)minPrice, (float)maxPrice, st, "Cena");
+                working.Add(priceSlider);
+                //Sub categories filters also
+                //var items = dataContext.categorySpecificationWithChildren((int)CurrentCategoryId);
+
+                //Only this category filters
+                if (CurrentCategoryId == null) { Filters = working; return; }
+                var items = dataContext.categorySpecification((int)CurrentCategoryId);
+                foreach (var specKey in items.Select(x => x.SpecKey).Distinct())
+                {
+                    //var section = new CheckListViewModel();
+                    //section.Header = specKey;
+                    List<float> variantsF = new List<float>();
+                    List<string> variantsS = new List<string>();
+                    bool onlyNumbers = true;
+                    var fMin = float.MaxValue;
+                    var fMax = float.MinValue;
+                    foreach (var variant in items.Where(x => x.SpecKey == specKey).Select(x => x.SpecValue).Distinct())
                     {
-                        variantsF.Add(converted);
-                        if (converted <= fMin) fMin = converted;
-                        if (converted >= fMax) fMax = converted;
+                        float converted = 0.0F;
+                        if (float.TryParse(variant, NumberStyles.Float, CultureInfo.InvariantCulture, out converted))
+                        {
+                            variantsF.Add(converted);
+                            if (converted <= fMin) fMin = converted;
+                            if (converted >= fMax) fMax = converted;
+                        }
+                        else
+                            onlyNumbers = false;
+
+                        variantsS.Add(variant);
+                        //section.Checks.Add(new CheckListModel() { Name = variant });
+                    }
+
+                    if (!onlyNumbers)
+                    {
+                        var section = new CheckListViewModel();
+                        section.Header = specKey;
+                        foreach (var s in variantsS)
+                            section.Checks.Add(new CheckListModel() { Name = s });
+                        working.Add(section);
                     }
                     else
-                        onlyNumbers = false;
-
-                    variantsS.Add(variant);
-                    //section.Checks.Add(new CheckListModel() { Name = variant });
+                    {
+                        float step = 0.0F;
+                        if (fMax - fMin <= 1) step = 0.01F;
+                        else if (fMax - fMin <= 10) step = 0.1F;
+                        else if (fMax - fMin <= 500) step = 1.0F;
+                        else if (fMax - fMin <= 10000) step = 10.0F;
+                        else step = 20.0F;
+                        var section = new SliderListViewModel(fMin, fMax, step, specKey);
+                        working.Add(section);
+                    }
                 }
 
-                if(!onlyNumbers)
-                {
-                    var section = new CheckListViewModel();
-                    section.Header = specKey;
-                    foreach (var s in variantsS)
-                        section.Checks.Add(new CheckListModel() { Name = s });
-                    working.Add(section);
-                }
-                else
-                {
-                    float step = 0.0F;
-                    if (fMax - fMin <= 1) step = 0.01F;
-                    else if (fMax - fMin <= 10) step = 0.1F;
-                    else if (fMax - fMin <= 500) step = 1.0F;
-                    else if (fMax - fMin <= 10000) step = 10.0F;
-                    else step = 20.0F;
-                    var section = new SliderListViewModel(fMin,fMax,step,specKey);
-                    working.Add(section);
-                }
+                Filters = working;
             }
-            
-            Filters = working;
+            catch(Exception e)
+            {
+                StandardMessages.Error(e.Message);
+            }
         }
-
         private void SetAdditionalInfo(string text)
         {
             if (text == null)
@@ -423,7 +461,6 @@ namespace BasicShop.ViewModel
             OnPropertyChanged("AdditionalInfoVisibility");
             OnPropertyChanged("AdditionalInfoText");
         }
-
         private void CreateSortingList()
         {
             SortingList = new ObservableCollection<SortingCategoryModel>()
@@ -454,7 +491,6 @@ namespace BasicShop.ViewModel
                 }
             };
         }
-
         private void UpdateNavList()
         {
             if (CurrentCategoryId == null)
@@ -467,21 +503,27 @@ namespace BasicShop.ViewModel
             var list = new ObservableCollection<Tuple<int, SimpleListModel>>();
             var dataContext = new shopEntities();
             var catId = CurrentCategoryId;
-            do
+            try
             {
-                counter++;
-                var categoryName = from l in dataContext.category
-                               where l.category_id == catId
-                               select l.name;
-                list.Add(new Tuple<int, SimpleListModel>(counter, new SimpleListModel() { Id = (uint)catId, Name = categoryName.First() }));
-                var parentId = from l in dataContext.category
-                           where l.category_id == catId
-                           select l.parent_category;
-                catId = (uint?)parentId.FirstOrDefault();
-            } while (catId != null);
-            NavList = new ObservableCollection<Tuple<int, SimpleListModel>>(list.OrderByDescending(p => p.Item1));
-        }
-
+                do
+                {
+                    counter++;
+                    var categoryName = from l in dataContext.category
+                                       where l.category_id == catId
+                                       select l.name;
+                    list.Add(new Tuple<int, SimpleListModel>(counter, new SimpleListModel() { Id = (uint)catId, Name = categoryName.First() }));
+                    var parentId = from l in dataContext.category
+                                   where l.category_id == catId
+                                   select l.parent_category;
+                    catId = (uint?)parentId.ToArray()[0];
+                } while (catId != null);
+                NavList = new ObservableCollection<Tuple<int, SimpleListModel>>(list.OrderByDescending(p => p.Item1));
+            }
+            catch (Exception e)
+            {
+                StandardMessages.Error(e.Message);
+            }
+}
         /* Got replaced by SQL function
         BTW, it was garbage
 
@@ -512,7 +554,6 @@ namespace BasicShop.ViewModel
 
             return output;
         }*/
-
         private void CreateShowingItemsComboBox()
         {
             ShowingItems = new ObservableCollection<Model.ComboBoxItemModel>()
@@ -543,13 +584,11 @@ namespace BasicShop.ViewModel
                 }
             };
         }
-
         private void ProcessSortingChange()
         {
             CurrentPage = 0;
             LoadingScreenProcess(LoadProductsFromDB);
         }
-
         private void LoadingScreenProcess(Action action)
         {
             LoadingScreen = Visibility.Visible;
@@ -559,171 +598,180 @@ namespace BasicShop.ViewModel
                 LoadingScreen = Visibility.Collapsed;
             });
         }
-
         private void LoadProductsFromDB()
         {
-            var dataContext = new shopEntities();
-            IQueryable<product> query = null;
-
-            //Get products from category
-            if (CurrentCategoryId != null)
+            try
             {
-                var li = dataContext.childCategories((int)CurrentCategoryId);
-                query = dataContext.product.Where(o => li.Contains((int)o.category_id));
-            }
+                var dataContext = new shopEntities();
+                IQueryable<product> query = null;
 
-            //Get products from name
-            if (CurrentSearch != null)
-            {
-                if (query != null)
-                    query = from l in query
-                            where l.name.ToLower().Contains(CurrentSearch.ToLower())
-                            select l;
-                else
-                    query = from l in dataContext.product
-                            where l.name.ToLower().Contains(CurrentSearch.ToLower())
-                            select l;
-            }
-            if(query == null)
-                query = from l in dataContext.product
-                        select l;
-
-            //Split active filters into category - values
-            Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>();
-            foreach (var filter in ActiveFilters)
-            {
-                if (!filters.ContainsKey(filter.Element))
-                    filters.Add(filter.Element, new List<string>());
-                filters[filter.Element].Add(filter.Value);
-            }
-
-            foreach (var key in filters.Keys)
-            {
-                List<string> condition = new List<string>();
-                foreach (var val in filters[key])
+                //Get products from category
+                if (CurrentCategoryId != null)
                 {
-                    if (val[0] != '>' && val[0] != '<')
-                    {
-                        condition.Add($"{key}:{val}");
-                        query = query.Where(x => condition.Any(y => x.specification.Contains(y)));
-                    }
-                    else if (key == "Cena")
-                    {
-                        string min = null, max = null;
-                        if (filters[key][0][0] == '>')
-                        {
-                            min = filters[key][0].Substring(1);
-                            if (filters[key].Count > 1)
-                                max = filters[key][1].Substring(1);
-                        }
-                        else
-                        {
-                            max = filters[key][0].Substring(1);
-                            if (filters[key].Count > 1)
-                                min = filters[key][1].Substring(1);
-                        }
-                        if (max != null)
-                        {
-                            decimal maxD = decimal.Parse(max);
-                            query = query.Where(x => x.price <= maxD);
-                        }
-                        if (min != null)
-                        {
-                            decimal minD = decimal.Parse(min);
-                            query = query.Where(x => x.price >= minD);
-                        }
-                    }
-                    else
-                    {
-                        var products = query.Select(x => new { id = x.product_id, spec = x.specification });
-                        var prodSpec = products.Where(x => x.spec.Contains(key)).ToList(); 
-                        Dictionary<int, List<string>> specSplit = new Dictionary<int, List<string>>();
-                        foreach (var element in prodSpec)
-                        {
-                            if (!specSplit.ContainsKey(element.id))
-                                specSplit.Add(element.id, new List<string>());
-                            specSplit[element.id].AddRange(element.spec.Split(';'));
-                        }
-                        List<int> validateProductIds = new List<int>();
-                        foreach (var k in specSplit.Keys)
-                        {
-                            var buff = specSplit[k].Where(x => x.Contains(key)).FirstOrDefault();
-                            buff = buff.Split(':')[1];
+                    var li = dataContext.childCategories((int)CurrentCategoryId);
+                    query = dataContext.product.Where(o => li.Contains((int)o.category_id));
+                }
 
-                            if (val[0] == '<')
+                //Get products from name
+                if (CurrentSearch != null)
+                {
+                    if (query != null)
+                        query = from l in query
+                                where l.name.ToLower().Contains(CurrentSearch.ToLower())
+                                select l;
+                    else
+                        query = from l in dataContext.product
+                                where l.name.ToLower().Contains(CurrentSearch.ToLower())
+                                select l;
+                }
+                if (query == null)
+                    query = from l in dataContext.product
+                            select l;
+
+                //Split active filters into category - values
+                Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>();
+                foreach (var filter in ActiveFilters)
+                {
+                    if (!filters.ContainsKey(filter.Element))
+                        filters.Add(filter.Element, new List<string>());
+                    filters[filter.Element].Add(filter.Value);
+                }
+
+                foreach (var key in filters.Keys)
+                {
+                    List<string> condition = new List<string>();
+                    foreach (var val in filters[key])
+                    {
+                        if (val[0] != '>' && val[0] != '<')
+                        {
+                            condition.Add($"{key}:{val}");
+                            query = query.Where(x => condition.Any(y => x.specification.Contains(y)));
+                        }
+                        else if (key == "Cena")
+                        {
+                            string min = null, max = null;
+                            if (filters[key][0][0] == '>')
                             {
-                                if (decimal.Parse(buff, CultureInfo.InvariantCulture) <= decimal.Parse(val.Substring(1), CultureInfo.InvariantCulture))
-                                    validateProductIds.Add(k);
+                                min = filters[key][0].Substring(1);
+                                if (filters[key].Count > 1)
+                                    max = filters[key][1].Substring(1);
                             }
                             else
                             {
-                                if (decimal.Parse(buff, CultureInfo.InvariantCulture) >= decimal.Parse(val.Substring(1), CultureInfo.InvariantCulture))
-                                    validateProductIds.Add(k);
+                                max = filters[key][0].Substring(1);
+                                if (filters[key].Count > 1)
+                                    min = filters[key][1].Substring(1);
+                            }
+                            if (max != null)
+                            {
+                                decimal maxD = decimal.Parse(max);
+                                query = query.Where(x => x.price <= maxD);
+                            }
+                            if (min != null)
+                            {
+                                decimal minD = decimal.Parse(min);
+                                query = query.Where(x => x.price >= minD);
                             }
                         }
+                        else
+                        {
+                            var products = query.Select(x => new { id = x.product_id, spec = x.specification });
+                            var prodSpec = products.Where(x => x.spec.Contains(key)).ToList();
+                            Dictionary<int, List<string>> specSplit = new Dictionary<int, List<string>>();
+                            foreach (var element in prodSpec)
+                            {
+                                if (!specSplit.ContainsKey(element.id))
+                                    specSplit.Add(element.id, new List<string>());
+                                specSplit[element.id].AddRange(element.spec.Split(';'));
+                            }
+                            List<int> validateProductIds = new List<int>();
+                            foreach (var k in specSplit.Keys)
+                            {
+                                var buff = specSplit[k].Where(x => x.Contains(key)).FirstOrDefault();
+                                buff = buff.Split(':')[1];
 
-                        query = query.Where(x => validateProductIds.Any(y => x.product_id == y));
+                                if (val[0] == '<')
+                                {
+                                    if (decimal.Parse(buff, CultureInfo.InvariantCulture) <= decimal.Parse(val.Substring(1), CultureInfo.InvariantCulture))
+                                        validateProductIds.Add(k);
+                                }
+                                else
+                                {
+                                    if (decimal.Parse(buff, CultureInfo.InvariantCulture) >= decimal.Parse(val.Substring(1), CultureInfo.InvariantCulture))
+                                        validateProductIds.Add(k);
+                                }
+                            }
+
+                            query = query.Where(x => validateProductIds.Any(y => x.product_id == y));
+                        }
                     }
                 }
-            }
 
-            //Sort list
-            SortingCategoryModel selected = new SortingCategoryModel();
-            if (SelectedSortingName != null)
-                selected = SortingList.FirstOrDefault(s => s.Name == SelectedSortingName);
-            switch (selected.Sort.PropertyName)
-            {
-                case "name":
-                    if (selected.Sort.Direction == ListSortDirection.Ascending)
-                        query = from q in query
-                                orderby q.name ascending
-                                select q;
-                    else
-                        query = from q in query
-                                orderby q.name descending
-                                select q;
-                    break;
-                case "price":
-                    if (selected.Sort.Direction == ListSortDirection.Ascending)
-                        query = from q in query
-                                orderby q.price ascending
-                                select q;
-                    else
-                        query = from q in query
-                                orderby q.price descending
-                                select q;
-                    break;
-                default:
-                    query = from q in query
-                            orderby q.product_id
-                            select q;
-                    break;
-            }
 
-            //Page processing
-            _countProducts = query.Count();
-            var list = query.Skip(_currentPage * int.Parse(SelectedShowingNumber)).Take(int.Parse(SelectedShowingNumber));
 
-            //Mapping into object
-            var tmp = new ObservableCollection<ProductListModel>();
-            foreach (var e in list)
-            {
-                var p = new ProductListModel()
+                //Sort list
+                SortingCategoryModel selected = new SortingCategoryModel();
+                if (SelectedSortingName != null)
+                    selected = SortingList.FirstOrDefault(s => s.Name == SelectedSortingName);
+                switch (selected.Sort.PropertyName)
                 {
-                    Name = e.name,
-                    Price = e.price,
-                    ImageUrl = e.thumbnail
-                };
-                p.SetSpecification(e.specification);
-                tmp.Add(p);
+                    case "name":
+                        if (selected.Sort.Direction == ListSortDirection.Ascending)
+                            query = from q in query
+                                    orderby q.name ascending
+                                    select q;
+                        else
+                            query = from q in query
+                                    orderby q.name descending
+                                    select q;
+                        break;
+                    case "price":
+                        if (selected.Sort.Direction == ListSortDirection.Ascending)
+                            query = from q in query
+                                    orderby q.price ascending
+                                    select q;
+                        else
+                            query = from q in query
+                                    orderby q.price descending
+                                    select q;
+                        break;
+                    default:
+                        query = from q in query
+                                orderby q.product_id
+                                select q;
+                        break;
+                }
+
+                //Page processing
+                _countProducts = query.Count();
+                var list = query.Skip(_currentPage * int.Parse(SelectedShowingNumber)).Take(int.Parse(SelectedShowingNumber));
+
+                //Mapping into object
+                var tmp = new ObservableCollection<ProductListModel>();
+                foreach (var e in list)
+                {
+                    var p = new ProductListModel()
+                    {
+                        Name = e.name,
+                        Price = e.price,
+                        ImageUrl = e.thumbnail
+                    };
+                    p.SetSpecification(e.specification);
+                    tmp.Add(p);
+                }
+
+                Products = tmp;
+
+                //0 element list
+                if (tmp.Count == 0) SetAdditionalInfo("Nie znaleziono produktów pasujących do kryteriów wyszukiwania!");
+                else SetAdditionalInfo(null);
             }
-
-            Products = tmp;
-
-            //0 element list
-            if (tmp.Count == 0) SetAdditionalInfo("Nie znaleziono produktów pasujących do kryteriów wyszukiwania!");
-            else SetAdditionalInfo(null);
+            catch (Exception e)
+            {
+                StandardMessages.Error(e.Message);
+            }
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(String info)
