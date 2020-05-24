@@ -136,7 +136,8 @@
     <Compile Include="country.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseManager.cs" />
+    <Compile Include="Interfaces\IFilter.cs" />
+    <Compile Include="Managers\DatabaseManager.cs" />
     <Compile Include="feedback.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
@@ -293,6 +294,7 @@
       <LastGenOutput>FullDatabase.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.1.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.1.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

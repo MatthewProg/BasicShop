@@ -83,11 +83,11 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" FontSize="18" TextAlignment="Center" Text="{Binding Minimum, StringFormat={}{0:0}}" Width="{Binding ElementName=upperValue, Path=ActualWidth}" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="0" FontSize="18" TextAlignment="Center" Text="{Binding Minimum}" Width="{Binding ElementName=upperValue, Path=ActualWidth}" VerticalAlignment="Center"/>
                     <Controls:RangeSlider Grid.Column="1" Controls:AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="{Binding Precision}" 
                                           TickFrequency="{Binding Step}" IsSnapToTickEnabled="False" HorizontalAlignment="Stretch" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" 
                                           LowerValue="{Binding ValueMinimum}" UpperValue="{Binding ValueMaximum}" Orientation="Horizontal" Margin="4,0" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="2" FontSize="18" TextAlignment="Center" x:Name="upperValue" Text="{Binding Maximum, StringFormat={}{0:0}}" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" FontSize="18" TextAlignment="Center" x:Name="upperValue" Text="{Binding Maximum}" VerticalAlignment="Center"/>
                 </Grid>
             </Expander>
         </DataTemplate>
@@ -95,7 +95,8 @@
         <selectors:FilterListTypeSelector x:Key="filterSelector" CheckListTemplate="{StaticResource checkListTemplate}" SliderListTemplate="{StaticResource sliderListTemplate}" />
     </Page.Resources>
 
-    <materialDesign:DrawerHost x:Name="leftDrawer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <!--Left drawer-->
+    <materialDesign:DrawerHost x:Name="leftDrawer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LeftDrawerCloseOnClickAway="False">
         <materialDesign:DrawerHost.LeftDrawerContent>
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
                 <DockPanel Width="300" Height="auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="False">
@@ -139,18 +140,15 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" DataContext="{Binding Item2}">
                                 <TextBlock VerticalAlignment="Center" FontWeight="Black" FontSize="18" Text=">" Foreground="{StaticResource MaterialDesignLightForeground}"/>
-                                <Button VerticalAlignment="Center" Margin="0,0,0,0" Padding="1,0" Width="auto" Height="auto" Style="{StaticResource MaterialDesignFlatButton}">
+                                <Button VerticalAlignment="Center" Margin="0,0,0,0" Padding="1,0" Width="auto" Height="auto" Style="{StaticResource MaterialDesignFlatButton}" 
+                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.ChangeCategoryCommand}" 
+                                        CommandParameter="{Binding}">
                                     <TextBlock VerticalAlignment="Center" FontSize="16" Text="{Binding Name}" Foreground="{StaticResource MaterialDesignLightForeground}"/>
                                 </Button>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <!--<TextBlock VerticalAlignment="Center" FontWeight="Black" FontSize="18" Text=">" Foreground="{StaticResource MaterialDesignLightForeground}"/>
-
-                <Button VerticalAlignment="Center" Margin="0,0,0,0" Padding="1,0" Width="auto" Height="auto" Style="{StaticResource MaterialDesignFlatButton}">
-                    <TextBlock VerticalAlignment="Center" FontSize="16" Text="Podzespoły komputerowe" Foreground="{StaticResource MaterialDesignLightForeground}"/>
-                </Button>-->
             </WrapPanel>
             <Separator Grid.Row="0" VerticalAlignment="Bottom" Width="auto" HorizontalAlignment="Stretch" Margin="10,0"/>
 
@@ -182,22 +180,31 @@
             </DockPanel>
 
             <!--Filters-->
-            <WrapPanel Margin="4,2" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left">
-                <ItemsControl ItemsSource="{Binding ActiveFilters}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <materialDesign:Chip Margin="2" IsDeletable="True">
-                                <materialDesign:Chip.Content>
-                                <MultiBinding StringFormat="{}{0}: {1}">
-                                        <Binding Path="Element"/>
-                                        <Binding Path="Value"/>
-                                    </MultiBinding>       
-                                </materialDesign:Chip.Content>
-                            </materialDesign:Chip>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </WrapPanel>
+            <ItemsControl Margin="4,2" Grid.Row="2" ItemsSource="{Binding ActiveFilters}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <materialDesign:Chip Margin="2" IsDeletable="True" 
+                                             DeleteCommand="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.DeleteFilterCommand}" 
+                                             DeleteCommandParameter="{Binding}">
+                            <materialDesign:Chip.Content>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}: {1}">
+                                            <Binding Path="Element"/>
+                                            <Binding Path="Value"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </materialDesign:Chip.Content>
+                        </materialDesign:Chip>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
             <!--Items-->
             <ScrollViewer Grid.Row="3"  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">

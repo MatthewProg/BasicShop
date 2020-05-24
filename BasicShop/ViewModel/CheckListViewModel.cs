@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace BasicShop.ViewModel
 {
-    public class CheckListViewModel : INotifyPropertyChanged
+    public class CheckListViewModel : INotifyPropertyChanged, Interfaces.IFilter
     {
         private ObservableCollection<CheckListModel> _checks;
         private string _header;

@@ -7,11 +7,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlTypes;
+using System.Globalization;
 using System.IO.Pipes;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.Remoting.Contexts;
+using System.Security.Authentication.ExtendedProtection.Configuration;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -40,6 +43,7 @@ namespace BasicShop.ViewModel
         private Visibility _rightVisibility;
         private int _currentPage;
         private int _countProducts;
+        private ObservableCollection<SpecifitationModel> _activeFilters;
 
         public int CurrentPage
         {
@@ -132,7 +136,6 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("LoadingScreen");
             }
         }
-
         public string SelectedShowingNumber
         {
             get { return _selectedShowingNumber; }
@@ -144,7 +147,6 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("SelectedShowingNumber");
             }
         }
-
         public ObservableCollection<Model.ComboBoxItemModel> ShowingItems
         {
             get { return _showingItems; }
@@ -167,7 +169,6 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("SortingList");
             }
         }
-
         public string SelectedSortingName
         {
             get { return _selectedSortingName; }
@@ -179,7 +180,6 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("SelectedSortingName");
             }
         }
-
         public ObservableCollection<object> Filters
         {
             get { return _filters; }
@@ -189,10 +189,8 @@ namespace BasicShop.ViewModel
 
                 _filters = value;
                 OnPropertyChanged("Filters");
-                OnPropertyChanged("ActiveFilters");
             }
         }
-
         public ObservableCollection<ProductListModel> Products
         {
             get { return _products; }
@@ -204,36 +202,46 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("Products");
             }
         }
-
         public ObservableCollection<SpecifitationModel> ActiveFilters
         {
-            get
+            get{ return _activeFilters; }
+            set
             {
-                var tmp = new ObservableCollection<SpecifitationModel>();
-                /*foreach (var e in _filters)
-                {
-                    foreach (var f in e.GetActiveFilters())
-                        tmp.Add(f);
-                }*/
-                return tmp;
+                if (value == _activeFilters) return;
+
+                _activeFilters = value;
+                OnPropertyChanged("ActiveFilters");
             }
         }
+
 
         public SimpleCommand FilterCommand { get; set; }
         public SimpleCommand SelectedItemChangedCommand { get; set; }
         public ParameterCommand SwitchPageCommand { get; set; }
+        public ParameterCommand DeleteFilterCommand { get; set; }
+        public ParameterCommand ChangeCategoryCommand { get; set; }
+
 
 
         public ProductListViewModel()
         {
-            CurrentPage = 0;
-            SearchVisibility = Visibility.Collapsed;
-            SelectedShowingNumber = "15";
-            CreateSortingList();
-            CreateShowingItemsComboBox();
+            ActiveFilters = new ObservableCollection<SpecifitationModel>();
             FilterCommand = new SimpleCommand(FilterList);
             SelectedItemChangedCommand = new SimpleCommand(ProcessSortingChange);
             SwitchPageCommand = new ParameterCommand(SetPage);
+            DeleteFilterCommand = new ParameterCommand(DeleteFilter);
+            ChangeCategoryCommand = new ParameterCommand(ChangeCategory);
+
+            FullReload();
+        }
+       
+        private void FullReload()
+        {
+            CurrentPage = 0;
+            SearchVisibility = Visibility.Collapsed;
+            CreateSortingList();
+            CreateShowingItemsComboBox();
+            SelectedShowingNumber = "15";
 
             Action mainLoad = () =>
             {
@@ -244,37 +252,57 @@ namespace BasicShop.ViewModel
                 SetPageNavVisibility();
             };
             LoadingScreenProcess(mainLoad);
-            /* - - - - - - TESTS ONLY! - - - - - - -*/
-            var li1 = new List<CheckListModel>()
+        }
+        private void ChangeCategory(object param)
+        {
+            var obj = param as SimpleListModel;
+            CurrentCategoryId = obj.Id;
+            FullReload();
+        }
+        private void FilterList()
+        {
+            var tmp = new ObservableCollection<SpecifitationModel>();
+            foreach (var e in _filters)
             {
-                new CheckListModel() { Name = "ok"},
-                new CheckListModel() { Name = "dwa"},
-                new CheckListModel() { Name = "three"},
-                new CheckListModel() { Name = "4"}
-            };
-            var li2 = new List<CheckListModel>()
-            {
-                new CheckListModel() { Name = "ok"},
-                new CheckListModel() { Name = "dwa"},
-                new CheckListModel() { Name = "three"},
-                new CheckListModel() { Name = "4"}
-            };
-
-            Filters = new ObservableCollection<object>()
-            {
-                new CheckListViewModel(li1, "test1"),
-                new CheckListViewModel(li2, "test2")
-            };
-
-            /* - - - - - - - - - - - - - - - - - - - - - -*/
-
+                if (e is CheckListViewModel)
+                    foreach (var f in (e as CheckListViewModel).GetActiveFilters())
+                        tmp.Add(f);
+                else if(e is SliderListViewModel)
+                {
+                    var obj = e as SliderListViewModel;
+                    if (obj.ValueMinimum != obj.Minimum) tmp.Add(new SpecifitationModel() { Element = obj.Header, Value = ">" + obj.ValueMinimum.ToString("F" + obj.Precision.ToString(), CultureInfo.InvariantCulture) });
+                    if (obj.ValueMaximum != obj.Maximum) tmp.Add(new SpecifitationModel() { Element = obj.Header, Value = "<" + obj.ValueMaximum.ToString("F" + obj.Precision.ToString(), CultureInfo.InvariantCulture) });
+                }
+            }
+            ActiveFilters = tmp;
+            LoadingScreenProcess(LoadProductsFromDB);
         }
 
-
-        public void FilterList()
+        private void DeleteFilter(object param)
         {
-            //DialogHost.CloseDialogCommand.Execute(new object(), null);
-            //MessageBox.Show("ok");
+            var obj = param as SpecifitationModel;
+
+            object filter = null;
+            foreach(Interfaces.IFilter fil in _filters)
+                if (fil.Header == obj.Element)
+                {
+                    filter = fil;
+                    break;
+                }
+
+            if (obj.Value[0] == '>')
+                (filter as SliderListViewModel).ValueMinimum = (filter as SliderListViewModel).Minimum;
+            else if (obj.Value[0] == '<')
+                (filter as SliderListViewModel).ValueMaximum = (filter as SliderListViewModel).Maximum;
+            else
+                foreach (var check in (filter as CheckListViewModel).Checks)
+                    if (check.Name == obj.Value)
+                    {
+                        check.IsChecked = false;
+                        break;
+                    }
+            ActiveFilters.Remove(obj);
+            LoadingScreenProcess(LoadProductsFromDB);
         }
 
         private void SetPage(object param)
@@ -342,7 +370,7 @@ namespace BasicShop.ViewModel
                 foreach(var variant in items.Where(x=>x.SpecKey == specKey).Select(x=>x.SpecValue).Distinct())
                 {
                     float converted = 0.0F;
-                    if (float.TryParse(variant, out converted))
+                    if (float.TryParse(variant, NumberStyles.Float, CultureInfo.InvariantCulture, out converted))
                     {
                         variantsF.Add(converted);
                         if (converted <= fMin) fMin = converted;
@@ -498,19 +526,19 @@ namespace BasicShop.ViewModel
                 new Model.ComboBoxItemModel()
                 {
                     Name = "30",
-                    IsSelected = true,
+                    IsSelected = false,
                     Value = 30
                 },
                 new Model.ComboBoxItemModel()
                 {
                     Name = "45",
-                    IsSelected = true,
+                    IsSelected = false,
                     Value = 45
                 },
                 new Model.ComboBoxItemModel()
                 {
                     Name = "90",
-                    IsSelected = true,
+                    IsSelected = false,
                     Value = 90
                 }
             };
@@ -536,14 +564,15 @@ namespace BasicShop.ViewModel
         {
             var dataContext = new shopEntities();
             IQueryable<product> query = null;
+
+            //Get products from category
             if (CurrentCategoryId != null)
             {
                 var li = dataContext.childCategories((int)CurrentCategoryId);
                 query = dataContext.product.Where(o => li.Contains((int)o.category_id));
             }
-            /*query = from l in dataContext.product
-                    where l.category_id == CurrentCategoryId
-                    select l;*/
+
+            //Get products from name
             if (CurrentSearch != null)
             {
                 if (query != null)
@@ -559,6 +588,86 @@ namespace BasicShop.ViewModel
                 query = from l in dataContext.product
                         select l;
 
+            //Split active filters into category - values
+            Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>();
+            foreach (var filter in ActiveFilters)
+            {
+                if (!filters.ContainsKey(filter.Element))
+                    filters.Add(filter.Element, new List<string>());
+                filters[filter.Element].Add(filter.Value);
+            }
+
+            foreach (var key in filters.Keys)
+            {
+                List<string> condition = new List<string>();
+                foreach (var val in filters[key])
+                {
+                    if (val[0] != '>' && val[0] != '<')
+                    {
+                        condition.Add($"{key}:{val}");
+                        query = query.Where(x => condition.Any(y => x.specification.Contains(y)));
+                    }
+                    else if (key == "Cena")
+                    {
+                        string min = null, max = null;
+                        if (filters[key][0][0] == '>')
+                        {
+                            min = filters[key][0].Substring(1);
+                            if (filters[key].Count > 1)
+                                max = filters[key][1].Substring(1);
+                        }
+                        else
+                        {
+                            max = filters[key][0].Substring(1);
+                            if (filters[key].Count > 1)
+                                min = filters[key][1].Substring(1);
+                        }
+                        if (max != null)
+                        {
+                            decimal maxD = decimal.Parse(max);
+                            query = query.Where(x => x.price <= maxD);
+                        }
+                        if (min != null)
+                        {
+                            decimal minD = decimal.Parse(min);
+                            query = query.Where(x => x.price >= minD);
+                        }
+                    }
+                    else
+                    {
+                        var products = query.Select(x => new { id = x.product_id, spec = x.specification });
+                        var prodSpec = products.Where(x => x.spec.Contains(key)).ToList(); 
+                        Dictionary<int, List<string>> specSplit = new Dictionary<int, List<string>>();
+                        foreach (var element in prodSpec)
+                        {
+                            if (!specSplit.ContainsKey(element.id))
+                                specSplit.Add(element.id, new List<string>());
+                            specSplit[element.id].AddRange(element.spec.Split(';'));
+                        }
+                        List<int> validateProductIds = new List<int>();
+                        foreach (var k in specSplit.Keys)
+                        {
+                            var buff = specSplit[k].Where(x => x.Contains(key)).FirstOrDefault();
+                            buff = buff.Split(':')[1];
+
+                            if (val[0] == '<')
+                            {
+                                if (decimal.Parse(buff, CultureInfo.InvariantCulture) <= decimal.Parse(val.Substring(1), CultureInfo.InvariantCulture))
+                                    validateProductIds.Add(k);
+                            }
+                            else
+                            {
+                                if (decimal.Parse(buff, CultureInfo.InvariantCulture) >= decimal.Parse(val.Substring(1), CultureInfo.InvariantCulture))
+                                    validateProductIds.Add(k);
+                            }
+                        }
+
+                        query = query.Where(x => validateProductIds.Any(y => x.product_id == y));
+                    }
+                }
+            }
+
+            //Sort list
             SortingCategoryModel selected = new SortingCategoryModel();
             if (SelectedSortingName != null)
                 selected = SortingList.FirstOrDefault(s => s.Name == SelectedSortingName);
@@ -590,9 +699,12 @@ namespace BasicShop.ViewModel
                             select q;
                     break;
             }
+
+            //Page processing
             _countProducts = query.Count();
             var list = query.Skip(_currentPage * int.Parse(SelectedShowingNumber)).Take(int.Parse(SelectedShowingNumber));
-            //Products = new ObservableCollection<ProductListModel>();
+
+            //Mapping into object
             var tmp = new ObservableCollection<ProductListModel>();
             foreach (var e in list)
             {
@@ -607,6 +719,8 @@ namespace BasicShop.ViewModel
             }
 
             Products = tmp;
+
+            //0 element list
             if (tmp.Count == 0) SetAdditionalInfo("Nie znaleziono produktów pasujących do kryteriów wyszukiwania!");
             else SetAdditionalInfo(null);
         }

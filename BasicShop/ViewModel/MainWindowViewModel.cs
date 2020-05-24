@@ -39,7 +39,7 @@ namespace BasicShop.ViewModel
 
             var productList = new ProductList();
             (productList.DataContext as ProductListViewModel).CurrentSearch = null;
-            (productList.DataContext as ProductListViewModel).CurrentCategoryId = 7;
+            (productList.DataContext as ProductListViewModel).CurrentCategoryId = 19;
             MainFrame = productList;
 
         }

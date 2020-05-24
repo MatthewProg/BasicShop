@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace BasicShop.ViewModel
 {
-    public class SliderListViewModel : INotifyPropertyChanged
+    public class SliderListViewModel : INotifyPropertyChanged, Interfaces.IFilter
     {
         private float _minimum;
         private float _maximum;
@@ -75,7 +75,7 @@ namespace BasicShop.ViewModel
         }
         public float ValueMinimum
         {
-            get { return _valueMinimum; }
+            get { return (float)Math.Round(_valueMinimum, Precision); }
             set
             {
                 if (value == _valueMinimum) return;
@@ -87,7 +87,7 @@ namespace BasicShop.ViewModel
 
         public float ValueMaximum
         {
-            get { return _valueMaximum; }
+            get { return (float)Math.Round(_valueMaximum, Precision); }
             set
             {
                 if (value == _valueMaximum) return;
