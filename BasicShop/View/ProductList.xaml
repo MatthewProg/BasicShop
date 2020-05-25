@@ -127,7 +127,8 @@
 
             <!--Navigation-->
             <WrapPanel Grid.Row="0" Margin="4,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Button VerticalAlignment="Center" Width="auto" Height="auto" Style="{StaticResource MaterialDesignIconForegroundButton}">
+                <Button VerticalAlignment="Center" Width="auto" Height="auto" Style="{StaticResource MaterialDesignIconForegroundButton}"
+                        Command="{Binding HomeCommand}">
                     <materialDesign:PackIcon Kind="Home" Height="auto" Width="auto" Foreground="{StaticResource MaterialDesignLightForeground}"/>
                 </Button>
                 <ItemsControl ItemsSource="{Binding NavList}">
@@ -233,6 +234,12 @@
                                             </EventTrigger.Actions>
                                         </EventTrigger>
                                     </Border.Triggers>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseUp">
+                                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=Page, Mode=FindAncestor}, Path=DataContext.ShowProductCommand}"
+                                                                   CommandParameter="{Binding .}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
                                     <Grid Height="150">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition SharedSizeGroup="Checkerz" />
@@ -244,7 +251,7 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <Border Background="Transparent" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Height="150" Width="150">
-                                            <Image Height="150" Width="150" Source="{Binding ImageUrl, Converter={StaticResource OnlineImageConverter}}"/>
+                                            <Image RenderOptions.BitmapScalingMode="Fant" Stretch="Uniform" Height="150" Width="150" Source="{Binding ImageUrl, Converter={StaticResource OnlineImageConverter}}"/>
                                         </Border>
                                         <TextBlock Margin="8 0 0 0" Grid.Row="0" Grid.Column="1" FontWeight="Black" TextTrimming="CharacterEllipsis" FontSize="30" ToolTip="{Binding Name}" Text="{Binding Name}" VerticalAlignment="Top" HorizontalAlignment="Left" materialDesign:HintAssist.Hint="{Binding Name}" />
                                         <ItemsControl Margin="8 0 0 0" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" ItemsSource="{Binding Specifitation}">

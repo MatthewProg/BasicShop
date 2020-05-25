@@ -28,6 +28,7 @@ namespace BasicShop.ViewModel
 {
     public class ProductListViewModel : INotifyPropertyChanged
     {
+        private MainWindowViewModel _mainVM;
         private ObservableCollection<object> _filters;
         private ObservableCollection<ProductListModel> _products;
         private ObservableCollection<SortingCategoryModel> _sortingList;
@@ -204,7 +205,7 @@ namespace BasicShop.ViewModel
         }
         public ObservableCollection<SpecifitationModel> ActiveFilters
         {
-            get{ return _activeFilters; }
+            get { return _activeFilters; }
             set
             {
                 if (value == _activeFilters) return;
@@ -217,27 +218,39 @@ namespace BasicShop.ViewModel
 
         public SimpleCommand FilterCommand { get; set; }
         public SimpleCommand SelectedItemChangedCommand { get; set; }
+        public SimpleCommand HomeCommand { get; set; }
         public ParameterCommand SwitchPageCommand { get; set; }
         public ParameterCommand DeleteFilterCommand { get; set; }
         public ParameterCommand ChangeCategoryCommand { get; set; }
+        public ParameterCommand ShowProductCommand { get; set; }
 
-
-        public ProductListViewModel(uint? category = null, string search = null)
+        public ProductListViewModel(MainWindowViewModel mvm, uint? category = null, string search = null)
         {
+            _mainVM = mvm;
             ActiveFilters = new ObservableCollection<SpecifitationModel>();
             FilterCommand = new SimpleCommand(FilterList);
             SelectedItemChangedCommand = new SimpleCommand(ProcessSortingChange);
+            HomeCommand = new SimpleCommand(GoToHome);
             SwitchPageCommand = new ParameterCommand(SetPage);
             DeleteFilterCommand = new ParameterCommand(DeleteFilter);
             ChangeCategoryCommand = new ParameterCommand(ChangeCategory);
+            ShowProductCommand = new ParameterCommand(ShowProduct);
 
             CurrentCategoryId = category;
             CurrentSearch = search;
 
             FullReload();
         }
-       
 
+        private void GoToHome()
+        {
+            _mainVM.LoadPage("home");
+        }
+        private void ShowProduct(object param)
+        {
+            var obj = param as ProductListModel;
+            _mainVM.LoadProduct(obj.ProductID);
+        }
         private void FullReload()
         {
             CurrentPage = 0;
@@ -281,6 +294,8 @@ namespace BasicShop.ViewModel
             ActiveFilters = tmp;
             Action reload = () =>
             {
+                CurrentPage = 0;
+                SelectedShowingNumber = "15";
                 LoadProductsFromDB();
                 SetPageNavVisibility();
             };
@@ -587,6 +602,7 @@ namespace BasicShop.ViewModel
         private void ProcessSortingChange()
         {
             CurrentPage = 0;
+            SetPageNavVisibility();
             LoadingScreenProcess(LoadProductsFromDB);
         }
         private void LoadingScreenProcess(Action action)
@@ -754,7 +770,8 @@ namespace BasicShop.ViewModel
                     {
                         Name = e.name,
                         Price = e.price,
-                        ImageUrl = e.thumbnail
+                        ImageUrl = e.thumbnail,
+                        ProductID = e.product_id
                     };
                     p.SetSpecification(e.specification);
                     tmp.Add(p);

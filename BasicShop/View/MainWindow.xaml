@@ -147,11 +147,18 @@
                         <TextBlock x:Name="button2text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Kategorie</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"
+                <!--<Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"
                         Command="{Binding LoadScreenCommand}" CommandParameter="null">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <materialDesign:PackIcon Kind="PackageVariant" Width="auto" Height="auto"/>
                         <TextBlock x:Name="button3text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Zamówienia</TextBlock>
+                    </StackPanel>
+                </Button>-->
+                <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"
+                        Command="{Binding LoadScreenCommand}" CommandParameter="cart">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Cart" Width="auto" Height="auto"/>
+                        <TextBlock x:Name="button3text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Koszyk</TextBlock>
                     </StackPanel>
                 </Button>
                 <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"

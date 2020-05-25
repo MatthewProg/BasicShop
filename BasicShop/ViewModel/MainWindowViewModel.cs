@@ -33,6 +33,7 @@ namespace BasicShop.ViewModel
         public SimpleCommand MinimalizeWindowCommand { get; set; }
         public ParameterCommand LoadScreenCommand { get; set; }
         public ParameterCommand SearchCommand { get; set; }
+
         public MainWindowViewModel(MainWindow main)
         {
             _mainWindow = main;
@@ -42,12 +43,20 @@ namespace BasicShop.ViewModel
             LoadScreenCommand = new ParameterCommand(LoadScreen);
             SearchCommand = new ParameterCommand(Search);
 
-            MainFrame = new InformationPage();
+            LoadPage("home");
         }
 
+        public void LoadPage(string name)
+        {
+            LoadScreen(name);
+        }
         public void LoadProductList(uint? categoryID, string search)
         {
-            MainFrame = new ProductList(categoryID, search);
+            MainFrame = new ProductList(this,categoryID, search);
+        }
+        public void LoadProduct(int? prodId)
+        {
+            MainFrame = new ProductPage(this, prodId);
         }
         private void LoadScreen(object param)
         {
@@ -71,11 +80,16 @@ namespace BasicShop.ViewModel
 
             LoadProductList(null, search);
         }
+        public void NavigationGoBack()
+        {
+            if(_mainWindow.frameMain.CanGoBack)
+                _mainWindow.frameMain.GoBack();
+        }
+
         private void CloseWindow()
         {
             _mainWindow.Close();
         }
-
         private void MinimalizeWindow()
         {
             _mainWindow.WindowState = System.Windows.WindowState.Minimized;

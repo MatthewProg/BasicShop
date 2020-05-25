@@ -25,16 +25,11 @@ namespace BasicShop.View
     /// </summary>
     public partial class ProductList : Page
     {
-        public ProductList()
-        {
-            InitializeComponent();
-            this.DataContext = new ProductListViewModel();
-        }
 
-        public ProductList(uint? category = null, string search = null)
+        public ProductList(MainWindowViewModel mvm, uint? category = null, string search = null)
         {
             InitializeComponent();
-            this.DataContext = new ProductListViewModel(category,search);
+            this.DataContext = new ProductListViewModel(mvm,category,search);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
