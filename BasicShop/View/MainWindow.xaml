@@ -162,7 +162,7 @@
                     </StackPanel>
                 </Button>
                 <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"
-                        Command="{Binding LoadScreenCommand}" CommandParameter="null">
+                        Command="{Binding LoadScreenCommand}" CommandParameter="account">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <materialDesign:PackIcon Kind="AccountCircle" Width="auto" Height="auto"/>
                         <TextBlock x:Name="button4text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Moje konto</TextBlock>

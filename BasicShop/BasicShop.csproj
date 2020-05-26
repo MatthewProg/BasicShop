@@ -342,6 +342,9 @@
       <DependentUpon>FullDatabase.edmx</DependentUpon>
       <LastGenOutput>FullDatabase.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\img\icons\account.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,5 @@
 ﻿using BasicShop.Commands;
+using BasicShop.Managers;
 using BasicShop.View;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,12 @@ namespace BasicShop.ViewModel
                     break;
                 case "categories":
                     MainFrame = new CategoriesPage(this);
+                    break;
+                case "account":
+                    if (AccountManager.LoggedId == null)
+                        MainFrame = new LoginPage();
+                    else
+                        MainFrame = new AccountPage();
                     break;
                 default:
                     break;
