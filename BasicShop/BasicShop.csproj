@@ -87,6 +87,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
@@ -133,15 +134,17 @@
     <Compile Include="Commands\ParameterCommand.cs" />
     <Compile Include="Commands\SimpleCommand.cs" />
     <Compile Include="Converters\DecimalPlacesConverter.cs" />
+    <Compile Include="Converters\MyMultiConverter.cs" />
     <Compile Include="Converters\OnlineImageConverter.cs" />
     <Compile Include="country.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IFilter.cs" />
-    <Compile Include="Managers\DatabaseManager.cs" />
     <Compile Include="feedback.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IFilter.cs" />
+    <Compile Include="Managers\AccountManager.cs" />
+    <Compile Include="Managers\DatabaseManager.cs" />
     <Compile Include="FullDatabase.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -203,18 +206,26 @@
     <Compile Include="sysdiagrams.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\AccountViewModel.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\CheckListViewModel.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ProductListViewModel.cs" />
     <Compile Include="ViewModel\ProductPageViewModel.cs" />
     <Compile Include="ViewModel\SimpleListViewModel.cs" />
     <Compile Include="ViewModel\SliderListViewModel.cs" />
+    <Compile Include="View\AccountPage.xaml.cs">
+      <DependentUpon>AccountPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CategoriesPage.xaml.cs">
       <DependentUpon>CategoriesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\InformationPage.xaml.cs">
       <DependentUpon>InformationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ProductPage.xaml.cs">
       <DependentUpon>ProductPage.xaml</DependentUpon>
@@ -225,11 +236,19 @@
     <Compile Include="warehouse.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
+    <Page Include="View\AccountPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CategoriesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\InformationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -69,13 +69,10 @@
           <Property Name="address_id" Type="int" Nullable="false" />
           <Property Name="status" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_A61718_basic.dbo.order_product' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="order_product">
           <Key>
             <PropertyRef Name="order_id" />
             <PropertyRef Name="product_id" />
-            
           </Key>
           <Property Name="order_id" Type="int" Nullable="false" />
           <Property Name="product_id" Type="int" Nullable="false" />
@@ -121,7 +118,7 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.order_product' does not have a
           <Property Name="thumbnail" Type="varchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_A61718_basic.dbo.product_image' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'shop_database.dbo.product_image' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="product_image">
           <Key>
             <PropertyRef Name="product_id" />
@@ -164,20 +161,15 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.product_image' does not have a
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_A61718_basic.dbo.warehouse' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="warehouse">
           <Key>
             <PropertyRef Name="product_id" />
             <PropertyRef Name="store_id" />
-            
           </Key>
           <Property Name="product_id" Type="int" Nullable="false" />
           <Property Name="store_id" Type="int" Nullable="false" />
           <Property Name="quantity" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DB_A61718_basic.dbo.whishlist' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="whishlist">
           <Key>
             <PropertyRef Name="account_id" />
@@ -449,9 +441,7 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.whishlist' does not have a pri
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_whishlist_account">
-          <End Role="account" Type="Self.account" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="account" Type="Self.account" Multiplicity="1" />
           <End Role="whishlist" Type="Self.whishlist" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="account">
@@ -529,6 +519,7 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.whishlist' does not have a pri
           <EntitySet Name="country" EntityType="Self.country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="feedback" EntityType="Self.feedback" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="order" EntityType="Self.order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="order_product" EntityType="Self.order_product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="person" EntityType="Self.person" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="position" EntityType="Self.position" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="producent" EntityType="Self.producent" Schema="dbo" store:Type="Tables" />
@@ -537,31 +528,13 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.whishlist' does not have a pri
           <EntitySet Name="staff" EntityType="Self.staff" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="store" EntityType="Self.store" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="order_product" EntityType="Self.order_product" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [order_product].[order_id] AS [order_id], 
-    [order_product].[product_id] AS [product_id], 
-    [order_product].[quantity] AS [quantity]
-    FROM [dbo].[order_product] AS [order_product]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="warehouse" EntityType="Self.warehouse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="whishlist" EntityType="Self.whishlist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="product_image" EntityType="Self.product_image" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [product_image].[product_id] AS [product_id], 
     [product_image].[image_src] AS [image_src]
     FROM [dbo].[product_image] AS [product_image]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="warehouse" EntityType="Self.warehouse" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [warehouse].[product_id] AS [product_id], 
-    [warehouse].[store_id] AS [store_id], 
-    [warehouse].[quantity] AS [quantity]
-    FROM [dbo].[warehouse] AS [warehouse]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="whishlist" EntityType="Self.whishlist" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [whishlist].[account_id] AS [account_id], 
-    [whishlist].[product_id] AS [product_id]
-    FROM [dbo].[whishlist] AS [whishlist]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_account_person" Association="Self.FK_account_person">
             <End Role="person" EntitySet="person" />
@@ -1250,7 +1223,7 @@ warning 6002: The table/view 'DB_A61718_basic.dbo.whishlist' does not have a pri
           <Parameter Name="CategoryId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="productSpecification" IsComposable="true" ReturnType="Collection(shopModel.productSpecification_Result)">
-            <Parameter Name="ProductId" Mode="In" Type="Int32" />
+          <Parameter Name="ProductId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="categorySpecification_Result">

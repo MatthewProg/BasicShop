@@ -29,7 +29,7 @@ namespace BasicShop.View
         public ProductPage(MainWindowViewModel mvm, int? productId)
         {
             InitializeComponent();
-            this.DataContext = new ProductPageViewModel(mvm, productId);
+            this.DataContext = new ProductPageViewModel(this, mvm, productId);
         }
     }
 }

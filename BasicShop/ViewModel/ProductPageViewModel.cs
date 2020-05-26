@@ -1,11 +1,16 @@
 ﻿using BasicShop.Commands;
+using BasicShop.Managers;
 using BasicShop.Model;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +33,8 @@ namespace BasicShop.ViewModel
         private int _noOfAvaible;
         private ObservableCollection<Tuple<int, SimpleListModel>> _navList;
         private Visibility _loadingScreen;
+        private bool _inWishlist;
+        private View.ProductPage _productPage;
 
         public string Name
         {
@@ -151,36 +158,55 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("LoadingScreen");
             }
         }
+        public bool InWhishlist
+        {
+            get { return _inWishlist; }
+            set
+            {
+                if (value == _inWishlist) return;
+
+                _inWishlist = value;
+                OnPropertyChanged("InWhishlist");
+            }
+        }
+        public MaterialDesignThemes.Wpf.SnackbarMessageQueue MessageQueue { get; set; }
 
         public SimpleCommand GoBackCommand { get; set; }
         public SimpleCommand GoHomeCommand { get; set; }
+        public SimpleCommand WhishlistCommand { get; set; }
         public ParameterCommand ChangeImageCommand { get; set; }
         public ParameterCommand ChangeCategoryCommand { get; set; }
+        public ParameterCommand AddCommentCommand { get; set; }
 
         public ProductPageViewModel()
         {
             GoBackCommand = new SimpleCommand(GoBack);
             GoHomeCommand = new SimpleCommand(GoHome);
+            WhishlistCommand = new SimpleCommand(ProcessWhishlistChange);
             ChangeCategoryCommand = new ParameterCommand(ChangeCategory);
             ChangeImageCommand = new ParameterCommand(ChangeImage);
+            AddCommentCommand = new ParameterCommand(AddComment);
 
             Name = "Name";
             Images = new ObservableCollection<string>();
-            Price = 10.0M;
+            Price = 0.0M;
             Description = "Description";
             Specification = new ObservableCollection<SpecifitationModel>();
-            Rating = 5.0D;
+            Rating = 0.0D;
             Comments = new ObservableCollection<CommentModel>();
             SelectedPhoto = string.Empty;
             NavList = new ObservableCollection<Tuple<int, SimpleListModel>>();
+            MessageQueue = new MaterialDesignThemes.Wpf.SnackbarMessageQueue(new TimeSpan(0,0,2));
         }
-        public ProductPageViewModel(MainWindowViewModel mvm, int? productId) : this()
+        public ProductPageViewModel(View.ProductPage page, MainWindowViewModel mvm, int? productId) : this()
         {
             if(productId == null)
             {
-                StandardMessages.Error("Błędny numer produktu!");
+                string mess = "Podczas ładowania produktu wystąpił błąd!\n";
+                StandardMessages.Error(mess + "Błędny numer produktu!");
                 return;
             }
+            _productPage = page;
             _mainVM = mvm;
             LoadingScreenProcess(() =>
             {
@@ -188,7 +214,111 @@ namespace BasicShop.ViewModel
             });
         }
 
+        private void AddComment(object param)
+        {
+            object[] obj = new object[2];
+            obj = (object[])param;
 
+            int rating = (int)obj[0];
+            string comment = (string)obj[1];
+
+            if(rating == 0)
+            {
+                MessageQueue.Enqueue("Należy podać wartość oceny");
+                return;
+            }
+            if (AccountManager.LoggedId == null)
+            {
+                MessageQueue.Enqueue("Musisz być zalogowany, aby dodawać opinie!");
+                return;
+            }
+
+            feedback comm = new feedback();
+            comm.account_id = (int)AccountManager.LoggedId;
+            comm.comment = (comment == null || comment == string.Empty) ? null : comment;
+            comm.product_id = (int)CurrentProductId;
+            comm.rating = rating;
+
+            try
+            {
+                var dataContext = new shopEntities();
+                dataContext.feedback.Add(comm);
+                dataContext.SaveChanges();
+            }
+            catch(Exception e)
+            {
+                string mess = "Podczas dodawania opinii wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
+            }
+
+            Rating = GetProductRating(CurrentProductId);
+            Comments = new ObservableCollection<CommentModel>(GetProductComments(CurrentProductId));
+
+            _productPage.newRating.Value = 0;
+            _productPage.newComment.Text = string.Empty;
+        }
+        private void ProcessWhishlistChange()
+        {
+            if(AccountManager.LoggedId == null)
+            {
+                InWhishlist = false;
+                MessageQueue.Enqueue("Musisz być zalogowany, aby dodać produkt do listy życzeń", null, null, null, true, false, new TimeSpan(0,0,4));
+                return;
+            }
+
+            try
+            {
+                var dataContext = new shopEntities();
+                if (IsInWhishlist(CurrentProductId))
+                {
+                    var p = dataContext.product.FirstOrDefault(x => x.product_id == CurrentProductId);
+                    var a = dataContext.account.FirstOrDefault(x => x.account_id == AccountManager.LoggedId);
+                    p.account.Remove(a);
+                    dataContext.SaveChanges();
+                    MessageQueue.Enqueue("Produkt został usunięty z listy życzeń");
+                }
+                else
+                {
+                    var p = dataContext.product.FirstOrDefault(x => x.product_id == CurrentProductId);
+                    var a = dataContext.account.FirstOrDefault(x => x.account_id == AccountManager.LoggedId);
+                    p.account.Add(a);
+                    dataContext.SaveChanges();
+                    MessageQueue.Enqueue("Produkt został dodany do listy życzeń");
+                }       
+            }
+            catch(Exception e)
+            {
+                string mess = "Podczas edytowania listy życzeń wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
+            }
+        }
+        private bool IsInWhishlist(int? prodId)
+        {
+            bool output = false;
+
+            if (AccountManager.LoggedId == null || prodId == null) return false;
+
+            try
+            {
+                var dataContext = new shopEntities();
+                var count = from a in dataContext.account
+                            from p in a.product
+                            where p.product_id == prodId && a.account_id == AccountManager.LoggedId
+                           select new
+                           {
+                               account_id = a.account_id,
+                               product_id = p.product_id
+                           };
+                if (count.Count() != 0) output = true;
+            }
+            catch(Exception e)
+            {
+                string mess = "Podczas edytowania listy życzeń wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
+            }
+
+            return output;
+        }
         private void ChangeImage(object param)
         {
             SelectedPhoto = param as string;
@@ -200,7 +330,7 @@ namespace BasicShop.ViewModel
         }
         private void GoHome()
         {
-            _mainVM.LoadPage("home");
+            _mainVM.LoadPage("categories");
         }
         private void GoBack()
         {
@@ -218,9 +348,11 @@ namespace BasicShop.ViewModel
             }
             catch(Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas uzyskiwania obiektu produktu wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
 
+            CurrentProductId = obj.product_id;
             Name = obj.name;
             Images = new ObservableCollection<string>(GetProductImages(prodId));
             Price = obj.price;
@@ -230,6 +362,7 @@ namespace BasicShop.ViewModel
             Comments = new ObservableCollection<CommentModel>(GetProductComments(prodId));
             SelectedPhoto = Images[0];
             NoOfAvaible = GetNoOfAvaibleProducts(prodId);
+            InWhishlist = IsInWhishlist(prodId);
             UpdateNavList(prodId);
         }
         private List<string> GetProductImages(int? prodId)
@@ -244,7 +377,8 @@ namespace BasicShop.ViewModel
             }
             catch(Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas uzyskiwania zdjęć produktu wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
 
             return output;
@@ -262,7 +396,8 @@ namespace BasicShop.ViewModel
             }
             catch(Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas uzyskiwania specyfikacji produktu wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
 
             return output;
@@ -277,7 +412,8 @@ namespace BasicShop.ViewModel
             }
             catch(Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas uzyskiwania ilości dostępnych produktów wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
 
             return output;
@@ -295,15 +431,42 @@ namespace BasicShop.ViewModel
                     output = 0;
             }
             catch (InvalidOperationException)
-                { StandardMessages.Error("Błędny numer produktu!"); }
+            { StandardMessages.Error("Błędny numer produktu!"); }
             catch (Exception e)
-                { StandardMessages.Error(e.Message); }
+            {
+                string mess = "Podczas uzyskiwania oceny produktu wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
+            }
 
             return output;
             }
         private List<CommentModel> GetProductComments(int? prodId)
         {
             List<CommentModel> output = new List<CommentModel>();
+
+            var obj = new List<feedback>();
+            try
+            {
+                var dataContext = new shopEntities();
+                obj = dataContext.feedback.Where(x => x.product_id == prodId).OrderByDescending(x=>x.feedback_id).ToList();
+
+                foreach(var comment in obj)
+                {
+                    output.Add(new CommentModel()
+                    {
+                        CommentId = comment.feedback_id,
+                        Comment = comment.comment,
+                        Rating = comment.rating,
+                        UserId = comment.account_id,
+                        Username = dataContext.account.Where(x => x.account_id == comment.account_id).Select(x => x.username).ToArray()[0]
+                    });
+                }
+            }
+            catch(Exception e)
+            {
+                string mess = "Podczas uzystkiwania opinii wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
+            }
 
             return output;
         }
@@ -327,7 +490,8 @@ namespace BasicShop.ViewModel
             }
             catch(Exception e)
             {
-                StandardMessages.Error("Błędny numer produktu!");
+                string mess = "Podczas uzyskiwania numeru kategorii wystąpił błąd!\n";
+                StandardMessages.Error(mess + "Błędny numer produktu!");
                 NavList = new ObservableCollection<Tuple<int, SimpleListModel>>();
                 return;
             }
@@ -353,7 +517,8 @@ namespace BasicShop.ViewModel
             }
             catch (Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas próby uzyskania wyższych kategorii wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
         }
 

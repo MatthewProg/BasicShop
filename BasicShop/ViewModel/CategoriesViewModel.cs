@@ -72,7 +72,8 @@ namespace BasicShop.ViewModel
             }
             catch(Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas ładowania listy kategorii wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
         }
         private List<TreeViewCategoryModel> GetChildCategory(int parentId, List<category> categoriesList)

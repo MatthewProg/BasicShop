@@ -244,7 +244,7 @@ namespace BasicShop.ViewModel
 
         private void GoToHome()
         {
-            _mainVM.LoadPage("home");
+            _mainVM.LoadPage("categories");
         }
         private void ShowProduct(object param)
         {
@@ -254,10 +254,10 @@ namespace BasicShop.ViewModel
         private void FullReload()
         {
             CurrentPage = 0;
-            SearchVisibility = Visibility.Collapsed;
-            CreateSortingList();
-            CreateShowingItemsComboBox();
             SelectedShowingNumber = "15";
+            SearchVisibility = Visibility.Collapsed;
+            CreateShowingItemsComboBox();
+            CreateSortingList();
 
             Action mainLoad = () =>
             {
@@ -353,6 +353,7 @@ namespace BasicShop.ViewModel
             RightVisibility = Visibility.Visible;
 
             if (_currentPage == 0) LeftVisibility = Visibility.Hidden;
+            if (_selectedShowingNumber == null) SelectedShowingNumber = "15";
             if (CurrentPage == Math.Ceiling(_countProducts / float.Parse(_selectedShowingNumber)) || _countProducts <= float.Parse(_selectedShowingNumber)) RightVisibility = Visibility.Hidden;
         }
         private void UpdateFilters()
@@ -457,7 +458,8 @@ namespace BasicShop.ViewModel
             }
             catch(Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas ładowania filtrów wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
         }
         private void SetAdditionalInfo(string text)
@@ -536,7 +538,8 @@ namespace BasicShop.ViewModel
             }
             catch (Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas ładowania wyższych kategorii wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
 }
         /* Got replaced by SQL function
@@ -598,6 +601,7 @@ namespace BasicShop.ViewModel
                     Value = 90
                 }
             };
+            SelectedShowingNumber = "15";
         }
         private void ProcessSortingChange()
         {
@@ -785,7 +789,8 @@ namespace BasicShop.ViewModel
             }
             catch (Exception e)
             {
-                StandardMessages.Error(e.Message);
+                string mess = "Podczas ładowania listy produktów wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
             }
         }
 

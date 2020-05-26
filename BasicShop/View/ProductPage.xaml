@@ -24,6 +24,7 @@
     <Page.Resources>
         <converters:OnlineImageConverter x:Key="OnlineImageConverter"/>
         <converters:DecimalPlacesConverter x:Key="DecimalPlacesConverter" />
+        <converters:MyMultiConverter x:Key="MyMultiConverter" />
     </Page.Resources>
 
     <Grid>
@@ -31,6 +32,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -76,9 +78,22 @@
                 <Separator Grid.Row="0" VerticalAlignment="Bottom" Width="auto" HorizontalAlignment="Stretch" Margin="10,0"/>
 
                 <!--Name-->
-                <Viewbox Height="40" Grid.Row="1" HorizontalAlignment="Left">
-                    <TextBlock TextAlignment="Left" HorizontalAlignment="Left" Text="{Binding Name}"/>
-                </Viewbox>
+                <DockPanel Height="40" Grid.Row="1" LastChildFill="False">
+                    <Viewbox DockPanel.Dock="Left" Height="40" HorizontalAlignment="Left">
+                        <TextBlock TextAlignment="Left" HorizontalAlignment="Left" Text="{Binding Name}"/>
+                    </Viewbox>
+                    <ToggleButton DockPanel.Dock="Right" Margin="4,0" Height="34" Width="34"  
+                                  Style="{StaticResource MaterialDesignActionToggleButton}" 
+                                  Background="Transparent" IsChecked="{Binding InWhishlist}"
+                                  Command="{Binding WhishlistCommand}">
+                        <ToggleButton.Content>
+                            <materialDesign:PackIcon Kind="Heart" Height="30" Width="30" Foreground="Gray" />
+                        </ToggleButton.Content>
+                        <materialDesign:ToggleButtonAssist.OnContent>
+                            <materialDesign:PackIcon Kind="Heart" Height="30" Width="30" Foreground="Red" />
+                        </materialDesign:ToggleButtonAssist.OnContent>
+                    </ToggleButton>
+                </DockPanel>
 
 
                 <!--Photos and price-->
@@ -128,40 +143,98 @@
 
 
                 <!--Description-->
-                <TextBlock Grid.Row="3" Text="{Binding Description}"/>
+                <materialDesign:Card Grid.Row="3" Margin="4,6" Padding="8,4">
+                    <StackPanel>
+                        <TextBlock Text="Opis" TextAlignment="Left" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding Description}" TextAlignment="Justify" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </materialDesign:Card>
 
 
                 <!--Specification-->
-                <ItemsControl Grid.Row="4" ItemsSource="{Binding Specification}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:SpecifitationModel}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" HorizontalAlignment="Right" Text="{Binding Element}"/>
-                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" Text="{Binding Value}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <materialDesign:Card Grid.Row="4" Margin="4,6" Padding="8,4">
+                    <StackPanel>
+                        <TextBlock Text="Specyfikacja" FontSize="24" Margin="0,0,0,8"/>
+                        <ItemsControl  ItemsSource="{Binding Specification}" AlternationCount="2">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:SpecifitationModel}">
+                                    <Grid Margin="2" x:Name="Bar">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="BarLeft" Margin="4,0" Grid.Column="0" FontSize="16" HorizontalAlignment="Right" TextAlignment="Left" Text="{Binding Element}" FontWeight="Medium"/>
+                                        <TextBlock x:Name="BarRight" Margin="4,0" Grid.Column="1" FontSize="16" HorizontalAlignment="Left" TextAlignment="Left" Text="{Binding Value}"/>
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                            <Setter Property="Background" Value="#ddebf7" TargetName="Bar" />
+                                            <!--<Setter Property="Background" Value="#ddebf7" TargetName="BarLeft" />
+                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="BarRight"/>-->
+                                        </Trigger>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="Bar" />
+                                            <!--<Setter Property="Background" Value="#ddebf7" TargetName="BarRight"/>
+                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="BarLeft"/>-->
+                                        </Trigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </materialDesign:Card>
 
 
-                <!--Comments-->
-                <StackPanel Grid.Row="5">
-                    <Border Padding="4" BorderThickness="1" BorderBrush="DimGray">
-                        <DockPanel LastChildFill="False">
-                            <RichTextBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
-                            <materialDesign:RatingBar DockPanel.Dock="Left" Value="{Binding Rating}"/>
-                            <Button DockPanel.Dock="Right" Content="Dodaj opinię"/>
+                <!--AddComment-->
+                <materialDesign:Card Grid.Row="5" Margin="4,6" Padding="8,4">
+                    <StackPanel >
+                        <TextBlock Text="Dodaj opinię" FontSize="24" Margin="0,0,0,8"/>
+                        <DockPanel LastChildFill="False" Margin="4">
+                            <TextBox x:Name="newComment" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="80" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                                     AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Hidden"
+                                     materialDesign:HintAssist.Hint="Opinia" Margin="4,4,4,6"/>
+                            <materialDesign:RatingBar x:Name="newRating" DockPanel.Dock="Left" Value="0" VerticalAlignment="Center"/>
+                            <Button DockPanel.Dock="Right" Content="Dodaj opinię" Margin="4,0" Command="{Binding AddCommentCommand}">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                        <Binding Path="Value" ElementName="newRating" />
+                                        <Binding Path="Text" ElementName="newComment" />
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
                         </DockPanel>
-                    </Border>
-                    <ItemsControl />
-                </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
 
+                
+                <!--Comment-->
+                <materialDesign:Card Grid.Row="6" Margin="4,6" Padding="8,4">
+                    <StackPanel >
+                        <TextBlock Text="{Binding Rating, StringFormat=Oceny (średnia: {0:F2})}" FontSize="24" Margin="0,0,0,8"/>
+                        <ItemsControl ItemsSource="{Binding Comments}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:CommentModel}">
+                                    <StackPanel>
+                                        <DockPanel LastChildFill="False" VerticalAlignment="Center" Height="30">
+                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Username}" FontSize="18" FontWeight="Medium" VerticalAlignment="Center"/>
+                                            <materialDesign:RatingBar DockPanel.Dock="Left" Margin="4,0" IsReadOnly="True" Value="{Binding Rating}" VerticalAlignment="Center"/>
+                                            <TextBlock DockPanel.Dock="Right" FontSize="14" TextWrapping="Wrap" Text="{Binding CommentId, StringFormat=#{0}}" Foreground="Gray" />
+                                        </DockPanel>
+                                        <materialDesign:RatingBarButton HorizontalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Comment}" HorizontalAlignment="Stretch" TextAlignment="Left"/>
+                                        <Separator VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </materialDesign:Card>
             </Grid>
         </ScrollViewer>
+        
+        <!--Snackbar-->
+        <materialDesign:Snackbar Grid.Column="0" Grid.Row="0" MessageQueue="{Binding MessageQueue}"/>
+
         <Grid Grid.Row="0" Grid.Column="0" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
             <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
