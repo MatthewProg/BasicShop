@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BasicShop.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,10 @@ namespace BasicShop.View
     /// </summary>
     public partial class LoginPage : Page
     {
-        public LoginPage()
+        public LoginPage(MainWindowViewModel mvm)
         {
             InitializeComponent();
+            this.DataContext = new LoginViewModel(mvm);
         }
     }
 }

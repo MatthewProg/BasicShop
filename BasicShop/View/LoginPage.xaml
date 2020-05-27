@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:BasicShop.View"
       mc:Ignorable="d" 
        xmlns:models="clr-namespace:BasicShop.Model"
+      xmlns:ff="clr-namespace:FunctionalFun.UI"
       xmlns:viewModels="clr-namespace:BasicShop.ViewModel"
       xmlns:converters="clr-namespace:BasicShop.Converters"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -25,35 +26,81 @@
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <!--<Image Source="/BasicShop;component/Resources/img/icons/account.png" Height="100" Width="100" RenderOptions.BitmapScalingMode="Fant"/>-->
-            <materialDesign:PackIcon Kind="AccountCircle" Width="100" Height="100" HorizontalAlignment="Center"/>
 
-            <materialDesign:Flipper Style="{DynamicResource MaterialDesignCardFlipper}" Height="300" Width="260">
+            <materialDesign:Flipper Style="{DynamicResource MaterialDesignCardFlipper}" Width="340" Height="330">
                 <materialDesign:Flipper.FrontContent>
-                    <materialDesign:Card>
+                    <materialDesign:Card Height="320" Width="260">
                         <StackPanel>
-                            <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                                Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top">
+                            <materialDesign:PackIcon Margin="4,4,4,12" Kind="AccountCircle" Width="100" Height="100" HorizontalAlignment="Center"/>
+                            
+                            <TextBox materialDesign:HintAssist.Hint="Nazwa użytkownika" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                    HorizontalAlignment="Center" Width="200" Margin="0,0,0,6" Text="{Binding Username, Mode=OneWayToSource}"
+                                     MaxLength="25"/>
+                            <PasswordBox materialDesign:HintAssist.Hint="Hasło" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                         HorizontalAlignment="Center" Width="200" ff:PasswordBoxAssistant.BindPassword="True" ff:PasswordBoxAssistant.BoundPassword="{Binding Password,Mode=OneWayToSource}" />
+
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}" Command="{Binding LoginCommand}"
+                                Margin="4,28,4,0" HorizontalAlignment="Center" Width="150">
+                                Zaloguj
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                                Margin="8" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="150">
                                 Utwórz konto
                             </Button>
-
-                            <TextBox materialDesign:HintAssist.Hint="Nazwa użytkownika" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                 HorizontalAlignment="Center" Width="200"/>
-                            <PasswordBox materialDesign:HintAssist.Hint="Hasło" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                                 HorizontalAlignment="Center" Width="200"/>
                         </StackPanel>
                     </materialDesign:Card>
                 </materialDesign:Flipper.FrontContent>
-                <materialDesign:Flipper.BackContent>
-                    <materialDesign:Card>
+                <materialDesign:Flipper.BackContent >
+                    <materialDesign:Card Height="330" Width="340">
                         <StackPanel>
-                            <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                                Margin="8" HorizontalAlignment="Left" VerticalAlignment="Top">
-                                Zaloguj się
+                            <materialDesign:PackIcon Margin="4,4,4,0" Kind="AccountCircle" Width="100" Height="100" HorizontalAlignment="Center"/>
+
+                            <DockPanel Margin="16,0" LastChildFill="False">
+                                <TextBox DockPanel.Dock="Left" materialDesign:HintAssist.Hint="Imię" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     HorizontalAlignment="Left" Width="140" Margin="4,0" Text="{Binding Firstname, Mode=OneWayToSource}"
+                                         MaxLength="50"/>
+                                <TextBox DockPanel.Dock="Right" materialDesign:HintAssist.Hint="Nazwisko" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     HorizontalAlignment="Right" Width="140" Margin="4,0" Text="{Binding Surname, Mode=OneWayToSource}"
+                                         MaxLength="50"/>
+                            </DockPanel>
+                            <DockPanel Margin="16,-8,16,0" LastChildFill="False">
+                                <TextBox DockPanel.Dock="Left" materialDesign:HintAssist.Hint="Nazwa użytkownika" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 HorizontalAlignment="Left" Width="140" Margin="4,0" Text="{Binding Username, Mode=OneWayToSource}"
+                                     MaxLength="25"/>
+                                <TextBox DockPanel.Dock="Right" materialDesign:HintAssist.Hint="E-mail" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 HorizontalAlignment="Right" Width="140" Margin="4,0" Text="{Binding Email, Mode=OneWayToSource}"
+                                     MaxLength="50"/>
+                            </DockPanel>
+                            <DockPanel Margin="16,0" LastChildFill="False">
+                                <PasswordBox DockPanel.Dock="Left" materialDesign:HintAssist.Hint="Hasło" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                     HorizontalAlignment="Left" Width="140" ff:PasswordBoxAssistant.BindPassword="True" ff:PasswordBoxAssistant.BoundPassword="{Binding Password,Mode=OneWayToSource}"
+                                             Margin="4,0"/>
+                                <PasswordBox DockPanel.Dock="Right" materialDesign:HintAssist.Hint="Powtórz hasło" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                     HorizontalAlignment="Right" Width="140" ff:PasswordBoxAssistant.BindPassword="True" ff:PasswordBoxAssistant.BoundPassword="{Binding RepeatPassword, Mode=OneWayToSource}"
+                                             Margin="4,0"/>
+                            </DockPanel>
+
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}" Command="{Binding RegisterCommand}"
+                                Margin="4,28,4,0" HorizontalAlignment="Center" Width="150">
+                                Zarejestruj
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                                Margin="8" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="150">
+                                Mam już konto
                             </Button>
                         </StackPanel>
                     </materialDesign:Card>
                 </materialDesign:Flipper.BackContent>
             </materialDesign:Flipper>
         </StackPanel>
+
+        <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}" />
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
+        </Grid>
+
     </Grid>
 </Page>

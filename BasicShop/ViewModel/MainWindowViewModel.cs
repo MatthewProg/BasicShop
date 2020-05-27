@@ -72,7 +72,7 @@ namespace BasicShop.ViewModel
                     break;
                 case "account":
                     if (AccountManager.LoggedId == null)
-                        MainFrame = new LoginPage();
+                        MainFrame = new LoginPage(this);
                     else
                         MainFrame = new AccountPage();
                     break;
