@@ -1,0 +1,76 @@
+﻿<Page x:Class="BasicShop.View.CartPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BasicShop.View"
+      mc:Ignorable="d" 
+      xmlns:models="clr-namespace:BasicShop.Model"
+      xmlns:viewModels="clr-namespace:BasicShop.ViewModel"
+      xmlns:converters="clr-namespace:BasicShop.Converters"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:selectors="clr-namespace:BasicShop.Selectors"
+      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+      d:DesignHeight="576" d:DesignWidth="986"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+      Title="Cart">
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="Koszyk" FontSize="30" HorizontalAlignment="Center" Margin="0,10"/>
+                <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" 
+                          CanUserDeleteRows="False" IsReadOnly="False" ItemsSource="{Binding Cart, Mode=TwoWay}"
+                          HorizontalAlignment="Center" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nazwa" Binding="{Binding ProductName}" IsReadOnly="True"/>
+                        <!--<DataGridTextColumn Header="Ilość" Binding="{Binding Quantity}" IsReadOnly="False"/>-->
+                        <!--<DataGridTemplateColumn IsReadOnly="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox HorizontalAlignment="Stretch" Text="{Binding Quantity, Mode=TwoWay}"
+                                             VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>-->
+                        <DataGridTemplateColumn IsReadOnly="False" Header="Ilość" MinWidth="60">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Controls:NumericUpDown Value="{Binding Quantity, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Minimum="1" Maximum="99" Interval="1" HasDecimals="False" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Padding="0" Style="{DynamicResource MaterialDesignFlatButton}"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=Page,Mode=FindAncestor}, Path=DataContext.RemoveElementCommand}"
+                                            CommandParameter="{Binding .}">
+                                        <materialDesign:PackIcon Kind="Close" Foreground="Red"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button Margin="0,10" ToolTip="Musisz być zalogowany, aby złożyć zamówienie" HorizontalAlignment="Right" Content="Zamów" 
+                        Style="{DynamicResource MaterialDesignOutlinedButton}" IsEnabled="True" Command="{Binding OrderProcessCommand}"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}"/>
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
+        </Grid>
+    </Grid>
+</Page>

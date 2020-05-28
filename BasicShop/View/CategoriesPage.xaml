@@ -23,23 +23,28 @@
       Title="Categories">
 
     <Grid>
-        <TreeView x:Name="mainTree" ItemsSource="{Binding CategoriesHierarchy}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectedItemChanged">
-                    <i:InvokeCommandAction  Command="{Binding TreeViewSelectionCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <e:Interaction.Behaviors>
-                <behaviours:BindableSelectedItemBehavior SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" />
-            </e:Interaction.Behaviors>
-            <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type models:TreeViewCategoryModel}" ItemsSource="{Binding Items}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.Resources>
-        </TreeView>
+        <ScrollViewer>
+            <StackPanel Margin="4">
+                <TextBlock Text="Kategorie" FontSize="30" Margin="4,10" />
+                <TreeView x:Name="mainTree" ItemsSource="{Binding CategoriesHierarchy}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectedItemChanged">
+                            <i:InvokeCommandAction  Command="{Binding TreeViewSelectionCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <e:Interaction.Behaviors>
+                        <behaviours:BindableSelectedItemBehavior SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" />
+                    </e:Interaction.Behaviors>
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type models:TreeViewCategoryModel}" ItemsSource="{Binding Items}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </StackPanel>
+        </ScrollViewer>
 
 
         <!--Loading-->

@@ -198,7 +198,7 @@
                                 <Run FontStretch="ExtraCondensed" BaselineAlignment="TextTop" TextDecorations="Underline" FontSize="36" Text="{Binding Price, Converter={StaticResource DecimalPlacesConverter}, ConverterParameter=D2}"></Run>
                                 <Run FontSize="40" Text=" zł"></Run>
                             </TextBlock>
-                            <Button>
+                            <Button Command="{Binding AddToCartCommand}">
                                 <WrapPanel>
                                     <materialDesign:PackIcon Kind="Cart" Height="24" Width="24"/>
                                     <TextBlock VerticalAlignment="Center" Text="Dodaj do koszyka "/>

@@ -187,6 +187,7 @@ namespace BasicShop.ViewModel
         public SimpleCommand GoBackCommand { get; set; }
         public SimpleCommand GoHomeCommand { get; set; }
         public SimpleCommand WhishlistCommand { get; set; }
+        public SimpleCommand AddToCartCommand { get; set; }
         public ParameterCommand ChangeImageCommand { get; set; }
         public ParameterCommand ChangeCategoryCommand { get; set; }
         public ParameterCommand AddCommentCommand { get; set; }
@@ -196,6 +197,7 @@ namespace BasicShop.ViewModel
             GoBackCommand = new SimpleCommand(GoBack);
             GoHomeCommand = new SimpleCommand(GoHome);
             WhishlistCommand = new SimpleCommand(ProcessWhishlistChange);
+            AddToCartCommand = new SimpleCommand(AddToCart);
             ChangeCategoryCommand = new ParameterCommand(ChangeCategory);
             ChangeImageCommand = new ParameterCommand(ChangeImage);
             AddCommentCommand = new ParameterCommand(AddComment);
@@ -227,6 +229,23 @@ namespace BasicShop.ViewModel
             });
         }
 
+        private void AddToCart()
+        {
+            if (CurrentProductId == null) return;
+
+            if(_mainVM.Cart.ContainsKey((int)CurrentProductId))
+            {
+                MessageQueue.IgnoreDuplicate = true;
+                MessageQueue.Enqueue("Produkt został już dodany do koszyka");
+            }
+            else
+            {
+                _mainVM.Cart[(int)CurrentProductId] = 1;
+                _mainVM.UpdateCart();
+                MessageQueue.Enqueue("Produkt został dodany do koszyka");
+            }
+                
+        }
         private void AddComment(object param)
         {
             object[] obj = new object[2];

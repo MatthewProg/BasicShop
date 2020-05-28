@@ -160,6 +160,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FullDatabase.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model\CartModel.cs" />
     <Compile Include="Model\CheckListModel.cs" />
     <Compile Include="Model\ComboBoxItemModel.cs" />
     <Compile Include="Model\CommentModel.cs" />
@@ -210,8 +211,10 @@
     </Compile>
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="ViewModel\AccountViewModel.cs" />
+    <Compile Include="ViewModel\CartViewModel.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\CheckListViewModel.cs" />
+    <Compile Include="ViewModel\CheckoutViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ProductListViewModel.cs" />
@@ -221,8 +224,14 @@
     <Compile Include="View\AccountPage.xaml.cs">
       <DependentUpon>AccountPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\CartPage.xaml.cs">
+      <DependentUpon>CartPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CategoriesPage.xaml.cs">
       <DependentUpon>CategoriesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CheckoutPage.xaml.cs">
+      <DependentUpon>CheckoutPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\InformationPage.xaml.cs">
       <DependentUpon>InformationPage.xaml</DependentUpon>
@@ -246,7 +255,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\CartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CategoriesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CheckoutPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

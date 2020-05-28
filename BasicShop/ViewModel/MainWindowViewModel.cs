@@ -4,6 +4,7 @@ using BasicShop.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -18,6 +19,7 @@ namespace BasicShop.ViewModel
         private MainWindow _mainWindow;
         private object _mainFrame;
         private int? _itemsInCart;
+        private Dictionary<int, int> _cart;
 
         public object MainFrame
         {
@@ -41,6 +43,20 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("ItemsInCart");
             }
         }
+        public Dictionary<int,int> Cart
+        {
+            get { return _cart; }
+            set
+            {
+                if (value == _cart) return;
+
+                _cart = value;
+                OnPropertyChanged("Cart");
+
+                if (_cart != null)
+                    ItemsInCart = _cart.Count;
+            }
+        }
 
         public SimpleCommand CloseWindowCommand { get; set; }
         public SimpleCommand MinimalizeWindowCommand { get; set; }
@@ -51,6 +67,21 @@ namespace BasicShop.ViewModel
         {
             _mainWindow = main;
 
+            Cart = new Dictionary<int, int>();
+
+            /////TEST ONLY/////
+
+            Cart = new Dictionary<int, int>()
+            {
+                {1,1},
+                {2,1},
+                {45,1},
+                {255,1},
+                {781,1}
+            };
+
+            ///////////////////
+
             CloseWindowCommand = new SimpleCommand(CloseWindow);
             MinimalizeWindowCommand = new SimpleCommand(MinimalizeWindow);
             LoadScreenCommand = new ParameterCommand(LoadScreen);
@@ -59,6 +90,14 @@ namespace BasicShop.ViewModel
             LoadPage("home");
         }
 
+        public void UpdateCart()
+        {
+            if (Cart == null) return;
+
+            ItemsInCart = Cart.Count;
+            OnPropertyChanged("Cart");
+            OnPropertyChanged("ItemsInCart");
+        }
         public void LoadPage(string name)
         {
             LoadScreen(name);
@@ -82,11 +121,17 @@ namespace BasicShop.ViewModel
                 case "categories":
                     MainFrame = new CategoriesPage(this);
                     break;
+                case "cart":
+                    MainFrame = new CartPage(this);
+                    break;
                 case "account":
                     if (AccountManager.LoggedId == null)
                         MainFrame = new LoginPage(this);
                     else
                         MainFrame = new AccountPage(this);
+                    break;
+                case "checkout":
+                    MainFrame = new CheckoutPage(this);
                     break;
                 default:
                     break;
