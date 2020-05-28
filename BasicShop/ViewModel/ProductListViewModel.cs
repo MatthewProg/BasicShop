@@ -390,6 +390,8 @@ namespace BasicShop.ViewModel
                     return;
                 }
 
+
+                //Price filter
                 var minPrice = query.Min(x => x.price);
                 var maxPrice = query.Max(x => x.price);
 
@@ -402,6 +404,16 @@ namespace BasicShop.ViewModel
 
                 var priceSlider = new SliderListViewModel((float)minPrice, (float)maxPrice, st, "Cena");
                 working.Add(priceSlider);
+
+                //Producent filter
+                CheckListViewModel prods = new CheckListViewModel();
+                var prodIds = query.Select(x => x.producent_id).Distinct().ToList();
+                foreach (var prod in dataContext.producent.Where(x => prodIds.Contains(x.producent_id)).Select(x => x.name).ToList())
+                    prods.Checks.Add(new CheckListModel() { Name = prod });
+                prods.Header = "Producent";
+                prods.Checks = new ObservableCollection<CheckListModel>(prods.Checks.OrderBy(x => x.Name).ToList());
+                working.Add(prods);
+
                 //Sub categories filters also
                 //var items = dataContext.categorySpecificationWithChildren((int)CurrentCategoryId);
 
@@ -662,10 +674,13 @@ namespace BasicShop.ViewModel
                     List<string> condition = new List<string>();
                     foreach (var val in filters[key])
                     {
-                        if (val[0] != '>' && val[0] != '<')
+                         if (key == "Producent")
                         {
-                            condition.Add($"{key}:{val}");
-                            query = query.Where(x => condition.Any(y => x.specification.Contains(y)));
+                            List<int> prodIds = new List<int>();
+                            foreach (var prodName in filters[key])
+                                prodIds.Add(dataContext.producent.First(x => x.name == prodName).producent_id);
+
+                            query = query.Where(x => prodIds.Any(y => x.producent_id == y));
                         }
                         else if (key == "Cena")
                         {
@@ -692,6 +707,11 @@ namespace BasicShop.ViewModel
                                 decimal minD = decimal.Parse(min);
                                 query = query.Where(x => x.price >= minD);
                             }
+                        }
+                        else if (val[0] != '>' && val[0] != '<')
+                        {
+                            condition.Add($"{key}:{val}");
+                            query = query.Where(x => condition.Any(y => x.specification.Contains(y)));
                         }
                         else
                         {

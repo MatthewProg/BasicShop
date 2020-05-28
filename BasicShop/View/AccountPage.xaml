@@ -23,6 +23,9 @@
       Title="User">
 
     <Grid>
-        
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding Username, StringFormat=Witaj\, {0}!}" FontSize="60"/>
+            <Button Content="Wyloguj" Command="{Binding LogoutCommand}" HorizontalAlignment="Center" />
+        </StackPanel>
     </Grid>
 </Page>

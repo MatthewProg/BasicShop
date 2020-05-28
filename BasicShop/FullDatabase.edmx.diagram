@@ -45,6 +45,7 @@
         <AssociationConnector Association="shopModel.FK_staff_store" ManuallyRouted="false" />
         <AssociationConnector Association="shopModel.FK_warehouse_store" ManuallyRouted="false" />
         <AssociationConnector Association="shopModel.whishlist" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="shopModel.WarehouseAllInfoView" Width="1.5" PointX="3.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

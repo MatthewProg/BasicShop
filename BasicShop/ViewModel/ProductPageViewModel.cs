@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace BasicShop.ViewModel
         private Visibility _loadingScreen;
         private bool _inWishlist;
         private View.ProductPage _productPage;
+        private ObservableCollection<WarehouseModel> _warehouses;
 
         public string Name
         {
@@ -170,6 +172,17 @@ namespace BasicShop.ViewModel
             }
         }
         public MaterialDesignThemes.Wpf.SnackbarMessageQueue MessageQueue { get; set; }
+        public ObservableCollection<WarehouseModel> Warehouses
+        {
+            get { return _warehouses; }
+            set
+            {
+                if (value == _warehouses) return;
+
+                _warehouses = value;
+                OnPropertyChanged("Warehouses");
+            }
+        }
 
         public SimpleCommand GoBackCommand { get; set; }
         public SimpleCommand GoHomeCommand { get; set; }
@@ -363,6 +376,7 @@ namespace BasicShop.ViewModel
             SelectedPhoto = Images[0];
             NoOfAvaible = GetNoOfAvaibleProducts(prodId);
             InWhishlist = IsInWhishlist(prodId);
+            Warehouses = new ObservableCollection<WarehouseModel>(GetWarehouses(prodId));
             UpdateNavList(prodId);
         }
         private List<string> GetProductImages(int? prodId)
@@ -520,6 +534,38 @@ namespace BasicShop.ViewModel
                 string mess = "Podczas próby uzyskania wyższych kategorii wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
             }
+        }
+        private List<WarehouseModel> GetWarehouses(int? prodId)
+        {
+            List<WarehouseModel> output = new List<WarehouseModel>();
+
+            List<WarehouseAllInfoView> li = new List<WarehouseAllInfoView>();
+            try
+            {
+                var dataContext = new shopEntities();
+                li = dataContext.WarehouseAllInfoView.Where(x => x.product_id == prodId && x.quantity > 0).ToList();
+            }
+            catch (Exception e)
+            {
+                string mess = "Podczas uzystkiwania stanów magazynowych wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
+            }
+
+            foreach (var shop in li)
+                output.Add(new WarehouseModel()
+                {
+                    Quantity = shop.quantity,
+                    Email = shop.email,
+                    Phone = shop.phone,
+                    House = shop.house,
+                    Flat = shop.flat,
+                    Road = shop.road,
+                    ZipCode = shop.zip_code.Substring(0,2) + "-" + shop.zip_code.Substring(2),
+                    City = shop.city,
+                    Country = shop.country
+                });
+
+            return output;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

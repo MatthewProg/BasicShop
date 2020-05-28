@@ -69,10 +69,13 @@
           <Property Name="address_id" Type="int" Nullable="false" />
           <Property Name="status" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_A61718_basic.dbo.order_product' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="order_product">
           <Key>
             <PropertyRef Name="order_id" />
             <PropertyRef Name="product_id" />
+            
           </Key>
           <Property Name="order_id" Type="int" Nullable="false" />
           <Property Name="product_id" Type="int" Nullable="false" />
@@ -118,7 +121,7 @@
           <Property Name="thumbnail" Type="varchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'shop_database.dbo.product_image' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'DB_A61718_basic.dbo.product_image' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="product_image">
           <Key>
             <PropertyRef Name="product_id" />
@@ -161,10 +164,13 @@ warning 6002: The table/view 'shop_database.dbo.product_image' does not have a p
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_A61718_basic.dbo.warehouse' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="warehouse">
           <Key>
             <PropertyRef Name="product_id" />
             <PropertyRef Name="store_id" />
+            
           </Key>
           <Property Name="product_id" Type="int" Nullable="false" />
           <Property Name="store_id" Type="int" Nullable="false" />
@@ -177,6 +183,29 @@ warning 6002: The table/view 'shop_database.dbo.product_image' does not have a p
           </Key>
           <Property Name="account_id" Type="int" Nullable="false" />
           <Property Name="product_id" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_A61718_basic.dbo.WarehouseAllInfoView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="WarehouseAllInfoView">
+          <Key>
+            <PropertyRef Name="product_id" />
+            <PropertyRef Name="quantity" />
+            <PropertyRef Name="road" />
+            <PropertyRef Name="house" />
+            <PropertyRef Name="zip_code" />
+            <PropertyRef Name="city" />
+            <PropertyRef Name="country" />
+          </Key>
+          <Property Name="product_id" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" />
+          <Property Name="phone" Type="varchar" MaxLength="12" />
+          <Property Name="road" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="house" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="flat" Type="varchar" MaxLength="10" />
+          <Property Name="zip_code" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="city" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="country" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_account_person">
           <End Role="person" Type="Self.person" Multiplicity="1" />
@@ -441,7 +470,9 @@ warning 6002: The table/view 'shop_database.dbo.product_image' does not have a p
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_whishlist_account">
-          <End Role="account" Type="Self.account" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="whishlist" Type="Self.whishlist" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="account">
@@ -519,7 +550,6 @@ warning 6002: The table/view 'shop_database.dbo.product_image' does not have a p
           <EntitySet Name="country" EntityType="Self.country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="feedback" EntityType="Self.feedback" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="order" EntityType="Self.order" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="order_product" EntityType="Self.order_product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="person" EntityType="Self.person" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="position" EntityType="Self.position" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="producent" EntityType="Self.producent" Schema="dbo" store:Type="Tables" />
@@ -528,13 +558,40 @@ warning 6002: The table/view 'shop_database.dbo.product_image' does not have a p
           <EntitySet Name="staff" EntityType="Self.staff" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="store" EntityType="Self.store" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="warehouse" EntityType="Self.warehouse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="whishlist" EntityType="Self.whishlist" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="order_product" EntityType="Self.order_product" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [order_product].[order_id] AS [order_id], 
+    [order_product].[product_id] AS [product_id], 
+    [order_product].[quantity] AS [quantity]
+    FROM [dbo].[order_product] AS [order_product]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="product_image" EntityType="Self.product_image" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [product_image].[product_id] AS [product_id], 
     [product_image].[image_src] AS [image_src]
     FROM [dbo].[product_image] AS [product_image]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="warehouse" EntityType="Self.warehouse" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [warehouse].[product_id] AS [product_id], 
+    [warehouse].[store_id] AS [store_id], 
+    [warehouse].[quantity] AS [quantity]
+    FROM [dbo].[warehouse] AS [warehouse]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="WarehouseAllInfoView" EntityType="Self.WarehouseAllInfoView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [WarehouseAllInfoView].[product_id] AS [product_id], 
+    [WarehouseAllInfoView].[quantity] AS [quantity], 
+    [WarehouseAllInfoView].[email] AS [email], 
+    [WarehouseAllInfoView].[phone] AS [phone], 
+    [WarehouseAllInfoView].[road] AS [road], 
+    [WarehouseAllInfoView].[house] AS [house], 
+    [WarehouseAllInfoView].[flat] AS [flat], 
+    [WarehouseAllInfoView].[zip_code] AS [zip_code], 
+    [WarehouseAllInfoView].[city] AS [city], 
+    [WarehouseAllInfoView].[country] AS [country]
+    FROM [dbo].[WarehouseAllInfoView] AS [WarehouseAllInfoView]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_account_person" Association="Self.FK_account_person">
             <End Role="person" EntitySet="person" />
@@ -1225,6 +1282,7 @@ warning 6002: The table/view 'shop_database.dbo.product_image' does not have a p
           <FunctionImport Name="productSpecification" IsComposable="true" ReturnType="Collection(shopModel.productSpecification_Result)">
           <Parameter Name="ProductId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="WarehouseAllInfoView" EntityType="shopModel.WarehouseAllInfoView" />
         </EntityContainer>
         <ComplexType Name="categorySpecification_Result">
           <Property Type="Int32" Name="product_id" Nullable="false" />
@@ -1240,6 +1298,27 @@ warning 6002: The table/view 'shop_database.dbo.product_image' does not have a p
           <Property Type="String" Name="SpecKey" Nullable="true" />
           <Property Type="String" Name="SpecValue" Nullable="true" />
         </ComplexType>
+        <EntityType Name="WarehouseAllInfoView">
+          <Key>
+            <PropertyRef Name="product_id" />
+            <PropertyRef Name="road" />
+            <PropertyRef Name="house" />
+            <PropertyRef Name="zip_code" />
+            <PropertyRef Name="city" />
+            <PropertyRef Name="country" />
+            <PropertyRef Name="quantity" />
+          </Key>
+          <Property Name="product_id" Type="Int32" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="road" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="house" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="flat" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="zip_code" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="city" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="country" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1460,6 +1539,22 @@ warning 6002: The table/view 'shop_database.dbo.product_image' does not have a p
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="WarehouseAllInfoView">
+            <EntityTypeMapping TypeName="shopModel.WarehouseAllInfoView">
+              <MappingFragment StoreEntitySet="WarehouseAllInfoView">
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="zip_code" ColumnName="zip_code" />
+                <ScalarProperty Name="flat" ColumnName="flat" />
+                <ScalarProperty Name="house" ColumnName="house" />
+                <ScalarProperty Name="road" ColumnName="road" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

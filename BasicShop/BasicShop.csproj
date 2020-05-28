@@ -168,6 +168,7 @@
     <Compile Include="Model\SortingCategoryModel.cs" />
     <Compile Include="Model\SpecifitationModel.cs" />
     <Compile Include="Model\TreeViewCategoryModel.cs" />
+    <Compile Include="Model\WarehouseModel.cs" />
     <Compile Include="order.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
@@ -236,6 +237,9 @@
       <DependentUpon>ProductList.xaml</DependentUpon>
     </Compile>
     <Compile Include="warehouse.cs">
+      <DependentUpon>FullDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WarehouseAllInfoView.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
     <Page Include="View\AccountPage.xaml">

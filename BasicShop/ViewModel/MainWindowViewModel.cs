@@ -17,6 +17,7 @@ namespace BasicShop.ViewModel
     {
         private MainWindow _mainWindow;
         private object _mainFrame;
+        private int? _itemsInCart;
 
         public object MainFrame
         {
@@ -27,6 +28,17 @@ namespace BasicShop.ViewModel
 
                 _mainFrame = value;
                 OnPropertyChanged("MainFrame");
+            }
+        }
+        public int? ItemsInCart
+        {
+            get { return (_itemsInCart == 0) ? null : _itemsInCart; }
+            set
+            {
+                if (value == _itemsInCart) return;
+
+                _itemsInCart = value;
+                OnPropertyChanged("ItemsInCart");
             }
         }
 
@@ -74,7 +86,7 @@ namespace BasicShop.ViewModel
                     if (AccountManager.LoggedId == null)
                         MainFrame = new LoginPage(this);
                     else
-                        MainFrame = new AccountPage();
+                        MainFrame = new AccountPage(this);
                     break;
                 default:
                     break;

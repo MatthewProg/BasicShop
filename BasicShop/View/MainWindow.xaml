@@ -157,7 +157,9 @@
                 <Button HorizontalAlignment="Left" HorizontalContentAlignment="Left" Width="200" Background="Transparent" Height="70" BorderThickness="0"  Padding="16,13"
                         Command="{Binding LoadScreenCommand}" CommandParameter="cart">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <materialDesign:PackIcon Kind="Cart" Width="auto" Height="auto"/>
+                        <materialDesign:Badged Badge="{Binding ItemsInCart}" BadgePlacementMode="TopRight" BadgeBackground="#ff1c1c" BadgeForeground="White">
+                            <materialDesign:PackIcon Kind="Cart" Width="auto" Height="auto"/>
+                        </materialDesign:Badged>
                         <TextBlock x:Name="button3text" Visibility="Hidden" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="18" FontFamily="Corbel">Koszyk</TextBlock>
                     </StackPanel>
                 </Button>

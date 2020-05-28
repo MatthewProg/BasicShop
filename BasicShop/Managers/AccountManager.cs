@@ -28,7 +28,7 @@ namespace BasicShop.Managers
                 using (var dataContext = new shopEntities())
                     hashSalt = dataContext.account.Where(x => x.username == username).Select(x => x.password).FirstOrDefault();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas logowania wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -38,7 +38,7 @@ namespace BasicShop.Managers
             if (!ChecklHashSalt(password, hashSalt)) output = false;
             else output = true;
 
-            if(output)
+            if (output)
             {
                 try
                 {
@@ -82,7 +82,7 @@ namespace BasicShop.Managers
                 dataContext.account.Add(a);
                 dataContext.SaveChanges();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas rejestracji wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -92,6 +92,11 @@ namespace BasicShop.Managers
 
             message = "Zarejestrowano pomyślnie!";
             return true;
+        }
+
+        public static void Logout()
+        {
+            LoggedId = null;
         }
 
         private static string GenerateHashSalt(string password)

@@ -145,11 +145,12 @@ namespace BasicShop.ViewModel
                     MessageQueue.Enqueue(messOut);
                 else
                 {
-                    if (AccountManager.Login(Username, Password))
-                        _mainVM.LoadPage("account");
-                    else
+                    if (!AccountManager.Login(Username, Password))
                         MessageQueue.Enqueue("Wystąpił problem przy logowaniu");
                 }
+            }, () =>
+            {
+                _mainVM.LoadPage("account");
             });
         }
 

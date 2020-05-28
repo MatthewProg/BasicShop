@@ -26,219 +26,289 @@
         <converters:DecimalPlacesConverter x:Key="DecimalPlacesConverter" />
         <converters:MyMultiConverter x:Key="MyMultiConverter" />
     </Page.Resources>
+    <materialDesign:DialogHost>
+        <materialDesign:DialogHost.DialogContent>
+            <StackPanel Margin="4" Width="400" Height="500">
+                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource MaterialDesignFlatButton}"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Padding="0" Margin="4,-4">
+                    <materialDesign:PackIcon Kind="Close" Foreground="Red"/>
+                </Button>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" FontSize="20" Text="Sklep" FontWeight="Normal"/>
+                    <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="20" Text="Ilość" FontWeight="Normal"/>
+                </Grid>
 
-    <Grid>
-        <ScrollViewer Padding="8,4">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="32" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-
-                <!--Navigation-->
-                <WrapPanel Grid.Row="0" Margin="0,0,0,4">
-                    <Button Height="24" Padding="0" Style="{StaticResource MaterialDesignFlatButton}" 
-                        Foreground="{DynamicResource MaterialDesignLightForeground}" Command="{Binding GoBackCommand}">
-                        <materialDesign:PackIcon Kind="ChevronLeft" Width="24" Height="24"/>
-                    </Button>
-                    <Separator DockPanel.Dock="Left" VerticalAlignment="Center" Height="30" Width="30" Margin="-10,0,0,0" RenderTransformOrigin="0.5,0.5">
-                        <Separator.RenderTransform>
-                            <RotateTransform Angle="90"/>
-                        </Separator.RenderTransform>
-                    </Separator>
-                    <Button VerticalAlignment="Center" Width="auto" Height="auto" Style="{StaticResource MaterialDesignIconForegroundButton}"
-                            Command="{Binding GoHomeCommand}">
-                        <materialDesign:PackIcon Kind="Home" Height="auto" Width="auto" Foreground="{StaticResource MaterialDesignLightForeground}"/>
-                    </Button>
-                    <ItemsControl ItemsSource="{Binding NavList}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" DataContext="{Binding Item2}">
-                                    <TextBlock VerticalAlignment="Center" FontWeight="Black" FontSize="18" Text=">" Foreground="{StaticResource MaterialDesignLightForeground}"/>
-                                    <Button VerticalAlignment="Center" Margin="0,0,0,0" Padding="1,0" Width="auto" Height="auto" Style="{StaticResource MaterialDesignFlatButton}" 
-                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.ChangeCategoryCommand}" 
-                                        CommandParameter="{Binding}">
-                                        <TextBlock VerticalAlignment="Center" FontSize="16" Text="{Binding Name}" Foreground="{StaticResource MaterialDesignLightForeground}"/>
-                                    </Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </WrapPanel>
-                <Separator Grid.Row="0" VerticalAlignment="Bottom" Width="auto" HorizontalAlignment="Stretch" Margin="10,0"/>
-
-                <!--Name-->
-                <DockPanel Height="40" Grid.Row="1" LastChildFill="False">
-                    <Viewbox DockPanel.Dock="Left" Height="40" HorizontalAlignment="Left">
-                        <TextBlock TextAlignment="Left" HorizontalAlignment="Left" Text="{Binding Name}"/>
-                    </Viewbox>
-                    <ToggleButton DockPanel.Dock="Right" Margin="4,0" Height="34" Width="34"  
-                                  Style="{StaticResource MaterialDesignActionToggleButton}" 
-                                  Background="Transparent" IsChecked="{Binding InWhishlist}"
-                                  Command="{Binding WhishlistCommand}">
-                        <ToggleButton.Content>
-                            <materialDesign:PackIcon Kind="Heart" Height="30" Width="30" Foreground="Gray" />
-                        </ToggleButton.Content>
-                        <materialDesign:ToggleButtonAssist.OnContent>
-                            <materialDesign:PackIcon Kind="Heart" Height="30" Width="30" Foreground="Red" />
-                        </materialDesign:ToggleButtonAssist.OnContent>
-                    </ToggleButton>
-                </DockPanel>
-
-
-                <!--Photos and price-->
-                <DockPanel Grid.Row="2" LastChildFill="False" Margin="0,0,0,8">
-                    <StackPanel DockPanel.Dock="Left" Margin="170,0,0,0">
-                        <Border BorderThickness="1" BorderBrush="Gray" Height="260" Width="300" Margin="0,4">
-                            <Image x:Name="actualImage" RenderOptions.BitmapScalingMode="Fant" Stretch="Uniform" Source="{Binding SelectedPhoto, Converter={StaticResource OnlineImageConverter}}" MaxHeight="250" Width="290"/>
-                        </Border>
-                        <Border BorderThickness="0" BorderBrush="{StaticResource GrayBrush3}">
-                            <ItemsControl Width="340" ItemsSource="{Binding Images}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Height="50" HorizontalAlignment="Center"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderThickness="1" BorderBrush="Gray" Margin="4,0">
-                                            <Viewbox>
-                                                <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.ChangeImageCommand}" CommandParameter="{Binding .}" Padding="0">
-                                                    <Image RenderOptions.BitmapScalingMode="Fant" Stretch="Uniform" Source="{Binding ., Converter={StaticResource OnlineImageConverter}}"/>
-                                                </Button>
-                                            </Viewbox>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Border>
-                    </StackPanel>
-                    <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,100,0">
-                        <TextBlock HorizontalAlignment="Center">
-                        <Run FontSize="60" Text="{Binding Price, Converter={StaticResource DecimalPlacesConverter}, ConverterParameter=N}"></Run>
-                        <Run FontStretch="ExtraCondensed" BaselineAlignment="TextTop" TextDecorations="Underline" FontSize="36" Text="{Binding Price, Converter={StaticResource DecimalPlacesConverter}, ConverterParameter=D2}"></Run>
-                        <Run FontSize="40" Text=" zł"></Run>
-                        </TextBlock>
-                        <Button>
-                            <WrapPanel>
-                                <materialDesign:PackIcon Kind="Cart" Height="24" Width="24"/>
-                                <TextBlock VerticalAlignment="Center" Text="Dodaj do koszyka "/>
-                            </WrapPanel>
-                        </Button>
-                        <TextBlock HorizontalAlignment="Center" Text="{Binding NoOfAvaible, StringFormat=Dostępne {0} szt.}"/>
-
-                        <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0,4,0,0" Content="Sprawdź dostępność w sklepie" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </DockPanel>
-
-
-                <!--Description-->
-                <materialDesign:Card Grid.Row="3" Margin="4,6" Padding="8,4">
-                    <StackPanel>
-                        <TextBlock Text="Opis" TextAlignment="Left" FontSize="24" Margin="0,0,0,8"/>
-                        <TextBlock Text="{Binding Description}" TextAlignment="Justify" TextWrapping="Wrap"/>
-                    </StackPanel>
-                </materialDesign:Card>
-
-
-                <!--Specification-->
-                <materialDesign:Card Grid.Row="4" Margin="4,6" Padding="8,4">
-                    <StackPanel>
-                        <TextBlock Text="Specyfikacja" FontSize="24" Margin="0,0,0,8"/>
-                        <ItemsControl  ItemsSource="{Binding Specification}" AlternationCount="2">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Height="470">
+                    <StackPanel VerticalAlignment="Top">
+                        <ItemsControl ItemsSource="{Binding Warehouses}">
                             <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type models:SpecifitationModel}">
-                                    <Grid Margin="2" x:Name="Bar">
+                                <DataTemplate DataType="{x:Type models:WarehouseModel}">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock x:Name="BarLeft" Margin="4,0" Grid.Column="0" FontSize="16" HorizontalAlignment="Right" TextAlignment="Left" Text="{Binding Element}" FontWeight="Medium"/>
-                                        <TextBlock x:Name="BarRight" Margin="4,0" Grid.Column="1" FontSize="16" HorizontalAlignment="Left" TextAlignment="Left" Text="{Binding Value}"/>
+                                        <Separator Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top">
+                                            <Separator.RenderTransform>
+                                                <TranslateTransform Y="0"/>
+                                            </Separator.RenderTransform>
+                                        </Separator>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock FontSize="16" FontWeight="SemiBold" Margin="0,4,0,0">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0}, {1}">
+                                                        <Binding Path="City" />
+                                                        <Binding Path="Country" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" >
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="ul. {0} {1}/{2}">
+                                                        <Binding Path="Road" />
+                                                        <Binding Path="House" />
+                                                        <Binding Path="Flat" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock TextWrapping="Wrap" >
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="ZipCode" />
+                                                        <Binding Path="City" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Phone, StringFormat=Phone: {0}}" Margin="0,4,0,0"/>
+                                            <TextBlock Text="{Binding Email, StringFormat=E-mail: {0}}"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Margin="2,8" Text="{Binding Quantity}" VerticalAlignment="Top"/>
                                     </Grid>
-                                    <DataTemplate.Triggers>
-                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                                            <Setter Property="Background" Value="#ddebf7" TargetName="Bar" />
-                                            <!--<Setter Property="Background" Value="#ddebf7" TargetName="BarLeft" />
-                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="BarRight"/>-->
-                                        </Trigger>
-                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="Bar" />
-                                            <!--<Setter Property="Background" Value="#ddebf7" TargetName="BarRight"/>
-                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="BarLeft"/>-->
-                                        </Trigger>
-                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </StackPanel>
-                </materialDesign:Card>
+                </ScrollViewer>
+            </StackPanel>
+        </materialDesign:DialogHost.DialogContent>
 
+        <Grid>
+            <ScrollViewer Padding="8,4">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
 
-                <!--AddComment-->
-                <materialDesign:Card Grid.Row="5" Margin="4,6" Padding="8,4">
-                    <StackPanel >
-                        <TextBlock Text="Dodaj opinię" FontSize="24" Margin="0,0,0,8"/>
-                        <DockPanel LastChildFill="False" Margin="4">
-                            <TextBox x:Name="newComment" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="80" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
-                                     AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Hidden"
-                                     materialDesign:HintAssist.Hint="Opinia" Margin="4,4,4,6"/>
-                            <materialDesign:RatingBar x:Name="newRating" DockPanel.Dock="Left" Value="0" VerticalAlignment="Center"/>
-                            <Button DockPanel.Dock="Right" Content="Dodaj opinię" Margin="4,0" Command="{Binding AddCommentCommand}">
-                                <Button.CommandParameter>
-                                    <MultiBinding Converter="{StaticResource MyMultiConverter}">
-                                        <Binding Path="Value" ElementName="newRating" />
-                                        <Binding Path="Text" ElementName="newComment" />
-                                    </MultiBinding>
-                                </Button.CommandParameter>
-                            </Button>
-                        </DockPanel>
-                    </StackPanel>
-                </materialDesign:Card>
-
-                
-                <!--Comment-->
-                <materialDesign:Card Grid.Row="6" Margin="4,6" Padding="8,4">
-                    <StackPanel >
-                        <TextBlock Text="{Binding Rating, StringFormat=Oceny (średnia: {0:F2})}" FontSize="24" Margin="0,0,0,8"/>
-                        <ItemsControl ItemsSource="{Binding Comments}">
+                    <!--Navigation-->
+                    <WrapPanel Grid.Row="0" Margin="0,0,0,4">
+                        <Button Height="24" Padding="0" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Foreground="{DynamicResource MaterialDesignLightForeground}" Command="{Binding GoBackCommand}">
+                            <materialDesign:PackIcon Kind="ChevronLeft" Width="24" Height="24"/>
+                        </Button>
+                        <Separator DockPanel.Dock="Left" VerticalAlignment="Center" Height="30" Width="30" Margin="-10,0,0,0" RenderTransformOrigin="0.5,0.5">
+                            <Separator.RenderTransform>
+                                <RotateTransform Angle="90"/>
+                            </Separator.RenderTransform>
+                        </Separator>
+                        <Button VerticalAlignment="Center" Width="auto" Height="auto" Style="{StaticResource MaterialDesignIconForegroundButton}"
+                            Command="{Binding GoHomeCommand}">
+                            <materialDesign:PackIcon Kind="Home" Height="auto" Width="auto" Foreground="{StaticResource MaterialDesignLightForeground}"/>
+                        </Button>
+                        <ItemsControl ItemsSource="{Binding NavList}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type models:CommentModel}">
-                                    <StackPanel>
-                                        <DockPanel LastChildFill="False" VerticalAlignment="Center" Height="30">
-                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Username}" FontSize="18" FontWeight="Medium" VerticalAlignment="Center"/>
-                                            <materialDesign:RatingBar DockPanel.Dock="Left" Margin="4,0" IsReadOnly="True" Value="{Binding Rating}" VerticalAlignment="Center"/>
-                                            <TextBlock DockPanel.Dock="Right" FontSize="14" TextWrapping="Wrap" Text="{Binding CommentId, StringFormat=#{0}}" Foreground="Gray" />
-                                        </DockPanel>
-                                        <materialDesign:RatingBarButton HorizontalAlignment="Center"/>
-                                        <TextBlock Text="{Binding Comment}" HorizontalAlignment="Stretch" TextAlignment="Left"/>
-                                        <Separator VerticalAlignment="Center" />
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" DataContext="{Binding Item2}">
+                                        <TextBlock VerticalAlignment="Center" FontWeight="Black" FontSize="18" Text=">" Foreground="{StaticResource MaterialDesignLightForeground}"/>
+                                        <Button VerticalAlignment="Center" Margin="0,0,0,0" Padding="1,0" Width="auto" Height="auto" Style="{StaticResource MaterialDesignFlatButton}" 
+                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.ChangeCategoryCommand}" 
+                                        CommandParameter="{Binding}">
+                                            <TextBlock VerticalAlignment="Center" FontSize="16" Text="{Binding Name}" Foreground="{StaticResource MaterialDesignLightForeground}"/>
+                                        </Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                    </StackPanel>
+                    </WrapPanel>
+                    <Separator Grid.Row="0" VerticalAlignment="Bottom" Width="auto" HorizontalAlignment="Stretch" Margin="10,0"/>
+
+                    <!--Name-->
+                    <DockPanel Height="40" Grid.Row="1" LastChildFill="False">
+                        <Viewbox DockPanel.Dock="Left" Height="40" HorizontalAlignment="Left">
+                            <TextBlock TextAlignment="Left" HorizontalAlignment="Left" Text="{Binding Name}"/>
+                        </Viewbox>
+                        <ToggleButton DockPanel.Dock="Right" Margin="4,0" Height="34" Width="34"  
+                                  Style="{StaticResource MaterialDesignActionToggleButton}" 
+                                  Background="Transparent" IsChecked="{Binding InWhishlist}"
+                                  Command="{Binding WhishlistCommand}">
+                            <ToggleButton.Content>
+                                <materialDesign:PackIcon Kind="Heart" Height="30" Width="30" Foreground="Gray" />
+                            </ToggleButton.Content>
+                            <materialDesign:ToggleButtonAssist.OnContent>
+                                <materialDesign:PackIcon Kind="Heart" Height="30" Width="30" Foreground="Red" />
+                            </materialDesign:ToggleButtonAssist.OnContent>
+                        </ToggleButton>
+                    </DockPanel>
+
+
+                    <!--Photos and price-->
+                    <DockPanel Grid.Row="2" LastChildFill="False" Margin="0,0,0,8">
+                        <StackPanel DockPanel.Dock="Left" Margin="170,0,0,0">
+                            <Border BorderThickness="1" BorderBrush="Gray" Height="260" Width="300" Margin="0,4">
+                                <Image x:Name="actualImage" RenderOptions.BitmapScalingMode="Fant" Stretch="Uniform" Source="{Binding SelectedPhoto, Converter={StaticResource OnlineImageConverter}}" MaxHeight="250" Width="290"/>
+                            </Border>
+                            <Border BorderThickness="0" BorderBrush="{StaticResource GrayBrush3}">
+                                <ItemsControl Width="340" ItemsSource="{Binding Images}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Height="50" HorizontalAlignment="Center"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1" BorderBrush="Gray" Margin="4,0">
+                                                <Viewbox>
+                                                    <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.ChangeImageCommand}" CommandParameter="{Binding .}" Padding="0">
+                                                        <Image RenderOptions.BitmapScalingMode="Fant" Stretch="Uniform" Source="{Binding ., Converter={StaticResource OnlineImageConverter}}"/>
+                                                    </Button>
+                                                </Viewbox>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0,0,100,0">
+                            <TextBlock HorizontalAlignment="Center">
+                                <Run FontSize="60" Text="{Binding Price, Converter={StaticResource DecimalPlacesConverter}, ConverterParameter=N}"></Run>
+                                <Run FontStretch="ExtraCondensed" BaselineAlignment="TextTop" TextDecorations="Underline" FontSize="36" Text="{Binding Price, Converter={StaticResource DecimalPlacesConverter}, ConverterParameter=D2}"></Run>
+                                <Run FontSize="40" Text=" zł"></Run>
+                            </TextBlock>
+                            <Button>
+                                <WrapPanel>
+                                    <materialDesign:PackIcon Kind="Cart" Height="24" Width="24"/>
+                                    <TextBlock VerticalAlignment="Center" Text="Dodaj do koszyka "/>
+                                </WrapPanel>
+                            </Button>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding NoOfAvaible, StringFormat=Dostępne {0} szt.}"/>
+
+                            <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0,4,0,0" Content="Sprawdź dostępność w sklepie" HorizontalAlignment="Center" Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"/>
+                        </StackPanel>
+                    </DockPanel>
+
+
+                    <!--Description-->
+                    <materialDesign:Card Grid.Row="3" Margin="4,6" Padding="8,4">
+                        <StackPanel>
+                            <TextBlock Text="Opis" TextAlignment="Left" FontSize="24" Margin="0,0,0,8"/>
+                            <TextBlock Text="{Binding Description}" TextAlignment="Justify" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+
+                    <!--Specification-->
+                    <materialDesign:Card Grid.Row="4" Margin="4,6" Padding="8,4">
+                        <StackPanel>
+                            <TextBlock Text="Specyfikacja" FontSize="24" Margin="0,0,0,8"/>
+                            <ItemsControl  ItemsSource="{Binding Specification}" AlternationCount="2">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:SpecifitationModel}">
+                                        <Grid Margin="2" x:Name="Bar">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="BarLeft" Margin="4,0" Grid.Column="0" FontSize="16" HorizontalAlignment="Right" TextAlignment="Left" Text="{Binding Element}" FontWeight="Medium"/>
+                                            <TextBlock x:Name="BarRight" Margin="4,0" Grid.Column="1" FontSize="16" HorizontalAlignment="Left" TextAlignment="Left" Text="{Binding Value}"/>
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                                <Setter Property="Background" Value="#ddebf7" TargetName="Bar" />
+                                                <!--<Setter Property="Background" Value="#ddebf7" TargetName="BarLeft" />
+                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="BarRight"/>-->
+                                            </Trigger>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="Bar" />
+                                                <!--<Setter Property="Background" Value="#ddebf7" TargetName="BarRight"/>
+                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" TargetName="BarLeft"/>-->
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+
+                    <!--AddComment-->
+                    <materialDesign:Card Grid.Row="5" Margin="4,6" Padding="8,4">
+                        <StackPanel >
+                            <TextBlock Text="Dodaj opinię" FontSize="24" Margin="0,0,0,8"/>
+                            <DockPanel LastChildFill="False" Margin="4">
+                                <TextBox x:Name="newComment" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="80" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                                     AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Hidden"
+                                     materialDesign:HintAssist.Hint="Opinia" Margin="4,4,4,6"/>
+                                <materialDesign:RatingBar x:Name="newRating" DockPanel.Dock="Left" Value="0" VerticalAlignment="Center"/>
+                                <Button DockPanel.Dock="Right" Content="Dodaj opinię" Margin="4,0" Command="{Binding AddCommentCommand}">
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource MyMultiConverter}">
+                                            <Binding Path="Value" ElementName="newRating" />
+                                            <Binding Path="Text" ElementName="newComment" />
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                </Button>
+                            </DockPanel>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+
+                    <!--Comment-->
+                    <materialDesign:Card Grid.Row="6" Margin="4,6" Padding="8,4">
+                        <StackPanel >
+                            <TextBlock Text="{Binding Rating, StringFormat=Oceny (średnia: {0:F2})}" FontSize="24" Margin="0,0,0,8"/>
+                            <ItemsControl ItemsSource="{Binding Comments}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:CommentModel}">
+                                        <StackPanel>
+                                            <DockPanel LastChildFill="False" VerticalAlignment="Center" Height="30">
+                                                <TextBlock DockPanel.Dock="Left" Text="{Binding Username}" FontSize="18" FontWeight="Medium" VerticalAlignment="Center"/>
+                                                <materialDesign:RatingBar DockPanel.Dock="Left" Margin="4,0" IsReadOnly="True" Value="{Binding Rating}" VerticalAlignment="Center"/>
+                                                <TextBlock DockPanel.Dock="Right" FontSize="14" TextWrapping="Wrap" Text="{Binding CommentId, StringFormat=#{0}}" Foreground="Gray" />
+                                            </DockPanel>
+                                            <materialDesign:RatingBarButton HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Comment}" HorizontalAlignment="Stretch" TextAlignment="Left"/>
+                                            <Separator VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </materialDesign:Card>
+                </Grid>
+            </ScrollViewer>
+
+            <!--Snackbar-->
+            <materialDesign:Snackbar Grid.Column="0" Grid.Row="0" MessageQueue="{Binding MessageQueue}"/>
+
+            <Grid Grid.Row="0" Grid.Column="0" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
+                <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
                 </materialDesign:Card>
             </Grid>
-        </ScrollViewer>
-        
-        <!--Snackbar-->
-        <materialDesign:Snackbar Grid.Column="0" Grid.Row="0" MessageQueue="{Binding MessageQueue}"/>
-
-        <Grid Grid.Row="0" Grid.Column="0" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
-            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
-            </materialDesign:Card>
         </Grid>
-    </Grid>
+    </materialDesign:DialogHost>
 </Page>

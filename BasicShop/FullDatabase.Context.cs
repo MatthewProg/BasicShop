@@ -45,6 +45,7 @@ namespace BasicShop
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<warehouse> warehouse { get; set; }
         public virtual DbSet<product_image> product_image { get; set; }
+        public virtual DbSet<WarehouseAllInfoView> WarehouseAllInfoView { get; set; }
     
         [DbFunction("shopEntities", "childCategories")]
         public virtual IQueryable<Nullable<int>> childCategories(Nullable<int> parentId)
