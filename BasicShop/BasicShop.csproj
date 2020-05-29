@@ -223,6 +223,8 @@
     <Compile Include="ViewModel\ProductPageViewModel.cs" />
     <Compile Include="ViewModel\SimpleListViewModel.cs" />
     <Compile Include="ViewModel\SliderListViewModel.cs" />
+    <Compile Include="ViewModel\UserViewModel.cs" />
+    <Compile Include="ViewModel\WhishlistViewModel.cs" />
     <Compile Include="View\AccountPage.xaml.cs">
       <DependentUpon>AccountPage.xaml</DependentUpon>
     </Compile>
@@ -249,6 +251,12 @@
     </Compile>
     <Compile Include="View\ProductList.xaml.cs">
       <DependentUpon>ProductList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserPage.xaml.cs">
+      <DependentUpon>UserPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WhishlistPage.xaml.cs">
+      <DependentUpon>WhishlistPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="warehouse.cs">
       <DependentUpon>FullDatabase.tt</DependentUpon>
@@ -301,6 +309,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ProductList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WhishlistPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

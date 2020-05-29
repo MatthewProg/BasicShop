@@ -38,7 +38,7 @@
                                         </DockPanel>
                                     </Expander.Header>
                                     <StackPanel Margin="10">
-                                        <DataGrid Margin="0,0,0,10" AutoGenerateColumns="False" ItemsSource="{Binding Products}" CanUserAddRows="False" CanUserDeleteRows="False">
+                                        <DataGrid Margin="0,0,0,10" AutoGenerateColumns="False" ItemsSource="{Binding Products}" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Nazwa" Binding="{Binding Item1.name}" />
                                                 <DataGridTextColumn Header="Ilość" Binding="{Binding Item2}" />

@@ -1,13 +1,13 @@
 ﻿using BasicShop.Commands;
 using BasicShop.Managers;
 using BasicShop.View;
-using ControlzEx.Standard;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace BasicShop.ViewModel
 {
@@ -38,6 +38,8 @@ namespace BasicShop.ViewModel
             LogoutCommand = new SimpleCommand(Logout);
             ChangeViewCommand = new ParameterCommand(ChangeView);
 
+            FrameView = new UserPage();
+
             ChangeView(startingPage);
         }
 
@@ -48,7 +50,7 @@ namespace BasicShop.ViewModel
             switch (change)
             {
                 case "account":
-                    FrameView = new object();
+                    FrameView = new UserPage();
                     break;
                 case "orders":
                     FrameView = new OrdersPage();
@@ -57,7 +59,7 @@ namespace BasicShop.ViewModel
                     FrameView = new object();
                     break;
                 case "whishlist":
-                    FrameView = new object();
+                    FrameView = new WhishlistPage(_mainVM);
                     break;
                 default:
                     break;
