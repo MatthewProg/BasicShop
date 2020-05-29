@@ -81,7 +81,6 @@ namespace BasicShop.ViewModel
                     _mainVM.LoadPage("account");
             });
         }
-
         private void Register()
         {
             if (Firstname == null || Firstname == string.Empty)
@@ -153,7 +152,6 @@ namespace BasicShop.ViewModel
                 _mainVM.LoadPage("account");
             });
         }
-
         private async void LoadingScreenProcess(Action action, Action onMain = null)
         {
             LoadingScreen = Visibility.Visible;

@@ -2,6 +2,7 @@
 using Microsoft.Xaml.Behaviors.Media;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography;
@@ -58,17 +59,6 @@ namespace BasicShop.Managers
             try
             {
                 var dataContext = new shopEntities();
-                /*if(dataContext.account.Where(x=>x.username == username).Any())
-                {
-                    message = "Użytkownik z taką nazwą już istnieje";
-                    return false;
-                }
-
-                if (dataContext.account.Where(x => x.email == email).Any())
-                {
-                    message = "Użytkownik z takim emailem już istnieje";
-                    return false;
-                }*/
 
                 account a = new account();
                 a.email = email;
@@ -97,6 +87,28 @@ namespace BasicShop.Managers
         public static void Logout()
         {
             LoggedId = null;
+        }
+
+        public static bool ChangePassword(string oldPassword, string newPassword)
+        {
+            try
+            {
+                var dataContext = new shopEntities();
+                var a = dataContext.account.FirstOrDefault(x => x.account_id == LoggedId);
+                if (!ChecklHashSalt(oldPassword, a.password))
+                    return false;
+                a.password = GenerateHashSalt(newPassword);
+                dataContext.account.AddOrUpdate(a);
+                dataContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                string mess = "Podczas zmiany hasła wystąpił błąd!\n";
+                StandardMessages.Error(mess + e.Message);
+                return false;
+            }
+
+            return true;
         }
 
         private static string GenerateHashSalt(string password)

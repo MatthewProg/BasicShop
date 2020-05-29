@@ -44,10 +44,6 @@ namespace BasicShop.ViewModel
             TreeViewSelectionCommand = new SimpleCommand(GoToCategory);
 
             LoadingScreenProcess(GetCategoriesTree);
-
-            // - - - - - - TESTS ONLY - - - - - -
-            
-            // - - - - - - - - - - - - - - - - - -
         }
 
         private void GetCategoriesTree()

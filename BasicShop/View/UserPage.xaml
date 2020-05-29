@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BasicShop.View"
       mc:Ignorable="d" 
+      xmlns:ff="clr-namespace:FunctionalFun.UI"
       xmlns:models="clr-namespace:BasicShop.Model"
       xmlns:viewModels="clr-namespace:BasicShop.ViewModel"
       xmlns:converters="clr-namespace:BasicShop.Converters"
@@ -23,6 +24,55 @@
       Title="User">
 
     <Grid>
-        <TextBlock Text="Ustawienia konta" FontSize="30" HorizontalAlignment="Center" Margin="10"/>
+        <DockPanel Margin="4,0" HorizontalAlignment="Stretch" LastChildFill="False">
+            <TextBlock DockPanel.Dock="Top" Margin="10" Text="Ustawienia konta" FontSize="30" HorizontalAlignment="Center"/>
+            <StackPanel DockPanel.Dock="Left" Width="230" Margin="10,0">
+                <TextBlock Text="Dane kontaktowe:" HorizontalAlignment="Left" Margin="4" FontSize="24" FontWeight="Medium" />
+                <WrapPanel Margin="4">
+                    <materialDesign:PackIcon Kind="Person" Width="20" Height="20" VerticalAlignment="Center"/>
+                    <TextBox VerticalAlignment="Center" FontSize="14" Width="200" HorizontalAlignment="Left" MaxLength="50" materialDesign:HintAssist.Hint="Imię" Text="{Binding FirstName}" />
+                </WrapPanel>
+                <WrapPanel Margin="4">
+                    <materialDesign:PackIcon Kind="Person" Width="20" Height="20" VerticalAlignment="Center"/>
+                    <TextBox VerticalAlignment="Center" FontSize="14" Width="200" HorizontalAlignment="Left" MaxLength="50" materialDesign:HintAssist.Hint="Nazwisko" Text="{Binding Surname}" />
+                </WrapPanel>
+                <WrapPanel Margin="4">
+                    <materialDesign:PackIcon Kind="Email" Width="20" Height="20" VerticalAlignment="Center"/>
+                    <TextBox VerticalAlignment="Center" FontSize="14" Width="200" HorizontalAlignment="Left" MaxLength="50" materialDesign:HintAssist.Hint="E-mail" Text="{Binding Email}" />
+                </WrapPanel>
+                <WrapPanel Margin="4">
+                    <materialDesign:PackIcon Kind="Phone" Width="20" Height="20" VerticalAlignment="Center"/>
+                    <TextBox VerticalAlignment="Center" FontSize="14" Width="200" HorizontalAlignment="Left" MaxLength="12" materialDesign:HintAssist.Hint="Telefon" Text="{Binding Phone}" />
+                </WrapPanel>
+                <Button Content="Zapisz" HorizontalAlignment="Center" Command="{Binding SaveCommand}"/>
+
+                <TextBlock Text="Zmiana hasła:" HorizontalAlignment="Left" Margin="4,60,4,4" FontSize="24" FontWeight="Medium" />
+
+                <PasswordBox Margin="4" FontSize="14" materialDesign:HintAssist.Hint="Stare hasło" ff:PasswordBoxAssistant.BindPassword="True" ff:PasswordBoxAssistant.BoundPassword="{Binding OldPassword, Mode=TwoWay}" />
+                <PasswordBox Margin="4" FontSize="14" materialDesign:HintAssist.Hint="Nowe hasło" ff:PasswordBoxAssistant.BindPassword="True" ff:PasswordBoxAssistant.BoundPassword="{Binding NewPassword, Mode=TwoWay}" />
+                <PasswordBox Margin="4" FontSize="14" materialDesign:HintAssist.Hint="Powtórz hasło" ff:PasswordBoxAssistant.BindPassword="True" ff:PasswordBoxAssistant.BoundPassword="{Binding ConfirmPassword, Mode=TwoWay}" />
+                <Button Content="Zmień" HorizontalAlignment="Center" Command="{Binding ChangePasswordCommand}"/>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Right" Width="230" Margin="0,0,100,0">
+                <TextBlock Text="Dane użytkownika:" HorizontalAlignment="Left" Margin="4" FontSize="24" FontWeight="Medium" />
+                <TextBlock FontSize="15" Margin="0,10,0,0">
+                    <Run FontWeight="Medium" Text="Nazywa konta: "/>
+                    <Run Text="{Binding Username}"/>
+                </TextBlock>
+                <TextBlock FontSize="15">
+                    <Run FontWeight="Medium" Text="E-mail konta: "/>
+                    <Run Text="{Binding EmailMain}"/>
+                </TextBlock>
+            </StackPanel>
+        </DockPanel>
+
+        <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}"/>
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="#FFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
+        </Grid>
     </Grid>
 </Page>
