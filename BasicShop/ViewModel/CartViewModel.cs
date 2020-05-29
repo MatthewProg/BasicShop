@@ -95,6 +95,7 @@ namespace BasicShop.ViewModel
                     CartModel prod = new CartModel();
                     prod.ProductId = key;
                     prod.ProductName = dataContext.product.FirstOrDefault(x => x.product_id == key).name;
+                    prod.Price = dataContext.product.FirstOrDefault(x => x.product_id == key).price;
                     prod.Quantity = _mainVM.Cart[key];
                     output.Add(prod);
                 }

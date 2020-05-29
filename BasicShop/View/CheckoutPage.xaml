@@ -23,6 +23,87 @@
       Title="Checkout">
 
     <Grid>
-        
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid HorizontalAlignment="Center" Margin="0,10" MaxWidth="940">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Zamówienie" HorizontalAlignment="Center" FontSize="30" Margin="0,10"/>
+                <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" AutoGenerateColumns="False" CanUserAddRows="False" 
+                          CanUserDeleteRows="False" IsReadOnly="False" ItemsSource="{Binding Cart, Mode=TwoWay}"
+                          HorizontalAlignment="Center" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding ProductId}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Nazwa" Binding="{Binding ProductName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Ilość" Binding="{Binding Quantity}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Cena za sztukę" Binding="{Binding Price, StringFormat={}{0:F2}zł}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Suma" Binding="{Binding PriceSum, StringFormat={}{0:F2}zł}" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" FontSize="26" Text="Dane dostawy:" Margin="0,10"/>
+
+                <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left">
+                    <TextBox Margin="4" Width="220" MaxLength="100" materialDesign:HintAssist.Hint="Ulica" Text="{Binding Road, Mode=TwoWay}"/>
+                    <DockPanel Width="220" Margin="4">
+                        <TextBox DockPanel.Dock="Left" Width="60" MaxLength="10" materialDesign:HintAssist.Hint="Nr domu" Text="{Binding House, Mode=TwoWay}"/>
+                        <TextBox DockPanel.Dock="Right" Width="60" MaxLength="10" materialDesign:HintAssist.Hint="Nr lokalu" Text="{Binding Flat, Mode=TwoWay}"/>
+                    </DockPanel>
+                    <DockPanel Width="220" Margin="4">
+                        <TextBox DockPanel.Dock="Left" Width="90" MaxLength="5" materialDesign:HintAssist.Hint="Kod pocztowy" Text="{Binding Zipcode, Mode=TwoWay}"/>
+                        <TextBox DockPanel.Dock="Right" Width="100" MaxLength="50" materialDesign:HintAssist.Hint="Miasto" Text="{Binding City, Mode=TwoWay}"/>
+                    </DockPanel>
+                    <ComboBox Width="220" materialDesign:HintAssist.Hint="Kraj" ItemsSource="{Binding Countries}" SelectedValue="{Binding Country, Mode=TwoWay}" IsTextSearchEnabled="True" IsEditable="False" TextSearch.TextPath="{Binding Countries}"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Text="Podsumowanie:" FontSize="26" Margin="0,30,0,10"/>
+
+                <StackPanel Grid.Row="5" Grid.Column="0" Margin="0,0,0,0">
+                    <TextBlock Text="Sposób dostawy:" FontWeight="Medium"/>
+                    <ComboBox Width="200" HorizontalAlignment="Left" SelectedValue="{Binding DeliverySelected, Mode=OneWayToSource}">
+                        <ComboBoxItem Content="Kurier DHL (12.99zł)" IsSelected="True"/>
+                        <ComboBoxItem Content="Paczkomat (8.99zł)" />
+                        <ComboBoxItem Content="Poczta Polska (7.99zł)" />
+                        <ComboBoxItem Content="Kiosk Ruch (3.99zł)" />
+                    </ComboBox>
+
+                    <TextBlock Text="Sposób zapłaty:" FontWeight="Medium" Margin="0,20,0,0"/>
+                    <ComboBox Width="200" HorizontalAlignment="Left" SelectedValue="{Binding PaymentSelected, Mode=OneWayToSource}">
+                        <ComboBoxItem Content="Przelew bankowy (0.00zł)" IsSelected="True"/>
+                        <ComboBoxItem Content="PayPal (0.00zł)" />
+                        <ComboBoxItem Content="PayU (2.99zł)" />
+                        <ComboBoxItem Content="BLIK (0.00zł)" />
+                        <ComboBoxItem Content="Przelewy24 (0.99zł)" />
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="5" Grid.Column="1" Margin="0,0,0,0" VerticalAlignment="Bottom">
+                    <TextBlock HorizontalAlignment="Right" FontSize="14" FontWeight="Medium" Text="{Binding ProductSum, StringFormat=Koszt produktów: {0:F2}zł}" />
+                    <TextBlock HorizontalAlignment="Right" FontSize="14" FontWeight="Medium" Text="{Binding DeliveryCoast, StringFormat=Koszt dostawy: {0:F2}zł}" />
+                    <TextBlock HorizontalAlignment="Right" FontSize="14" FontWeight="Medium" Text="{Binding PaymentCoast, StringFormat=Koszt zapłady: {0:F2}zł}" />
+                    <TextBlock HorizontalAlignment="Right" FontSize="20" FontWeight="SemiBold" Text="{Binding AllSum, StringFormat=Do zapłaty: {0:F2}zł}" />
+                </StackPanel>
+                <Button Grid.Row="6" Grid.Column="1" Margin="0,20,0,0" HorizontalAlignment="Right" Content="Zatwierdź" Command="{Binding ConfirmCommand}"/>
+            </Grid>
+        </ScrollViewer>
+
+        <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}"/>
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
+        </Grid>
     </Grid>
 </Page>

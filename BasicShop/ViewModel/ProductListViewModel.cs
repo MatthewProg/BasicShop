@@ -1,28 +1,14 @@
 ﻿using BasicShop.Commands;
 using BasicShop.Model;
-using MaterialDesignThemes.Wpf;
-using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlTypes;
 using System.Globalization;
-using System.IO.Pipes;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Runtime.Remoting.Contexts;
-using System.Security.Authentication.ExtendedProtection.Configuration;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Threading;
 
 namespace BasicShop.ViewModel
 {

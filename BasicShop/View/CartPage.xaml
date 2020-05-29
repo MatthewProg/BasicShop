@@ -31,15 +31,6 @@
                           HorizontalAlignment="Center" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Nazwa" Binding="{Binding ProductName}" IsReadOnly="True"/>
-                        <!--<DataGridTextColumn Header="Ilość" Binding="{Binding Quantity}" IsReadOnly="False"/>-->
-                        <!--<DataGridTemplateColumn IsReadOnly="False">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox HorizontalAlignment="Stretch" Text="{Binding Quantity, Mode=TwoWay}"
-                                             VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>-->
                         <DataGridTemplateColumn IsReadOnly="False" Header="Ilość" MinWidth="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -47,6 +38,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Cena za sztukę" Binding="{Binding Price, StringFormat={}{0:F2}zł}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Suma" Binding="{Binding PriceSum, StringFormat={}{0:F2}zł}" IsReadOnly="True"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

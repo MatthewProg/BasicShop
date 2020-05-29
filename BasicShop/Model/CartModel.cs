@@ -12,6 +12,7 @@ namespace BasicShop.Model
         private int _productId;
         private string _productName;
         private int _quantity;
+        private decimal _price;
 
         public int ProductId
         {
@@ -44,7 +45,26 @@ namespace BasicShop.Model
 
                 _quantity = value;
                 OnPropertyChanged("Quantity");
+                OnPropertyChanged("PriceSum");
             }
+        }
+
+        public decimal Price
+        {
+            get { return _price; }
+            set
+            {
+                if (value == _price) return;
+
+                _price = value;
+                OnPropertyChanged("Price");
+                OnPropertyChanged("PriceSum");
+            }
+        }
+
+        public decimal PriceSum
+        {
+            get { return Price * Quantity; }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
