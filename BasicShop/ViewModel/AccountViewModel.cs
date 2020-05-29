@@ -1,5 +1,7 @@
 ﻿using BasicShop.Commands;
 using BasicShop.Managers;
+using BasicShop.View;
+using ControlzEx.Standard;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,38 +14,55 @@ namespace BasicShop.ViewModel
     public class AccountViewModel : INotifyPropertyChanged
     {
         private MainWindowViewModel _mainVM;
-        private string _username;
+        private object _frameView;
 
-        public string Username
+        public object FrameView
         {
-            get { return _username; }
+            get { return _frameView; }
             set
             {
-                if (value == _username) return;
+                if (value == _frameView) return;
 
-                _username = value;
-                OnPropertyChanged("Username");
+                _frameView = value;
+                OnPropertyChanged("FrameView");
             }
         }
+
+        public ParameterCommand ChangeViewCommand { get; set; }
         public SimpleCommand LogoutCommand { get; set; }
 
-        public AccountViewModel(MainWindowViewModel mvm)
+        public AccountViewModel(MainWindowViewModel mvm, string startingPage = "account")
         {
             _mainVM = mvm;
 
             LogoutCommand = new SimpleCommand(Logout);
-            try
-            {
-                var dataContext = new shopEntities();
-                Username = dataContext.account.FirstOrDefault(x => x.account_id == AccountManager.LoggedId).username;
-            }
-            catch(Exception e)
-            {
-                string mess = "Podczas ładowania informacji o koncie wystąpił błąd!\n";
-                StandardMessages.Error(mess + e.Message);
-            }
+            ChangeViewCommand = new ParameterCommand(ChangeView);
+
+            ChangeView(startingPage);
         }
 
+        private void ChangeView(object param)
+        {
+            string change = param as string;
+
+            switch (change)
+            {
+                case "account":
+                    FrameView = new object();
+                    break;
+                case "orders":
+                    FrameView = new OrdersPage();
+                    break;
+                case "delivery":
+                    FrameView = new object();
+                    break;
+                case "whishlist":
+                    FrameView = new object();
+                    break;
+                default:
+                    break;
+            }
+        }
         private void Logout()
         {
             AccountManager.Logout();

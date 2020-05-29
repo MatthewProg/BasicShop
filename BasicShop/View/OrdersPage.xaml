@@ -1,0 +1,90 @@
+﻿<Page x:Class="BasicShop.View.OrdersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BasicShop.View"
+      mc:Ignorable="d" 
+      xmlns:models="clr-namespace:BasicShop.Model"
+      xmlns:viewModels="clr-namespace:BasicShop.ViewModel"
+      xmlns:converters="clr-namespace:BasicShop.Converters"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:selectors="clr-namespace:BasicShop.Selectors"
+      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+      d:DesignHeight="576" d:DesignWidth="826"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+      Title="Orders">
+
+    <Grid>
+        <ScrollViewer HorizontalAlignment="Center" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+            <StackPanel Width="800">
+                <TextBlock Text="Zamówienia" FontSize="30" HorizontalAlignment="Center" Margin="0,10"/>
+                <ItemsControl ItemsSource="{Binding Orders}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:OrderModel}">
+                            <materialDesign:Card>
+                                <Expander>
+                                    <Expander.Header>
+                                        <DockPanel HorizontalAlignment="Stretch" LastChildFill="False">
+                                            <TextBlock DockPanel.Dock="Left" Text="{Binding OrderId, StringFormat=Zamówienie #{0}}" FontSize="20" />
+                                            <TextBlock DockPanel.Dock="Right" Text="{Binding OrderStatus}" Foreground="Red" FontSize="20" Typography.Capitals="AllPetiteCaps" />
+                                        </DockPanel>
+                                    </Expander.Header>
+                                    <StackPanel Margin="10">
+                                        <DataGrid Margin="0,0,0,10" AutoGenerateColumns="False" ItemsSource="{Binding Products}" CanUserAddRows="False" CanUserDeleteRows="False">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Nazwa" Binding="{Binding Item1.name}" />
+                                                <DataGridTextColumn Header="Ilość" Binding="{Binding Item2}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <TextBlock FontWeight="Medium" Text="Dane wysyłkowe:"/>
+                                        <StackPanel>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0}, {1}">
+                                                        <Binding Path="Address.city.city1"/>
+                                                        <Binding Path="Address.city.country.country1"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="ul. {0} {1}/{2}">
+                                                        <Binding Path="Address.road"/>
+                                                        <Binding Path="Address.house"/>
+                                                        <Binding Path="Address.flat"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="Address.zip_code" />
+                                                        <Binding Path="Address.city.city1"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander>
+                            </materialDesign:Card>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="#FFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
+        </Grid>
+    </Grid>
+</Page>

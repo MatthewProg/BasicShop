@@ -69,19 +69,6 @@ namespace BasicShop.ViewModel
 
             Cart = new Dictionary<int, int>();
 
-            /////TEST ONLY/////
-
-            Cart = new Dictionary<int, int>()
-            {
-                {1,1},
-                {2,1},
-                {45,1},
-                {255,1},
-                {781,1}
-            };
-
-            ///////////////////
-
             CloseWindowCommand = new SimpleCommand(CloseWindow);
             MinimalizeWindowCommand = new SimpleCommand(MinimalizeWindow);
             LoadScreenCommand = new ParameterCommand(LoadScreen);
@@ -109,6 +96,13 @@ namespace BasicShop.ViewModel
         public void LoadProduct(int? prodId)
         {
             MainFrame = new ProductPage(this, prodId);
+        }
+        public void LoadCustomAccountPage(string page)
+        {
+            if (page != null)
+                MainFrame = new AccountPage(this, page);
+            else
+                MainFrame = new AccountPage(this);
         }
         private void LoadScreen(object param)
         {

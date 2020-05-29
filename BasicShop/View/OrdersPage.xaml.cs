@@ -17,14 +17,14 @@ using System.Windows.Shapes;
 namespace BasicShop.View
 {
     /// <summary>
-    /// Interaction logic for AccountPage.xaml
+    /// Interaction logic for OrdersPage.xaml
     /// </summary>
-    public partial class AccountPage : Page
+    public partial class OrdersPage : Page
     {
-        public AccountPage(MainWindowViewModel mvm, string startingPage = "account")
+        public OrdersPage()
         {
             InitializeComponent();
-            this.DataContext = new AccountViewModel(mvm, startingPage);
+            this.DataContext = new OrdersViewModel();
         }
     }
 }

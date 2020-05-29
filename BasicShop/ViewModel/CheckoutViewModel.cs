@@ -307,7 +307,7 @@ namespace BasicShop.ViewModel
             }
 
             //Load orders screen!
-
+            _mainVM.LoadCustomAccountPage("orders");
         }
         private decimal ValueParser(string input)
         {

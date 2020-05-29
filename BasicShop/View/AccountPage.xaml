@@ -23,9 +23,54 @@
       Title="User">
 
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="{Binding Username, StringFormat=Witaj\, {0}!}" FontSize="60"/>
-            <Button Content="Wyloguj" Command="{Binding LogoutCommand}" HorizontalAlignment="Center" />
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+           
+        <Frame Grid.Column="1" Height="576" Width="826" Content="{Binding FrameView}"/>
+
+        <materialDesign:Card Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+            <DockPanel LastChildFill="False" Width="160">
+                <!--Konto-->
+                <Button Margin="0" DockPanel.Dock="Top" Height="40" Style="{DynamicResource MaterialDesignFlatButton}"
+                        Command="{Binding ChangeViewCommand}" CommandParameter="account">
+                    <TextBlock FontSize="16" Text="Konto"/>
+                </Button>
+                <Separator Margin="0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="1"/>
+
+                <!--Dane wysyłkowe-->
+                <Button Margin="0" DockPanel.Dock="Top" Height="40" Style="{DynamicResource MaterialDesignFlatButton}"
+                        Command="{Binding ChangeViewCommand}" CommandParameter="delivery">
+                    <TextBlock FontSize="16" Text="Dane wysyłkowe"/>
+                </Button>
+                <Separator Margin="0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="1"/>
+                
+                <!--Zamowienia-->
+                <Button Margin="0" DockPanel.Dock="Top" Height="40" Style="{DynamicResource MaterialDesignFlatButton}"
+                        Command="{Binding ChangeViewCommand}" CommandParameter="orders">
+                    <TextBlock FontSize="16" Text="Zamówienia"/>
+                </Button>
+                <Separator Margin="0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="1"/>
+
+                <!--Lista życzęń-->
+                <Button Margin="0" DockPanel.Dock="Top" Height="40" Style="{DynamicResource MaterialDesignFlatButton}"
+                        Command="{Binding ChangeViewCommand}" CommandParameter="whishlist">
+                    <TextBlock FontSize="16" Text="Lista życzeń"/>
+                </Button>
+                <Separator Margin="0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="1"/>
+
+
+                <!--Wyloguj-->
+                <Button Padding="0" DockPanel.Dock="Bottom" Height="40" Style="{DynamicResource MaterialDesignFlatButton}"
+                        Foreground="Red" Command="{Binding LogoutCommand}">
+                    <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Shutdown" VerticalAlignment="Center" Height="22" Width="22"/>
+                        <TextBlock FontSize="16" Text="Wyloguj" VerticalAlignment="Center"/>
+                    </WrapPanel>
+                </Button>
+            </DockPanel>
+        </materialDesign:Card>
+
     </Grid>
 </Page>

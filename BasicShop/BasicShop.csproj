@@ -164,6 +164,7 @@
     <Compile Include="Model\CheckListModel.cs" />
     <Compile Include="Model\ComboBoxItemModel.cs" />
     <Compile Include="Model\CommentModel.cs" />
+    <Compile Include="Model\OrderModel.cs" />
     <Compile Include="Model\ProductListModel.cs" />
     <Compile Include="Model\SimpleListModel.cs" />
     <Compile Include="Model\SortingCategoryModel.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="ViewModel\CheckoutViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\OrdersViewModel.cs" />
     <Compile Include="ViewModel\ProductListViewModel.cs" />
     <Compile Include="ViewModel\ProductPageViewModel.cs" />
     <Compile Include="ViewModel\SimpleListViewModel.cs" />
@@ -238,6 +240,9 @@
     </Compile>
     <Compile Include="View\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OrdersPage.xaml.cs">
+      <DependentUpon>OrdersPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ProductPage.xaml.cs">
       <DependentUpon>ProductPage.xaml</DependentUpon>
@@ -287,6 +292,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\OrdersPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ProductPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
