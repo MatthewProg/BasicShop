@@ -134,6 +134,7 @@
     <Compile Include="Commands\ParameterCommand.cs" />
     <Compile Include="Commands\SimpleCommand.cs" />
     <Compile Include="Converters\DecimalPlacesConverter.cs" />
+    <Compile Include="Converters\DistinctConverter.cs" />
     <Compile Include="Converters\MyMultiConverter.cs" />
     <Compile Include="Converters\OnlineImageConverter.cs" />
     <Compile Include="country.cs">
@@ -421,6 +422,7 @@
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\position.datasource" />
     <None Include="Properties\DataSources\role.datasource" />
+    <None Include="Properties\DataSources\staff.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
