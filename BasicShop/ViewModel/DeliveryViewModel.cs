@@ -253,7 +253,7 @@ namespace BasicShop.ViewModel
                 string mess = "Podczas ładowania danych wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
             }
-
+            if (a == null) return;
             Road = a.road;
             Zipcode = a.zip_code;
             House = a.house;

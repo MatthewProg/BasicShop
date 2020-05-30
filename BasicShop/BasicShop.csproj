@@ -229,6 +229,33 @@
     <Compile Include="View\AccountPage.xaml.cs">
       <DependentUpon>AccountPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\AdminAccountPage.xaml.cs">
+      <DependentUpon>AdminAccountPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminAddressPage.xaml.cs">
+      <DependentUpon>AdminAddressPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminFeedbackPage.xaml.cs">
+      <DependentUpon>AdminFeedbackPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminOrdersPage.xaml.cs">
+      <DependentUpon>AdminOrdersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminPositionPage.xaml.cs">
+      <DependentUpon>AdminPositionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminProductPage.xaml.cs">
+      <DependentUpon>AdminProductPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminRolePage.xaml.cs">
+      <DependentUpon>AdminRolePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminShopPage.xaml.cs">
+      <DependentUpon>AdminShopPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AdminStaffPage.xaml.cs">
+      <DependentUpon>AdminStaffPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CartPage.xaml.cs">
       <DependentUpon>CartPage.xaml</DependentUpon>
     </Compile>
@@ -269,6 +296,42 @@
       <DependentUpon>FullDatabase.tt</DependentUpon>
     </Compile>
     <Page Include="View\AccountPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminAccountPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminAddressPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminFeedbackPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminOrdersPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminPositionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminProductPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminRolePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminShopPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AdminStaffPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -356,6 +419,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
+    <None Include="Properties\DataSources\role.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

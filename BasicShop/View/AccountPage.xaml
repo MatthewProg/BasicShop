@@ -60,6 +60,18 @@
                 </Button>
                 <Separator Margin="0" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="1"/>
 
+                <StackPanel HorizontalAlignment="Stretch" DockPanel.Dock="Top" Margin="0,20,0,0" Visibility="{Binding AdminSectionVisibility}">
+                    <TextBlock Text="Sekcja administracyjna" HorizontalAlignment="Center" FontSize="14"  Typography.Capitals="AllSmallCaps" Foreground="Gray"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminRole" Content="Role" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminPosition" Content="Stanowiska" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminAccount" Content="Konta" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminAddress" Content="Adresy" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminStaff" Content="Pracownicy" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminOrders" Content="Zamówienia" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminFeedback" Content="Opinie" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminProduct" Content="Produkty" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                    <Button FontSize="16" Command="{Binding ChangeViewCommand}" CommandParameter="adminShop" Content="Sklepy" Style="{DynamicResource MaterialDesignFlatButton}" Padding="0"/>
+                </StackPanel>
 
                 <!--Wyloguj-->
                 <Button Padding="0" DockPanel.Dock="Bottom" Height="40" Style="{DynamicResource MaterialDesignFlatButton}"
@@ -72,5 +84,10 @@
             </DockPanel>
         </materialDesign:Card>
 
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="#CC111111" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
+        </Grid>
     </Grid>
 </Page>
