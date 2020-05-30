@@ -1,0 +1,53 @@
+﻿<Page x:Class="BasicShop.View.DeliveryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BasicShop.View"
+      mc:Ignorable="d" 
+      xmlns:models="clr-namespace:BasicShop.Model"
+      xmlns:viewModels="clr-namespace:BasicShop.ViewModel"
+      xmlns:converters="clr-namespace:BasicShop.Converters"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:selectors="clr-namespace:BasicShop.Selectors"
+      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+      d:DesignHeight="576" d:DesignWidth="826"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+      Title="Delivery">
+
+    <Grid>
+        <DockPanel Margin="4,0" HorizontalAlignment="Stretch" LastChildFill="False">
+            <TextBlock DockPanel.Dock="Top" Margin="10" Text="Dane adresowe" FontSize="30" HorizontalAlignment="Center"/>
+            <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left">
+                <TextBlock Text="Domyślny adres:" HorizontalAlignment="Left" Margin="4" FontSize="24" FontWeight="Medium"/>
+                <TextBox Margin="4" Width="220" MaxLength="100" materialDesign:HintAssist.Hint="Ulica" Text="{Binding Road, Mode=TwoWay}"/>
+                <DockPanel Width="220" Margin="4">
+                    <TextBox DockPanel.Dock="Left" Width="60" MaxLength="10" materialDesign:HintAssist.Hint="Nr domu" Text="{Binding House, Mode=TwoWay}"/>
+                    <TextBox DockPanel.Dock="Right" Width="60" MaxLength="10" materialDesign:HintAssist.Hint="Nr lokalu" Text="{Binding Flat, Mode=TwoWay}"/>
+                </DockPanel>
+                <DockPanel Width="220" Margin="4">
+                    <TextBox DockPanel.Dock="Left" Width="90" MaxLength="5" materialDesign:HintAssist.Hint="Kod pocztowy" Text="{Binding Zipcode, Mode=TwoWay}"/>
+                    <TextBox DockPanel.Dock="Right" Width="100" MaxLength="50" materialDesign:HintAssist.Hint="Miasto" Text="{Binding City, Mode=TwoWay}"/>
+                </DockPanel>
+                <ComboBox Width="220" materialDesign:HintAssist.Hint="Kraj" ItemsSource="{Binding Countries}" SelectedValue="{Binding Country, Mode=TwoWay}" IsTextSearchEnabled="True" IsEditable="False" TextSearch.TextPath="{Binding Countries}"/>
+
+                <Button Margin="10" Content="Zapisz" HorizontalAlignment="Center" Command="{Binding SaveCommand}"/>
+            </StackPanel>
+        </DockPanel>
+
+        <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}"/>
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="#FFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding LoadingScreen}">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
+        </Grid>
+    </Grid>
+</Page>

@@ -56,7 +56,7 @@ namespace BasicShop.ViewModel
                     FrameView = new OrdersPage();
                     break;
                 case "delivery":
-                    FrameView = new object();
+                    FrameView = new DeliveryPage();
                     break;
                 case "whishlist":
                     FrameView = new WhishlistPage(_mainVM);

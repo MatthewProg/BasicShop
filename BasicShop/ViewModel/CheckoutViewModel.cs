@@ -240,8 +240,12 @@ namespace BasicShop.ViewModel
             Road = Road.Trim();
             City = City.Trim();
             Country = Country.Trim();
-            if(Flat != null)
+            if (Flat != null)
+            {
                 Flat = Flat.Trim();
+                if (Flat == string.Empty)
+                    Flat = null;
+            }
             House = House.Trim();
             Zipcode = Zipcode.Trim();
 
