@@ -19,8 +19,11 @@
 
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock FontSize="60"  Text="Aplikacja w trakcie budowy" FontFamily="Segoe UI" FontWeight="SemiBold" Foreground="#FFFF3434"/>
-            <TextBlock Text="Na razie zapraszam do testowania działania kategorii i listy produktów (lewa zakładka)" FontSize="16" Width="400" TextWrapping="Wrap" TextAlignment="Center"/>
+            <TextBlock Margin="4" Width="750" TextWrapping="Wrap" FontSize="20" Text="• Ze względu na pośpiech, panel administracyjny jest wciąż w wersji Beta. Umożliwa on wykonywanie operacji CRUD, aczkolwiek ze względu na posiadanie jedynie podstawowej walidacji, mogą występować błędy."/>
+            <TextBlock Margin="4" Width="750" TextWrapping="Wrap" FontSize="20" Text="• W przypadku ładowania się strony przez dluższy czas lub komunikacie o błędzie połączenia, stronę wystarczy odświeżyć, gdyż problemy powoduje wolny serwer bazodanowy oparty o darmowy hosting."/>
+            <TextBlock Margin="4" Width="750" TextWrapping="Wrap" FontSize="20" Text="• Wszystkie treści ładowane są ze zdalnego serwera bazodanowego lub strony WWW (zdjęcia)."/>
+            <TextBlock Margin="0,10,0,0" FontSize="30" HorizontalAlignment="Right" Foreground="Red" Text="v1.0"/>
+            <TextBlock Margin="0" FontSize="12" HorizontalAlignment="Right" Foreground="Gray" Text="Made by Mateusz Ciągło"/>
         </StackPanel>
     </Grid>
 </Page>

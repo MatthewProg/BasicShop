@@ -61,6 +61,9 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\ControlzEx.dll</HintPath>
@@ -470,6 +473,7 @@
       <DependentUpon>FullDatabase.edmx</DependentUpon>
       <LastGenOutput>FullDatabase.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\favicon.ico" />
     <Resource Include="Resources\img\icons\account.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
