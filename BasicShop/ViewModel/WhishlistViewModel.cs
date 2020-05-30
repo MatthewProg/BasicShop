@@ -4,12 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Dynamic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace BasicShop.ViewModel
 {
@@ -64,7 +61,7 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 var a = dataContext.account.FirstOrDefault(x => x.account_id == AccountManager.LoggedId);
                 output = a.product.ToList();
             }
@@ -94,7 +91,7 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 var a = dataContext.account.FirstOrDefault(x => x.account_id == AccountManager.LoggedId);
                 var prod = dataContext.product.FirstOrDefault(x => x.product_id == p.product_id);
                 a.product.Remove(prod);

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BasicShop.Model
 {
@@ -23,7 +19,6 @@ namespace BasicShop.Model
                 OnPropertyChanged("IsChecked");
             }
         }
-
         public string Name
         {
             get { return _name; }
@@ -37,14 +32,15 @@ namespace BasicShop.Model
         }
 
         public Commands.SimpleCommand ChangeSelection { get; set; }
-        private void SelectionChange()
-        {
-            IsChecked = !IsChecked;
-        }
 
         public CheckListModel()
         {
             ChangeSelection = new Commands.SimpleCommand(SelectionChange);
+        }
+
+        private void SelectionChange()
+        {
+            IsChecked = !IsChecked;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

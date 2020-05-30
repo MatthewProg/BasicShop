@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BasicShop.Model
 {
@@ -24,7 +20,6 @@ namespace BasicShop.Model
                 OnPropertyChanged("Name");
             }
         }
-
         public bool IsSelected
         {
             get { return _isSelected; }
@@ -36,7 +31,6 @@ namespace BasicShop.Model
                 OnPropertyChanged("IsSelected");
             }
         }
-
         public object Value
         {
             get { return _value; }
@@ -48,6 +42,7 @@ namespace BasicShop.Model
                 OnPropertyChanged("Value");
             }
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(String info)
         {

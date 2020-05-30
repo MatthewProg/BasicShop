@@ -4,13 +4,6 @@ using BasicShop.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
 
 namespace BasicShop.ViewModel
 {
@@ -43,7 +36,7 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("ItemsInCart");
             }
         }
-        public Dictionary<int,int> Cart
+        public Dictionary<int, int> Cart
         {
             get { return _cart; }
             set
@@ -91,7 +84,7 @@ namespace BasicShop.ViewModel
         }
         public void LoadProductList(uint? categoryID, string search)
         {
-            MainFrame = new ProductList(this,categoryID, search);
+            MainFrame = new ProductList(this, categoryID, search);
         }
         public void LoadProduct(int? prodId)
         {
@@ -140,7 +133,7 @@ namespace BasicShop.ViewModel
         }
         public void NavigationGoBack()
         {
-            if(_mainWindow.frameMain.CanGoBack)
+            if (_mainWindow.frameMain.CanGoBack)
                 _mainWindow.frameMain.GoBack();
         }
 

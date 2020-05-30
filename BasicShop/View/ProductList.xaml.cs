@@ -1,22 +1,8 @@
-﻿using BasicShop.Model;
-using BasicShop.ViewModel;
+﻿using BasicShop.ViewModel;
 using MaterialDesignThemes.Wpf;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BasicShop.View
 {
@@ -29,7 +15,7 @@ namespace BasicShop.View
         public ProductList(MainWindowViewModel mvm, uint? category = null, string search = null)
         {
             InitializeComponent();
-            this.DataContext = new ProductListViewModel(mvm,category,search);
+            this.DataContext = new ProductListViewModel(mvm, category, search);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)

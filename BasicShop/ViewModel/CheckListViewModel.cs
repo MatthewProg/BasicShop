@@ -3,10 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace BasicShop.ViewModel
 {
@@ -26,7 +22,6 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("Checks");
             }
         }
-        
         public string Header
         {
             get { return _header; }
@@ -38,7 +33,6 @@ namespace BasicShop.ViewModel
                 OnPropertyChanged("Header");
             }
         }
-
         public int NoOfChecked
         {
             get
@@ -55,13 +49,11 @@ namespace BasicShop.ViewModel
             Checks = new ObservableCollection<CheckListModel>();
             Header = "Header";
         }
-
         public CheckListViewModel(ObservableCollection<CheckListModel> checks, string header = "Header") : base()
         {
             Checks = checks;
             Header = header;
         }
-
         public CheckListViewModel(List<CheckListModel> checks, string header = "Header") : base()
         {
             Checks = new ObservableCollection<CheckListModel>(checks);

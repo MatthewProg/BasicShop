@@ -2,12 +2,9 @@
 using BasicShop.Managers;
 using BasicShop.Validators;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -166,7 +163,7 @@ namespace BasicShop.ViewModel
             account a = new account();
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 a = dataContext.account.FirstOrDefault(y => y.account_id == AccountManager.LoggedId);
                 p = dataContext.person.FirstOrDefault(x => x.person_id == a.person_id);
             }
@@ -227,7 +224,7 @@ namespace BasicShop.ViewModel
                     }
                 }
             }
-            if(!StringValidator.ValidateName(FirstName))
+            if (!StringValidator.ValidateName(FirstName))
             {
                 MessageQueue.Enqueue("Imię nie jest poprawne");
                 return;
@@ -244,7 +241,7 @@ namespace BasicShop.ViewModel
                 try
                 {
                     person p = new person();
-                    var dataContext = new shopEntities();
+                    var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                     p = dataContext.person.FirstOrDefault(x => x.person_id == dataContext.account.FirstOrDefault(y => y.account_id == AccountManager.LoggedId).person_id);
                     if (p != null)
                     {
@@ -261,14 +258,14 @@ namespace BasicShop.ViewModel
                     string mess = "Podczas ładowania danych wystąpił błąd!\n";
                     StandardMessages.Error(mess + e.Message);
                 }
-            }, () => 
+            }, () =>
             {
                 MessageQueue.Enqueue("Zapisano!");
             });
         }
         private void ChangePassword()
         {
-            if(string.IsNullOrEmpty(OldPassword))
+            if (string.IsNullOrEmpty(OldPassword))
             {
                 MessageQueue.Enqueue("Należy podać stare hasło!");
                 return;
@@ -290,7 +287,7 @@ namespace BasicShop.ViewModel
                 return;
             }
 
-            MessageQueue.Enqueue("Zapisywanie..", null, null,null,false,false,new TimeSpan(0,0,2));
+            MessageQueue.Enqueue("Zapisywanie..", null, null, null, false, false, new TimeSpan(0, 0, 2));
             RunInBackground(() =>
             {
                 if (!AccountManager.ChangePassword(OldPassword, NewPassword))

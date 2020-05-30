@@ -1,6 +1,5 @@
 ﻿using BasicShop.Commands;
 using BasicShop.Managers;
-using ControlzEx.Standard;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -126,7 +124,7 @@ namespace BasicShop.ViewModel
             {
                 Countries = new ObservableCollection<string>(GetCountries());
                 LoadData();
-            }); 
+            });
         }
 
         private void Save()
@@ -176,11 +174,11 @@ namespace BasicShop.ViewModel
             }
 
             MessageQueue.Enqueue("Zapisywanie..");
-            RunInBackground(() => 
+            RunInBackground(() =>
             {
                 try
                 {
-                    var dataContext = new shopEntities();
+                    var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
 
                     var acc = dataContext.account.FirstOrDefault(x => x.account_id == AccountManager.LoggedId);
                     var query = dataContext.address.FirstOrDefault(x => x.road == Road && x.house == House && x.flat == Flat && x.zip_code == Zipcode && x.city.city1 == City);
@@ -216,7 +214,7 @@ namespace BasicShop.ViewModel
                     StandardMessages.Error(mess + e.Message);
                     return;
                 }
-            }, () => 
+            }, () =>
             {
                 MessageQueue.Enqueue("Zapisano!");
             });
@@ -227,7 +225,7 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 output = dataContext.country.OrderBy(x => x.country1).Select(x => x.country1).ToList();
             }
             catch (Exception e)
@@ -243,7 +241,7 @@ namespace BasicShop.ViewModel
             address a = new address();
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 var acc = dataContext.account.FirstOrDefault(x => x.account_id == AccountManager.LoggedId);
                 var p = acc.person;
                 a = p.address;

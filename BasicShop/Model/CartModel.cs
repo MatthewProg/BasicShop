@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BasicShop.Model
 {
@@ -48,7 +44,6 @@ namespace BasicShop.Model
                 OnPropertyChanged("PriceSum");
             }
         }
-
         public decimal Price
         {
             get { return _price; }
@@ -61,7 +56,6 @@ namespace BasicShop.Model
                 OnPropertyChanged("PriceSum");
             }
         }
-
         public decimal PriceSum
         {
             get { return Price * Quantity; }

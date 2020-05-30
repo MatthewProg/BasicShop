@@ -1,14 +1,10 @@
 ﻿using BasicShop.Commands;
 using BasicShop.Model;
-using BasicShop.View;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -18,7 +14,7 @@ namespace BasicShop.ViewModel
     {
         private Visibility _loadingScreen;
         private MainWindowViewModel _host;
-       
+
         public Visibility LoadingScreen
         {
             get { return _loadingScreen; }
@@ -50,7 +46,7 @@ namespace BasicShop.ViewModel
         {
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
 
                 var tmp = new List<TreeViewCategoryModel>();
 
@@ -66,7 +62,7 @@ namespace BasicShop.ViewModel
                 CategoriesHierarchy = new ObservableCollection<TreeViewCategoryModel>(tmp);
                 OnPropertyChanged("CategoriesHierarchy");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas ładowania listy kategorii wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);

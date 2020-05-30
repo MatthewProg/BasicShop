@@ -1,14 +1,7 @@
-﻿using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Xaml.Behaviors.Media;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BasicShop.Managers
 {
@@ -26,7 +19,7 @@ namespace BasicShop.Managers
             string hashSalt = string.Empty;
             try
             {
-                using (var dataContext = new shopEntities())
+                using (var dataContext = new shopEntities(DatabaseHelper.GetConnectionString()))
                     hashSalt = dataContext.account.Where(x => x.username == username).Select(x => x.password).FirstOrDefault();
             }
             catch (Exception e)
@@ -43,7 +36,7 @@ namespace BasicShop.Managers
             {
                 try
                 {
-                    LoggedId = new shopEntities().account.Where(x => x.username == username).Select(x => x.account_id).FirstOrDefault();
+                    LoggedId = new shopEntities(DatabaseHelper.GetConnectionString()).account.Where(x => x.username == username).Select(x => x.account_id).FirstOrDefault();
                 }
                 catch (Exception e)
                 {
@@ -58,7 +51,7 @@ namespace BasicShop.Managers
         {
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
 
                 account a = new account();
                 a.email = email;
@@ -93,7 +86,7 @@ namespace BasicShop.Managers
         {
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 var a = dataContext.account.FirstOrDefault(x => x.account_id == LoggedId);
                 if (!ChecklHashSalt(oldPassword, a.password))
                     return false;

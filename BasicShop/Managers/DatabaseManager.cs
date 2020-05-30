@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.SqlClient;
 
 namespace BasicShop.Managers
 {
@@ -13,7 +8,7 @@ namespace BasicShop.Managers
         {
             try
             {
-                var ctx = new shopEntities();
+                var ctx = new shopEntities(DatabaseHelper.GetConnectionString());
                 ctx.Database.Connection.Open();
                 ctx.Database.Connection.Close();
             }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace BasicShop.Model
@@ -25,12 +20,9 @@ namespace BasicShop.Model
             }
         }
 
-
         public TreeViewCategoryModel()
         {
             Subcategories = new List<TreeViewCategoryModel>();
         }
-
-
     }
 }

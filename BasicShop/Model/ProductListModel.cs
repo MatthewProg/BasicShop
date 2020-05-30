@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BasicShop.Model
 {
@@ -11,7 +7,7 @@ namespace BasicShop.Model
     {
         public int ProductID { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set;}
+        public decimal Price { get; set; }
         public string ImageUrl { get; set; }
         public List<SpecifitationModel> Specifitation { get; private set; }
 
@@ -20,7 +16,6 @@ namespace BasicShop.Model
             if (spec == null) throw new NullReferenceException("Specification is null");
             Specifitation = spec;
         }
-
         public void SetSpecification(string spec)
         {
             if (spec == null) throw new NullReferenceException("Specification is null");

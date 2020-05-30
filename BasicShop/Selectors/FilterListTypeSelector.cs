@@ -1,9 +1,4 @@
 ﻿using BasicShop.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -19,7 +14,7 @@ namespace BasicShop.Selectors
                 return CheckListTemplate;
             if (item is SliderListViewModel)
                 return SliderListTemplate;
-            return base.SelectTemplate(item,container);
+            return base.SelectTemplate(item, container);
         }
     }
 }

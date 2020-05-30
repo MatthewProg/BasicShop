@@ -2,13 +2,7 @@
 using BasicShop.Managers;
 using BasicShop.Validators;
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -57,7 +51,7 @@ namespace BasicShop.ViewModel
 
         private void Login()
         {
-            if(Username == null || Username == string.Empty)
+            if (Username == null || Username == string.Empty)
             {
                 MessageQueue.Enqueue("Nazwa użytkownika nie może być pusta");
                 return;
@@ -108,7 +102,7 @@ namespace BasicShop.ViewModel
                 MessageQueue.Enqueue("Hasło nie może być puste");
                 return;
             }
-            if(Password != RepeatPassword)
+            if (Password != RepeatPassword)
             {
                 MessageQueue.Enqueue("Hasła nie są identyczne");
                 return;

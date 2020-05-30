@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BasicShop.Model
 {
@@ -11,7 +8,7 @@ namespace BasicShop.Model
     {
         private int _orderId;
         private string _orderStatus;
-        private List<Tuple<product,int>> _products;
+        private List<Tuple<product, int>> _products;
         private address _address;
 
         public int OrderId

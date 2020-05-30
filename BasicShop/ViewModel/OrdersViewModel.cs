@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -42,7 +41,7 @@ namespace BasicShop.ViewModel
 
         public OrdersViewModel()
         {
-            LoadingScreenProcess(() => 
+            LoadingScreenProcess(() =>
             {
                 Orders = new ObservableCollection<OrderModel>(GetOrders());
             });
@@ -55,16 +54,16 @@ namespace BasicShop.ViewModel
             List<order> ord = new List<order>();
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 ord = dataContext.order.Where(x => x.account_id == AccountManager.LoggedId).ToList();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas uzyskiwania listy zamówień wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
             }
 
-            foreach(var o in ord)
+            foreach (var o in ord)
             {
                 var tmp = new OrderModel()
                 {
@@ -72,7 +71,7 @@ namespace BasicShop.ViewModel
                     OrderStatus = o.status,
                     Address = o.address,
                 };
-                foreach(var pr in o.order_product)
+                foreach (var pr in o.order_product)
                     tmp.Products.Add(new Tuple<product, int>(pr.product, pr.quantity));
 
                 output.Add(tmp);

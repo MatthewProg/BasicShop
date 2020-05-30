@@ -2,21 +2,13 @@
 using BasicShop.Managers;
 using BasicShop.Model;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace BasicShop.ViewModel
 {
@@ -211,11 +203,11 @@ namespace BasicShop.ViewModel
             Comments = new ObservableCollection<CommentModel>();
             SelectedPhoto = string.Empty;
             NavList = new ObservableCollection<Tuple<int, SimpleListModel>>();
-            MessageQueue = new MaterialDesignThemes.Wpf.SnackbarMessageQueue(new TimeSpan(0,0,2));
+            MessageQueue = new MaterialDesignThemes.Wpf.SnackbarMessageQueue(new TimeSpan(0, 0, 2));
         }
         public ProductPageViewModel(View.ProductPage page, MainWindowViewModel mvm, int? productId) : this()
         {
-            if(productId == null)
+            if (productId == null)
             {
                 string mess = "Podczas ładowania produktu wystąpił błąd!\n";
                 StandardMessages.Error(mess + "Błędny numer produktu!");
@@ -233,7 +225,7 @@ namespace BasicShop.ViewModel
         {
             if (CurrentProductId == null) return;
 
-            if(_mainVM.Cart.ContainsKey((int)CurrentProductId))
+            if (_mainVM.Cart.ContainsKey((int)CurrentProductId))
             {
                 MessageQueue.IgnoreDuplicate = true;
                 MessageQueue.Enqueue("Produkt został już dodany do koszyka");
@@ -244,7 +236,7 @@ namespace BasicShop.ViewModel
                 _mainVM.UpdateCart();
                 MessageQueue.Enqueue("Produkt został dodany do koszyka");
             }
-                
+
         }
         private void AddComment(object param)
         {
@@ -254,7 +246,7 @@ namespace BasicShop.ViewModel
             int rating = (int)obj[0];
             string comment = (string)obj[1];
 
-            if(rating == 0)
+            if (rating == 0)
             {
                 MessageQueue.Enqueue("Należy podać wartość oceny");
                 return;
@@ -273,11 +265,11 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 dataContext.feedback.Add(comm);
                 dataContext.SaveChanges();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas dodawania opinii wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -291,16 +283,16 @@ namespace BasicShop.ViewModel
         }
         private void ProcessWhishlistChange()
         {
-            if(AccountManager.LoggedId == null)
+            if (AccountManager.LoggedId == null)
             {
                 InWhishlist = false;
-                MessageQueue.Enqueue("Musisz być zalogowany, aby dodać produkt do listy życzeń", null, null, null, true, false, new TimeSpan(0,0,4));
+                MessageQueue.Enqueue("Musisz być zalogowany, aby dodać produkt do listy życzeń", null, null, null, true, false, new TimeSpan(0, 0, 4));
                 return;
             }
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 if (IsInWhishlist(CurrentProductId))
                 {
                     var p = dataContext.product.FirstOrDefault(x => x.product_id == CurrentProductId);
@@ -316,9 +308,9 @@ namespace BasicShop.ViewModel
                     p.account.Add(a);
                     dataContext.SaveChanges();
                     MessageQueue.Enqueue("Produkt został dodany do listy życzeń");
-                }       
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas edytowania listy życzeń wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -332,18 +324,18 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 var count = from a in dataContext.account
                             from p in a.product
                             where p.product_id == prodId && a.account_id == AccountManager.LoggedId
-                           select new
-                           {
-                               account_id = a.account_id,
-                               product_id = p.product_id
-                           };
+                            select new
+                            {
+                                account_id = a.account_id,
+                                product_id = p.product_id
+                            };
                 if (count.Count() != 0) output = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas edytowania listy życzeń wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -374,11 +366,11 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 obj = dataContext.product.Where(x => x.product_id == prodId).ToList()[0];
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas uzyskiwania obiektu produktu wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -404,11 +396,11 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 output.Add(dataContext.product.Where(x => x.product_id == prodId).Select(x => x.thumbnail).ToList()[0]);
                 output.AddRange(dataContext.product_image.Where(x => x.product_id == prodId).Select(x => x.image_src).ToList());
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas uzyskiwania zdjęć produktu wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -422,12 +414,12 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 var obj = dataContext.productSpecification(prodId).ToList();
-                foreach(var spec in obj)
+                foreach (var spec in obj)
                     output.Add(new SpecifitationModel() { Element = spec.SpecKey, Value = spec.SpecValue });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas uzyskiwania specyfikacji produktu wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -440,10 +432,10 @@ namespace BasicShop.ViewModel
             int output = 0;
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 output = dataContext.warehouse.Where(x => x.product_id == prodId).Select(x => x.quantity).Sum();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas uzyskiwania ilości dostępnych produktów wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -457,7 +449,7 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 if (dataContext.feedback.Where(x => x.product_id == prodId).Select(x => x.feedback_id).ToArray().Length > 0)
                     output = dataContext.feedback.Where(x => x.product_id == prodId).Average(x => x.rating);
                 else
@@ -472,7 +464,7 @@ namespace BasicShop.ViewModel
             }
 
             return output;
-            }
+        }
         private List<CommentModel> GetProductComments(int? prodId)
         {
             List<CommentModel> output = new List<CommentModel>();
@@ -480,10 +472,10 @@ namespace BasicShop.ViewModel
             var obj = new List<feedback>();
             try
             {
-                var dataContext = new shopEntities();
-                obj = dataContext.feedback.Where(x => x.product_id == prodId).OrderByDescending(x=>x.feedback_id).ToList();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
+                obj = dataContext.feedback.Where(x => x.product_id == prodId).OrderByDescending(x => x.feedback_id).ToList();
 
-                foreach(var comment in obj)
+                foreach (var comment in obj)
                 {
                     output.Add(new CommentModel()
                     {
@@ -495,7 +487,7 @@ namespace BasicShop.ViewModel
                     });
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas uzystkiwania opinii wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -514,14 +506,14 @@ namespace BasicShop.ViewModel
         }
         private void UpdateNavList(int? prodId)
         {
-            var dataContext = new shopEntities();
+            var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
             int? cat = null;
             try
             {
                 cat = dataContext.product.Where(x => x.product_id == prodId).Select(x => x.category_id).ToList()[0];
                 if (cat == null) throw new Exception();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas uzyskiwania numeru kategorii wystąpił błąd!\n";
                 StandardMessages.Error(mess + "Błędny numer produktu!");
@@ -561,7 +553,7 @@ namespace BasicShop.ViewModel
             List<WarehouseAllInfoView> li = new List<WarehouseAllInfoView>();
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 li = dataContext.WarehouseAllInfoView.Where(x => x.product_id == prodId && x.quantity > 0).ToList();
             }
             catch (Exception e)
@@ -579,7 +571,7 @@ namespace BasicShop.ViewModel
                     House = shop.house,
                     Flat = shop.flat,
                     Road = shop.road,
-                    ZipCode = shop.zip_code.Substring(0,2) + "-" + shop.zip_code.Substring(2),
+                    ZipCode = shop.zip_code.Substring(0, 2) + "-" + shop.zip_code.Substring(2),
                     City = shop.city,
                     Country = shop.country
                 });

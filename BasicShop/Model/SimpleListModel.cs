@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BasicShop.Model
 {
@@ -13,7 +9,7 @@ namespace BasicShop.Model
 
         public uint Id { get; set; }
         public string Name
-        { 
+        {
             get { return _name; }
             set
             {

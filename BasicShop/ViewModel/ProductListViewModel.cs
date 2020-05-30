@@ -292,7 +292,7 @@ namespace BasicShop.ViewModel
             var obj = param as SpecifitationModel;
 
             object filter = null;
-            foreach(Interfaces.IFilter fil in _filters)
+            foreach (Interfaces.IFilter fil in _filters)
                 if (fil.Header == obj.Element)
                 {
                     filter = fil;
@@ -319,7 +319,7 @@ namespace BasicShop.ViewModel
 
             string direction = param.ToString();
 
-            if(direction.ToLower() == "left")
+            if (direction.ToLower() == "left")
             {
                 if (_currentPage == 0) return;
                 CurrentPage = _currentPage - 1;
@@ -347,7 +347,7 @@ namespace BasicShop.ViewModel
             try
             {
                 var working = new ObservableCollection<object>();
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
 
                 IQueryable<int?> li = null;
                 IQueryable<product> query = null;
@@ -454,7 +454,7 @@ namespace BasicShop.ViewModel
 
                 Filters = working;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas ładowania filtrów wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
@@ -516,7 +516,7 @@ namespace BasicShop.ViewModel
 
             int counter = -1;
             var list = new ObservableCollection<Tuple<int, SimpleListModel>>();
-            var dataContext = new shopEntities();
+            var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
             var catId = CurrentCategoryId;
             try
             {
@@ -539,7 +539,7 @@ namespace BasicShop.ViewModel
                 string mess = "Podczas ładowania wyższych kategorii wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
             }
-}
+        }
         /* Got replaced by SQL function
         BTW, it was garbage
 
@@ -548,7 +548,7 @@ namespace BasicShop.ViewModel
             var output = new List<int>();
             output.Add(parent);
 
-            var dataContext = new shopEntities();
+            var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
             int currentCount = 0;
             bool GetAndConcat()
             {
@@ -620,7 +620,7 @@ namespace BasicShop.ViewModel
         {
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 IQueryable<product> query = null;
 
                 //Get products from category
@@ -660,7 +660,7 @@ namespace BasicShop.ViewModel
                     List<string> condition = new List<string>();
                     foreach (var val in filters[key])
                     {
-                         if (key == "Producent")
+                        if (key == "Producent")
                         {
                             List<int> prodIds = new List<int>();
                             foreach (var prodName in filters[key])

@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.RightsManagement;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -78,7 +76,7 @@ namespace BasicShop.ViewModel
                 return;
             }
 
-            foreach(var element in Cart)
+            foreach (var element in Cart)
                 _mainVM.Cart[element.ProductId] = element.Quantity;
 
             _mainVM.LoadPage("checkout");
@@ -89,8 +87,8 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
-                foreach(var key in _mainVM.Cart.Keys)
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
+                foreach (var key in _mainVM.Cart.Keys)
                 {
                     CartModel prod = new CartModel();
                     prod.ProductId = key;
@@ -100,7 +98,7 @@ namespace BasicShop.ViewModel
                     output.Add(prod);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas uzyskiwania listy produktów z koszyka wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);

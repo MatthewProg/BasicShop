@@ -7,8 +7,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -211,7 +209,7 @@ namespace BasicShop.ViewModel
 
         private void Confirm()
         {
-            if(string.IsNullOrWhiteSpace(Road))
+            if (string.IsNullOrWhiteSpace(Road))
             {
                 MessageQueue.Enqueue("Pole ulica nie może być puste");
                 return;
@@ -249,7 +247,7 @@ namespace BasicShop.ViewModel
             House = House.Trim();
             Zipcode = Zipcode.Trim();
 
-            if(Zipcode.Length != 5)
+            if (Zipcode.Length != 5)
             {
                 MessageQueue.Enqueue("Kod pocztowy musi mieć 5 znaków");
                 return;
@@ -262,7 +260,7 @@ namespace BasicShop.ViewModel
             int cityId;
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
 
                 var query = dataContext.address.FirstOrDefault(x => x.road == Road && x.house == House && x.flat == Flat && x.zip_code == Zipcode && x.city.city1 == City);
 
@@ -288,18 +286,18 @@ namespace BasicShop.ViewModel
                     o.address.zip_code = Zipcode;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string mess = "Podczas zapisywania zamówienia wystąpił błąd!\n";
                 StandardMessages.Error(mess + e.Message);
                 return;
             }
-            
+
             foreach (var p in Cart)
                 o.order_product.Add(new order_product() { product_id = p.ProductId, quantity = p.Quantity });
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 dataContext.order.Add(o);
                 dataContext.SaveChanges();
             }
@@ -333,7 +331,7 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 foreach (var key in _mainVM.Cart.Keys)
                 {
                     CartModel prod = new CartModel();
@@ -358,8 +356,8 @@ namespace BasicShop.ViewModel
 
             try
             {
-                var dataContext = new shopEntities();
-                output = dataContext.country.OrderBy(x=>x.country1).Select(x => x.country1).ToList();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
+                output = dataContext.country.OrderBy(x => x.country1).Select(x => x.country1).ToList();
             }
             catch (Exception e)
             {
@@ -374,7 +372,7 @@ namespace BasicShop.ViewModel
             address def = new address();
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 def = dataContext.address.FirstOrDefault(x => x.address_id == dataContext.person.FirstOrDefault(
                     y => y.person_id == dataContext.account.FirstOrDefault(
                         z => z.account_id == AccountManager.LoggedId).person_id).address_id);

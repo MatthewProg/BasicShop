@@ -2,13 +2,10 @@
 using BasicShop.Managers;
 using BasicShop.View;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace BasicShop.ViewModel
 {
@@ -69,8 +66,8 @@ namespace BasicShop.ViewModel
             LoadingScreenProcess(() =>
             {
                 CheckUserRole();
-            }, () => 
-            { 
+            }, () =>
+            {
                 ChangeView(startingPage);
             });
         }
@@ -79,7 +76,7 @@ namespace BasicShop.ViewModel
         {
             try
             {
-                var dataContext = new shopEntities();
+                var dataContext = new shopEntities(DatabaseHelper.GetConnectionString());
                 var a = dataContext.account.FirstOrDefault(x => x.account_id == AccountManager.LoggedId);
                 if (a.role_id == 2)
                     AdminSectionVisibility = Visibility.Visible;
