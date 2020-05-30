@@ -1,18 +1,19 @@
-﻿<Page x:Class="BasicShop.View.AdminAccountPage"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:BasicShop.View"
-      mc:Ignorable="d" 
+      xmlns:local="clr-namespace:BasicShop.View" 
       xmlns:models="clr-namespace:BasicShop.Model"
       xmlns:viewModels="clr-namespace:BasicShop.ViewModel"
       xmlns:converters="clr-namespace:BasicShop.Converters"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:selectors="clr-namespace:BasicShop.Selectors"
       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
-      d:DesignHeight="576" d:DesignWidth="826"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:BasicShop="clr-namespace:BasicShop" x:Class="BasicShop.View.AdminAccountPage"
+      mc:Ignorable="d"
+      d:DesignHeight="576" d:DesignWidth="826"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -20,9 +21,105 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-      Title="AdminAccountPage">
+      Title="AdminAccountPage"
+      Loaded="Page_Loaded">
 
-    <Grid>
+    <Page.Resources>
+        <CollectionViewSource x:Key="accountViewSource" d:DesignSource="{d:DesignInstance {x:Type BasicShop:account}, CreateList=True}"/>
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource accountViewSource}">
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="Konta" FontSize="30" Margin="10"/>
+
+
+        <Grid x:Name="grid1" DataContext="{StaticResource accountViewSource}" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="account id:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+            <Label x:Name="account_idLabel" Content="{Binding account_id}" Grid.Column="1" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+            <Label Content="email:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center"/>
+            <TextBox x:Name="emailTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="1" Text="{Binding email, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+            <Label Content="person id:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center"/>
+            <ComboBox x:Name="person_idComboBox" Grid.Column="1" DisplayMemberPath="person_id" HorizontalAlignment="Left" Height="Auto" ItemsSource="{Binding}" Margin="3" Grid.Row="2" VerticalAlignment="Center" Width="120">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <Label Content="role id:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center"/>
+            <ComboBox x:Name="role_idComboBox" Grid.Column="1" DisplayMemberPath="role_id" HorizontalAlignment="Left" Height="Auto" ItemsSource="{Binding}" Margin="3" Grid.Row="3" VerticalAlignment="Center" Width="120">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <Label Content="username:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="4" VerticalAlignment="Center"/>
+            <TextBox x:Name="usernameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="4" Text="{Binding username, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+        </Grid>
+        <ListView x:Name="accountListView" ItemsSource="{Binding}" Margin="10,214,10,10" SelectionMode="Single">
+            <ListView.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Control.HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Control.VerticalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn x:Name="account_idColumn" Header="account id" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding account_id}" Margin="6,-1,-6,-1"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="emailColumn" Header="email" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding email}" Margin="-6,-1"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="person_idColumn" Header="person id" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding person_id}" Margin="-6,-1"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="role_idColumn" Header="role id" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding role_id}" Margin="-6,-1"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="usernameColumn" Header="username" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding username}" Margin="-6,-1"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Grid x:Name="loading" Grid.Row="0" Grid.Column="0" Background="#FFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
+        </Grid>
+
     </Grid>
 </Page>
