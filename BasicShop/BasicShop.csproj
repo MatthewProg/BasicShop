@@ -419,6 +419,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
+    <None Include="Properties\DataSources\order.datasource" />
     <None Include="Properties\DataSources\position.datasource" />
     <None Include="Properties\DataSources\product.datasource" />
     <None Include="Properties\DataSources\role.datasource" />
