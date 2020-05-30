@@ -31,15 +31,6 @@
     <Grid DataContext="{StaticResource staffViewSource}">
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="Pracownicy" FontSize="30" Margin="10"/>
 
-        <Button Content="Nowy" HorizontalAlignment="Left" Margin="231,62,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Button Content="Usuń" HorizontalAlignment="Left" Margin="311,62,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <Button Content="Zapisz listę" HorizontalAlignment="Left" Margin="391,62,0,0" VerticalAlignment="Top" Width="105" Click="Button_Click_2"/>
-
-        <Grid x:Name="loading" Grid.Row="0" Grid.Column="0" Background="#FFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
-            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
-            </materialDesign:Card>
-        </Grid>
         <ListView x:Name="staffListView" ItemsSource="{Binding}" Margin="0,192,10,10" SelectionMode="Single">
             <ListView.ItemContainerStyle>
                 <Style>
@@ -117,6 +108,15 @@
                     </ItemsPanelTemplate>
                 </ComboBox.ItemsPanel>
             </ComboBox>
+        </Grid>
+        <Button Content="Nowy" HorizontalAlignment="Left" Margin="231,62,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Usuń" HorizontalAlignment="Left" Margin="311,62,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <Button Content="Zapisz listę" HorizontalAlignment="Left" Margin="391,62,0,0" VerticalAlignment="Top" Width="105" Click="Button_Click_2"/>
+
+        <Grid x:Name="loading" Grid.Row="0" Grid.Column="0" Background="#FFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Visible">
+            <materialDesign:Card UniformCornerRadius="14" Padding="4" Opacity="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+            </materialDesign:Card>
         </Grid>
     </Grid>
 </Page>

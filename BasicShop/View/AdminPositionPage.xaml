@@ -61,21 +61,21 @@
                     <GridViewColumn x:Name="descriptionColumn" Header="description" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox IsReadOnly="True" Margin="6,-1,-6,-1" Text="{Binding description, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                                <TextBlock Margin="6,-1,-6,-1" Text="{Binding description, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn x:Name="paymentColumn" Header="payment" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox IsReadOnly="True" Margin="-6,-1" Text="{Binding payment, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                                <TextBlock Margin="-6,-1" Text="{Binding payment, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn x:Name="position_idColumn" Header="position id" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox IsReadOnly="True" Margin="-6,-1" Text="{Binding position_id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                                <TextBlock Margin="-6,-1" Text="{Binding position_id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

@@ -32,9 +32,13 @@ namespace BasicShop.View
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ctx.role.Load();
-            viewSource.Source = ctx.role.Local;
-            loading.Visibility = Visibility.Collapsed;
+            LoadScreenProcess(() =>
+            {
+                ctx.role.Load();
+            }, () =>
+            {
+                viewSource.Source = ctx.role.Local;
+            });
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -55,6 +59,18 @@ namespace BasicShop.View
         {
             ctx.SaveChanges();
             viewSource.View.Refresh();
+        }
+
+        private async void LoadScreenProcess(Action action, Action cont = null)
+        {
+            loading.Visibility = Visibility.Visible;
+
+            await Task.Factory.StartNew(action);
+
+            if (cont != null)
+                cont();
+
+            loading.Visibility = Visibility.Collapsed;
         }
     }
 }

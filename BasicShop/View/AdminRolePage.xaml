@@ -57,14 +57,14 @@
                     <GridViewColumn x:Name="role_idColumn" Header="role id" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox IsReadOnly="True" Margin="6,-1,-6,-1" Text="{Binding role_id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                                <TextBlock Margin="6,-1,-6,-1" Text="{Binding role_id, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn x:Name="typeColumn" Header="type" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox IsReadOnly="True" Margin="-6,-1" Text="{Binding type, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                                <TextBlock Margin="-6,-1" Text="{Binding type, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

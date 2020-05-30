@@ -423,6 +423,7 @@
     <None Include="Properties\DataSources\position.datasource" />
     <None Include="Properties\DataSources\role.datasource" />
     <None Include="Properties\DataSources\staff.datasource" />
+    <None Include="Properties\DataSources\store.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
