@@ -1,11 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29911.84
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicShop", "BasicShop\BasicShop.csproj", "{FF9F61AE-59A8-45FA-8CC1-498AFD50FC86}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicShop.Tests", "BasicShop.Tests\BasicShop.Tests.csproj", "{43D527B6-BC9B-4A8A-893C-5B1225684839}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicShop.FilesServer", "BasicShop.FilesServer\BasicShop.FilesServer.csproj", "{44826786-3D27-4643-998D-7607CEC9C4E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8AFD78A2-5E31-4F2D-BF91-43CD878E0422}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{08057B0E-50B5-408E-8E1F-84824FA88128}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{C12177E9-FCAE-4761-B1C1-7E83875D3B24}"
+	ProjectSection(SolutionItems) = preProject
+		docs\img\erd.png = docs\img\erd.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +36,16 @@ Global
 		{43D527B6-BC9B-4A8A-893C-5B1225684839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43D527B6-BC9B-4A8A-893C-5B1225684839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43D527B6-BC9B-4A8A-893C-5B1225684839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44826786-3D27-4643-998D-7607CEC9C4E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44826786-3D27-4643-998D-7607CEC9C4E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44826786-3D27-4643-998D-7607CEC9C4E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44826786-3D27-4643-998D-7607CEC9C4E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C12177E9-FCAE-4761-B1C1-7E83875D3B24} = {08057B0E-50B5-408E-8E1F-84824FA88128}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7170967B-5E17-4A2A-8D2F-C22D938F9097}

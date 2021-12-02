@@ -26,7 +26,7 @@ namespace BasicShop
         {
             throw new UnintentionalCodeFirstException();
         }
-
+    
         public virtual DbSet<account> account { get; set; }
         public virtual DbSet<address> address { get; set; }
         public virtual DbSet<category> category { get; set; }

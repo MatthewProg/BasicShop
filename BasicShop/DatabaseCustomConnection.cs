@@ -18,7 +18,7 @@ namespace BasicShop
             var entityBuilder = new EntityConnectionStringBuilder();
 
             entityBuilder.Provider = "System.Data.SqlClient";
-            entityBuilder.ProviderConnectionString = "data source=SQL5053.site4now.net;initial catalog=DB_A61718_basic;user id=DB_A61718_basic_admin;password=mowarer121;MultipleActiveResultSets=True;App=EntityFramework;";
+            entityBuilder.ProviderConnectionString = "Data Source=LAPTOP-HFC8SPKF\\SQLEXPRESS;Database=shop_database;User Id=shop_admin;Password=Admin12345;MultipleActiveResultSets=True;App=EntityFramework;";
             entityBuilder.Metadata = @"res://*/FullDatabase.csdl|res://*/FullDatabase.ssdl|res://*/FullDatabase.msl";
 
             return entityBuilder.ToString();
