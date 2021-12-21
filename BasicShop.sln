@@ -19,7 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{08057B0E-5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{C12177E9-FCAE-4761-B1C1-7E83875D3B24}"
 	ProjectSection(SolutionItems) = preProject
+		docs\img\cart.png = docs\img\cart.png
 		docs\img\erd.png = docs\img\erd.png
+		docs\img\filter.png = docs\img\filter.png
+		docs\img\list.png = docs\img\list.png
+		docs\img\order.png = docs\img\order.png
+		docs\img\product.png = docs\img\product.png
+		docs\img\whishlist.png = docs\img\whishlist.png
 	EndProjectSection
 EndProject
 Global

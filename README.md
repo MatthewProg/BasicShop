@@ -1,7 +1,7 @@
 <h1 align="center">Basic Shop (WPF)</h1>
 
 <p align="center">
-    <a href="/./LICENSE"><img src="https://img.shields.io/github/license/VegetaTheKing/BasicShop"></a>
+    <a href="/./LICENSE"><img src="https://img.shields.io/github/license/MatthewProg/BasicShop"></a>
 </p>
 
 <h5 align="center">
@@ -19,6 +19,7 @@
             <li><a href="#set-up">Set up</a></li>
         </ul>
     </li>
+    <li><a href="#screenshots">Screenshots</a></li>
     <li><a href="#documentation">Documentation</a></li>
     <li><a href="#license">License</a></li>
   </ol>
@@ -42,17 +43,38 @@ It was my first big project using .NET Framework. The app supports viewing produ
 ### Set up
 
 ##### Application projects
-1. Clone repository `git clone https://github.com/VegetaTheKing/BasicShop.git`
+1. Clone repository `git clone https://github.com/MatthewProg/BasicShop.git`
 2. Open `BasicShop.sln`
 
 ##### MS SQL database
-1. Clone repository `git clone https://github.com/VegetaTheKing/BasicShop.git`
+1. Clone repository `git clone https://github.com/MatthewProg/BasicShop.git`
 2. Open Microsoft SQL Server Management Studio
 3. Login to server
 4. Add new login to SQL Server named `shop_admin` with password `Admin12345`
 5. Databases->RMB->Restore database, select device and then navigate to `DatabaseBackups/shop_database.bak`
 
-`NOTE: Connection string is in`<a href="https://github.com/VegetaTheKing/BasicShop/blob/master/BasicShop/DatabaseCustomConnection.cs">`DatabaseCustomConnection.cs`</a>`and files server addres in`<a href="https://github.com/VegetaTheKing/BasicShop/blob/master/BasicShop/App.config#L11">`App.config`</a>
+`NOTE: Connection string is in`<a href="https://github.com/MatthewProg/BasicShop/blob/master/BasicShop/DatabaseCustomConnection.cs">`DatabaseCustomConnection.cs`</a>`and files server addres in`<a href="https://github.com/MatthewProg/BasicShop/blob/master/BasicShop/App.config#L11">`App.config`</a>
+
+## Screenshots
+
+<table>
+    <tr>
+        <th style="text-align:center"><a href="/./docs/img/list.png"><img alt="product list" src="/./docs/img/list.png"></a></th>
+        <th style="text-align:center"><a href="/./docs/img/filter.png"><img alt="filter" src="/./docs/img/filter.png"></a></th>
+        <th style="text-align:center"><a href="/./docs/img/product.png"><img alt="product" src="/./docs/img/product.png"></a></th>
+        <th style="text-align:center"><a href="/./docs/img/cart.png"><img alt="cart" src="/./docs/img/cart.png"></a></th>
+        <th style="text-align:center"><a href="/./docs/img/order.png"><img alt="order" src="/./docs/img/order.png"></a></th>
+        <th style="text-align:center"><a href="/./docs/img/whishlist.png"><img alt="whishlist" src="/./docs/img/whishlist.png"></a></th>
+    </tr>
+    <tr>
+        <td align="center">Products list</td>
+        <td align="center">Filtering</td>
+        <td align="center">Product page</td>
+        <td align="center">Cart</td>
+        <td align="center">Order</td>
+        <td align="center">Whishlist</td>
+    </tr>
+</table>
 
 ## Documentation
 
